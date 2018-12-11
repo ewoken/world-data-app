@@ -7,7 +7,6 @@ import { Route, Switch, Redirect, Link, withRouter } from 'react-router-dom';
 import { Layout, Menu, Spin, Select } from 'antd';
 
 import HomeView from '../views/HomeView';
-import ChartView from '../views/ChartView';
 import CountryView from '../views/CountryView';
 
 import { CountriesLoader, StatisticsLoader } from '../loaders';
