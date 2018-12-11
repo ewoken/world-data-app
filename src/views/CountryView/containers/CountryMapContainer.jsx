@@ -23,7 +23,7 @@ class CountryMapContainer extends Component {
 
   fetch() {
     const { country } = this.props;
-    fetch(`/geo/${country.alpha3Code}.geo.json`)
+    fetch(`/geo/${country.alpha3Code.toLowerCase()}.geo.json`)
       .then(res => res.json())
       .then(geojson => this.setState({ geojson }));
   }

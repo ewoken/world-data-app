@@ -34,7 +34,7 @@ function CountryView(props) {
         <Col sm={0} md={6}>
           <img
             style={{ height: '100px' }}
-            src={`/img/flags/${country.alpha3Code}.svg`}
+            src={`/img/flags/${country.alpha3Code.toLowerCase()}.svg`}
             alt={`Flag of ${country.commonName}`}
           />
           <CountryMapContainer country={country} />

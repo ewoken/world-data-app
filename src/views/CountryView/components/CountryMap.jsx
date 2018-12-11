@@ -25,7 +25,7 @@ class CustomGeoJSON extends Component {
 
     this.geojson = L.geoJSON(data).addTo(map);
     const bounds = this.geojson.getBounds();
-    map.fitBounds(bounds);
+    map.flyToBounds(bounds);
   }
 
   render() {

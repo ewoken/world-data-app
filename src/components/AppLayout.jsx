@@ -35,7 +35,7 @@ function AppLayout(props) {
             >
               <Menu.Item key="home">
                 <Link to="/home">
-                  <strong>Accueil</strong>
+                  <strong>Home</strong>
                 </Link>
               </Menu.Item>
               {/* <Menu.Item key="chart">
