@@ -3,4 +3,5 @@ coverage
 node_modules
 public/img/flags
 public/geo
+public/CNAME
 *.DS_Store

@@ -39,10 +39,9 @@
     "lint": "eslint --ignore-path .gitignore --ignore-pattern \"!**/.*\" .",
     "fix": "eslint --ignore-path .gitignore --ignore-pattern \"!**/.*\" --fix .",
     "start": "react-app-rewired start",
-    "build": "./scripts/importCountryData.sh && react-app-rewired build",
+    "build": "./scripts/prepareBuild.sh && react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "browserslist": [
