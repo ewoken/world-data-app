@@ -49,7 +49,7 @@ function AppLayout(props) {
               />
             </Switch>
           </Layout.Content>
-          <Layout.Footer>Sources: IEA & EIA</Layout.Footer>
+          <Layout.Footer>Sources: IEA & EIA, World Data Bank</Layout.Footer>
         </Layout>
       )}
     </div>

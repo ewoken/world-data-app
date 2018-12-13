@@ -318,20 +318,32 @@ export function compiledCountryStatisticsSelector(
 }
 
 export function compiledStatisticForCountriesAndYear(
-  { statisticCode, year },
+  { statisticCode, year, perCapita },
   state,
 ) {
   const countries = countriesSelector(state);
+  const statistic = statisticSelector(statisticCode, state);
+  const mapOfStatisticCodes = {
+    value: statisticCode,
+    ...(perCapita ? { pop: 'POPULATION' } : {}),
+  };
 
   return countries.map(({ alpha2Code: countryCode }) => {
-    const countryStatisticValues = countryStatisticValuesSelector(
-      { statisticCode, countryCode },
+    const countryStatisticValues = compiledCountryStatisticsSelector(
+      { mapOfStatisticCodes, countryCode },
       state,
     );
     const yearValue = countryStatisticValues.find(v => v.year === year);
+    // TODO
+    const value = yearValue && yearValue.value !== null && (yearValue.pop || !perCapita) // eslint-disable-line
+        ? perCapita
+          ? (yearValue.value * statistic.unitFactor) / yearValue.pop
+          : yearValue.value
+        : null;
+
     return {
       countryCode,
-      value: (yearValue && yearValue.value) || null,
+      value,
     };
   });
 }
@@ -404,8 +416,19 @@ export function loadCountryStatistics({ statisticCodes, countryCode }) {
 export function loadStatisticOfCountries(statisticCode) {
   return function dispatchLoadStatisticOfCountries(dispatch, getState) {
     const countries = countriesSelector(getState());
+    const isLoaded = countries.every(country =>
+      countryStatisticLoadedSelector(
+        { statisticCode, countryCode: country.alpha2Code },
+        getState(),
+      ),
+    );
+
+    if (isLoaded) {
+      return;
+    }
+
     dispatch(loadStatisticOfCountriesAction(statisticCode, countries));
-    return getStatisticOfAllCountries(statisticCode)
+    getStatisticOfAllCountries(statisticCode)
       .then(data =>
         dispatch(
           receiveStatisticOfCountriesAction({

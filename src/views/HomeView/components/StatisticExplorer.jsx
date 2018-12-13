@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Select, Slider } from 'antd';
+import { Table, Select, Slider, Radio } from 'antd';
 
 import { sortBy } from 'ramda';
 
@@ -13,9 +13,11 @@ function StatisticExplorer(props) {
     statistics,
     currentStatistic,
     currentYear,
+    perCapita,
     onRowClick,
     setStatistic,
     setYear,
+    setPerCapita,
   } = props;
 
   const formatedData = data
@@ -38,7 +40,7 @@ function StatisticExplorer(props) {
       >
         {sortBy(s => s.name, statistics).map(statistic => (
           <Select.Option key={statistic.code} title={statistic.name}>
-            {`${statistic.name} (${statistic.unit})`}
+            {`${statistic.name}`}
           </Select.Option>
         ))}
       </Select>
@@ -65,6 +67,18 @@ function StatisticExplorer(props) {
           },
         }}
       />
+      <Radio.Group
+        style={{ marginBottom: '10px' }}
+        buttonStyle="solid"
+        size="small"
+        value={perCapita}
+        onChange={e => setPerCapita(e.target.value)}
+      >
+        <Radio.Button value={false}>Absolute</Radio.Button>
+        <Radio.Button value disabled={currentStatistic.code === 'POPULATION'}>
+          Per capita
+        </Radio.Button>
+      </Radio.Group>
       <Table
         className="hideOnMobile"
         rowKey="countryCode"
@@ -82,7 +96,9 @@ function StatisticExplorer(props) {
           render: text => <a href="javascript:;">{text}</a>, // eslint-disable-line
           },
           {
-            title: currentStatistic.unit,
+            title: perCapita
+              ? `${currentStatistic.baseUnit}/capita`
+              : currentStatistic.unit,
             dataIndex: 'value',
             defaultSortOrder: 'descend',
             sorter: (a, b) => a.value - b.value,
@@ -113,6 +129,8 @@ StatisticExplorer.propTypes = {
   onRowClick: PropTypes.func.isRequired,
   setStatistic: PropTypes.func.isRequired,
   setYear: PropTypes.func.isRequired,
+  perCapita: PropTypes.bool.isRequired,
+  setPerCapita: PropTypes.func.isRequired,
 };
 
 export default StatisticExplorer;

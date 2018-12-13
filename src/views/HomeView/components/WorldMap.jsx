@@ -11,7 +11,7 @@ import { coordsToLatLng } from '../../../utils';
 
 const dependentCountries = getDependentCountries();
 
-const MAP_HEIGHT = '500px';
+const MAP_HEIGHT = '540px';
 const MIN_COLOR = 'rgb(107, 185, 240)';
 const MAX_COLOR = '#001529';
 const NA_COLOR = '#777';
@@ -28,6 +28,9 @@ function computeColorMap(data) {
     if (value === null || value === undefined) {
       return { color: NA_COLOR, value: 'NA' };
     }
+    if (value === 0) {
+      return { color: MIN_COLOR, value: 0 };
+    }
     return {
       color: gradiant(func(value / minValue) / func(maxValue / minValue)),
       value,
@@ -37,7 +40,7 @@ function computeColorMap(data) {
 }
 
 function WorldMap(props) {
-  const { countries, data, currentStatistic, currentYear } = props;
+  const { countries, data, currentStatistic, currentYear, perCapita } = props;
   const maxValue = Math.max(...data.map(d => d.value));
   const colorValueMap = computeColorMap(data);
   return (
@@ -86,7 +89,13 @@ function WorldMap(props) {
       </Map>
       <div className="WorldMap__legend">
         <div className="WorldMap__legend__gradient">
-          <div>{`${currentStatistic.name} (${currentStatistic.unit})`}</div>
+          <div>
+            {`${currentStatistic.name} (${
+              perCapita
+                ? `${currentStatistic.baseUnit}/capita`
+                : currentStatistic.unit
+            })`}
+          </div>
           <div
             className="WorldMap__legend__gradientColor"
             style={{
@@ -121,6 +130,7 @@ WorldMap.propTypes = {
       value: PropTypes.number,
     }).isRequired,
   ).isRequired,
+  perCapita: PropTypes.bool.isRequired,
 };
 
 export default WorldMap;

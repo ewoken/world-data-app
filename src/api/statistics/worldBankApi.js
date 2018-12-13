@@ -3,7 +3,7 @@ import { retryFetch } from '../helpers';
 export const WORLD_BANK_API = 'WORLD_BANK_API';
 
 export async function fetchStatisticFromWorldBank(statistic, country) {
-  const { worldBankCode } = statistic;
+  const { worldBankCode, unitConverter = i => i } = statistic;
 
   const data = await retryFetch(
     `http://api.worldbank.org/v2/countries/${
@@ -19,6 +19,6 @@ export async function fetchStatisticFromWorldBank(statistic, country) {
     statisticCode: statistic.code,
     countryCode: country.alpha2Code,
     year: Number(object.date),
-    value: object.value,
+    value: unitConverter(object.value),
   }));
 }

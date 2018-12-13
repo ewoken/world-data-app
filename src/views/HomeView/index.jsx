@@ -15,20 +15,23 @@ import {
   loadStatisticOfCountries,
 } from '../../store/statistics';
 
-const ConnectedWorldMap = connect((state, { statisticCode, currentYear }) => ({
-  countries: countriesSelector(state),
-  currentStatistic: statisticSelector(statisticCode, state),
-  data: compiledStatisticForCountriesAndYear(
-    {
-      statisticCode,
-      year: currentYear,
-    },
-    state,
-  ),
-}))(WorldMap);
+const ConnectedWorldMap = connect(
+  (state, { statisticCode, currentYear, perCapita }) => ({
+    countries: countriesSelector(state),
+    currentStatistic: statisticSelector(statisticCode, state),
+    data: compiledStatisticForCountriesAndYear(
+      {
+        statisticCode,
+        year: currentYear,
+        perCapita,
+      },
+      state,
+    ),
+  }),
+)(WorldMap);
 
 const ConnectedStatisticExplorer = connect(
-  (state, { statisticCode, currentYear }) => ({
+  (state, { statisticCode, currentYear, perCapita }) => ({
     countries: countriesSelector(state),
     statistics: allStatisticsSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
@@ -36,6 +39,7 @@ const ConnectedStatisticExplorer = connect(
       {
         statisticCode,
         year: currentYear,
+        perCapita,
       },
       state,
     ),
@@ -48,6 +52,7 @@ class HomeView extends Component {
     this.state = {
       statisticCode: 'PRIMARY_ENERGY_MTOE',
       currentYear: 2010,
+      perCapita: false,
     };
   }
 
@@ -61,18 +66,30 @@ class HomeView extends Component {
   setStatistic(statisticCode) {
     const { loadStatistic } = this.props;
     loadStatistic(statisticCode);
-    this.setState({ statisticCode });
+    const newState = {
+      statisticCode,
+      ...(statisticCode === 'POPULATION' ? { perCapita: false } : {}),
+    };
+    this.setState(newState);
   }
 
   setYear(year) {
     this.setState({ currentYear: year });
   }
 
+  setPerCapita(value) {
+    const { loadStatistic } = this.props;
+    if (value) {
+      loadStatistic('POPULATION');
+    }
+    this.setState({ perCapita: value });
+  }
+
   render() {
     const {
       history: { push },
     } = this.props;
-    const { currentYear, statisticCode } = this.state;
+    const { currentYear, statisticCode, perCapita } = this.state;
 
     return (
       <div className="HomeView">
@@ -81,15 +98,18 @@ class HomeView extends Component {
             <ConnectedWorldMap
               statisticCode={statisticCode}
               currentYear={currentYear}
+              perCapita={perCapita}
             />
           </Col>
           <Col md={8}>
             <ConnectedStatisticExplorer
               statisticCode={statisticCode}
               currentYear={currentYear}
+              perCapita={perCapita}
               onRowClick={record => push(`country/${record.countryCode}`)}
               setYear={year => this.setYear(year)}
               setStatistic={value => this.setStatistic(value)}
+              setPerCapita={value => this.setPerCapita(value)}
             />
           </Col>
         </Row>
