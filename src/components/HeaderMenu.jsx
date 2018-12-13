@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { sortBy } from 'ramda';
 
 import { Menu, Select } from 'antd';
+import GitHubLink from './GitHubLink';
 
 import { CountryType } from '../utils/types';
 
@@ -23,7 +24,7 @@ function HeaderMenu(props) {
       </Menu.Item>
       <Menu.Item>
         <Select
-          style={{ width: '20vw' }} // TODO
+          id="mainCountrySelect"
           placeholder="Countries"
           optionFilterProp="title"
           showSearch
@@ -41,6 +42,9 @@ function HeaderMenu(props) {
             </Select.Option>
           ))}
         </Select>
+      </Menu.Item>
+      <Menu.Item>
+        <GitHubLink />
       </Menu.Item>
     </Menu>
   );

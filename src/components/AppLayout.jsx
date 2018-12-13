@@ -36,12 +36,7 @@ function AppLayout(props) {
           >
             <ConnectedHeaderMenu />
           </Layout.Header>
-          <Layout.Content
-            style={{
-              padding: '20px 50px',
-              marginTop: 64,
-            }}
-          >
+          <Layout.Content>
             <Switch>
               <Route path="/home" exact component={HomeView} />
               <Route

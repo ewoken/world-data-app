@@ -1,3 +1,8 @@
+.ant-layout-content {
+  margin-top: 64px;
+  padding: 20px 50px;
+}
+
 .CustomTooltip {
   background-color: white;
   border: 1px solid #cccccc;
@@ -49,4 +54,26 @@
 
 .WorldMap__legend__gradientColor {
   height: 20px;
+}
+
+#mainCountrySelect {
+  width: 20em;
+}
+
+@media (max-width: 640px) {
+  .AppLayout .ant-layout-header {
+    padding: 0px 0px;
+  }
+
+  .ant-layout-content {
+    padding: 0px 10px;
+  }
+
+  .hideOnMobile {
+    display: none;
+  }
+
+  #mainCountrySelect {
+    width: 10em;
+  }
 }

@@ -76,14 +76,14 @@ class HomeView extends Component {
 
     return (
       <div className="HomeView">
-        <Row gutter={20}>
-          <Col span={16}>
+        <Row gutter={{ md: 20 }}>
+          <Col md={16}>
             <ConnectedWorldMap
               statisticCode={statisticCode}
               currentYear={currentYear}
             />
           </Col>
-          <Col span={8}>
+          <Col md={8}>
             <ConnectedStatisticExplorer
               statisticCode={statisticCode}
               currentYear={currentYear}

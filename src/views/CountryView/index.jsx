@@ -23,7 +23,7 @@ function CountryView(props) {
   return (
     <div className="CountryView">
       <Row gutter={16} style={{ marginBottom: '20px' }}>
-        <Col sm={24} md={18}>
+        <Col xs={24} sm={24} md={18}>
           <h2>{country.commonName}</h2>
           <div>{`Capital: ${country.capital}`}</div>
           <div>{`Area: ${country.area.toLocaleString()} km²`}</div>
@@ -31,7 +31,7 @@ function CountryView(props) {
             <PrimaryEnergyChartContainer countryCode={country.alpha2Code} />
           </div>
         </Col>
-        <Col sm={0} md={6}>
+        <Col xs={0} sm={0} md={6}>
           <img
             style={{ height: '100px' }}
             src={`/img/flags/${country.alpha3Code.toLowerCase()}.svg`}

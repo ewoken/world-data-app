@@ -43,6 +43,7 @@ function StatisticExplorer(props) {
         ))}
       </Select>
       <Slider
+        className="hideOnMobile"
         value={currentYear}
         min={currentStatistic.startingYear}
         max={currentStatistic.endingYear}
@@ -65,6 +66,7 @@ function StatisticExplorer(props) {
         }}
       />
       <Table
+        className="hideOnMobile"
         rowKey="countryCode"
         size="small"
         pagination={false}
