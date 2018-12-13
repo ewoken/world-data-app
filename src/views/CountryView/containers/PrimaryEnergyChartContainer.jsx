@@ -69,21 +69,14 @@ class PrimaryEnergyChartContainer extends Component {
     const { isLoaded, countryCode } = this.props;
     const { stacked, perCapita } = this.state;
 
-    return isLoaded ? (
-      <ConnectedPrimaryEnergyChart
-        countryCode={countryCode}
-        setStacked={value => this.setStacked(value)}
-        setPerCapita={value => this.setPerCapita(value)}
-        stacked={stacked}
-        perCapita={perCapita}
-      />
-    ) : (
-      <Spin>
+    return (
+      <Spin spinning={!isLoaded}>
         <ConnectedPrimaryEnergyChart
           countryCode={countryCode}
+          setStacked={value => this.setStacked(value)}
+          setPerCapita={value => this.setPerCapita(value)}
           stacked={stacked}
           perCapita={perCapita}
-          setStacked={() => {}}
         />
       </Spin>
     );

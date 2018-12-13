@@ -10,7 +10,7 @@ import { countrySelector } from '../../store/countries';
 
 import PrimaryEnergyChartContainer from './containers/PrimaryEnergyChartContainer';
 import ProdConsoChartContainer from './containers/ProdConsoCharContainer';
-import CountryMapContainer from './containers/CountryMapContainer';
+import CountryMap from './components/CountryMap';
 
 function CountryView(props) {
   const { country } = props;
@@ -37,7 +37,7 @@ function CountryView(props) {
             src={`/img/flags/${country.alpha3Code.toLowerCase()}.svg`}
             alt={`Flag of ${country.commonName}`}
           />
-          <CountryMapContainer country={country} />
+          <CountryMap country={country} />
         </Col>
       </Row>
       <Row>

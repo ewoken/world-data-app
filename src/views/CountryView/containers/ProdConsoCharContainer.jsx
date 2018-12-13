@@ -10,22 +10,18 @@ import {
   loadCountryStatistics,
   countryStatisticsLoadedSelector,
   statisticSelector,
-  countryStatisticValuesSelector,
+  compiledCountryStatisticsSelector,
 } from '../../../store/statistics';
 
 const ConnectedProdConsoChart = connect((state, props) => ({
   prodStatistic: statisticSelector(props.prodStatisticCode, state),
   consoStatistic: statisticSelector(props.consoStatisticCode, state),
-  prodValues: countryStatisticValuesSelector(
+  data: compiledCountryStatisticsSelector(
     {
-      statisticCode: props.prodStatisticCode,
-      countryCode: props.countryCode,
-    },
-    state,
-  ),
-  consoValues: countryStatisticValuesSelector(
-    {
-      statisticCode: props.consoStatisticCode,
+      mapOfStatisticCodes: {
+        prod: props.prodStatisticCode,
+        conso: props.consoStatisticCode,
+      },
       countryCode: props.countryCode,
     },
     state,
@@ -66,16 +62,8 @@ class ProdConsoChartContainer extends Component {
       countryCode,
     } = this.props;
 
-    return isLoaded ? (
-      <ConnectedProdConsoChart
-        // key={isLoaded ? 'a' : 'b'} // hack
-        fuel={fuel}
-        consoStatisticCode={consoStatisticCode}
-        prodStatisticCode={prodStatisticCode}
-        countryCode={countryCode}
-      />
-    ) : (
-      <Spin>
+    return (
+      <Spin spinning={!isLoaded}>
         <ConnectedProdConsoChart
           fuel={fuel}
           consoStatisticCode={consoStatisticCode}

@@ -10,7 +10,6 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
-import { compileStatistics, StatisticValues } from '../../../utils';
 
 function CustomTooltip(props) {
   const { active } = props;
@@ -27,7 +26,7 @@ function CustomTooltip(props) {
                 key={p.dataKey}
                 style={{ lineHeight: '22px', color: p.color }}
               >
-                {`${p.name} : ${p.value} ${p.unit}`}
+                {`${p.name} : ${p.value.toLocaleString()} ${p.unit}`}
               </div>
             ))}
         </div>
@@ -60,8 +59,7 @@ function ProdConsoChart(props) {
     prodStatistic,
     consoStatistic,
     // reservesStatistic,
-    prodValues,
-    consoValues,
+    data,
   } = props;
 
   if (consoStatistic.unit !== prodStatistic.unit) {
@@ -72,12 +70,7 @@ function ProdConsoChart(props) {
     ]);
   }
   const { unit } = consoStatistic;
-
-  const compiledStatistics = compileStatistics({
-    prod: prodValues,
-    conso: consoValues,
-  });
-  const data = compiledStatistics.map(l => {
+  const dataWithImportAndExport = data.map(l => {
     const diff = Number((l.prod - l.conso).toFixed(2));
     return {
       year: l.year,
@@ -94,7 +87,7 @@ function ProdConsoChart(props) {
       <h3>{fuel}</h3>
       <ResponsiveContainer height={250} width="100%">
         <ComposedChart
-          data={data}
+          data={dataWithImportAndExport}
           margin={{ top: 30, right: 20, bottom: 5, left: 20 }}
         >
           <Area
@@ -168,7 +161,7 @@ function ProdConsoChart(props) {
           )} */}
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
-          <XAxis dataKey="year" domain={['dataMin', 'dataMax']} interval={9} />
+          <XAxis dataKey="year" interval={9} />
           <YAxis
             label={{ value: unit, position: 'insideTopLeft', offset: -20 }}
           />
@@ -202,8 +195,13 @@ const Statistic = PropTypes.shape({
 ProdConsoChart.propTypes = {
   prodStatistic: Statistic.isRequired,
   consoStatistic: Statistic.isRequired,
-  prodValues: StatisticValues.isRequired,
-  consoValues: StatisticValues.isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      year: PropTypes.number.isRequired,
+      prod: PropTypes.number,
+      conso: PropTypes.number,
+    }),
+  ).isRequired,
   fuel: PropTypes.string.isRequired,
 };
 

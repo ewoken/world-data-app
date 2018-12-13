@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { Map, TileLayer, withLeaflet } from 'react-leaflet';
 import L from 'leaflet';
 
+import { coordsToLatLng } from '../../../utils';
+
 class CustomGeoJSON extends Component {
   componentDidMount() {
     this.createGeoJSON();
@@ -23,7 +25,7 @@ class CustomGeoJSON extends Component {
       data,
     } = this.props;
 
-    this.geojson = L.geoJSON(data).addTo(map);
+    this.geojson = L.geoJSON(data, { coordsToLatLng }).addTo(map);
     const bounds = this.geojson.getBounds();
     map.flyToBounds(bounds);
   }
@@ -41,7 +43,7 @@ CustomGeoJSON.propTypes = {
 const GeoJSON = withLeaflet(CustomGeoJSON);
 
 function CountryMap(props) {
-  const { country, countryGeoJSON } = props;
+  const { country } = props;
 
   return (
     <div className="CountryMap">
@@ -54,7 +56,7 @@ function CountryMap(props) {
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {countryGeoJSON && <GeoJSON data={countryGeoJSON} />}
+        {country.geojson && <GeoJSON data={country.geojson} />}
       </Map>
     </div>
   );
@@ -64,8 +66,8 @@ CountryMap.propTypes = {
   country: PropTypes.shape({
     latlng: PropTypes.arrayOf(PropTypes.number).isRequired,
     area: PropTypes.number.isRequired,
+    geojson: PropTypes.object.isRequired,
   }).isRequired,
-  countryGeoJSON: PropTypes.shape().isRequired,
 };
 
 export default CountryMap;

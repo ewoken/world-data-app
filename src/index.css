@@ -11,3 +11,42 @@
 .PrimaryEnergyChart__title {
   text-align: center
 }
+
+.HomeView .leaflet-container {
+  background-color: rgb(253, 248, 222);
+}
+
+.WorldMap__yearLabel {
+  position: absolute;
+  right: 10px;
+  background-color: white;
+  z-index: 1;
+  padding: 5px;
+  font-weight: bold;
+  border-radius: 0 0 0 3px;
+}
+
+.WorldMap__legend {
+  margin-top: 20px;
+  display: flex;
+}
+
+.WorldMap__legend__gradient {
+  width: 300px;
+  margin-right: 10px;
+}
+
+.WorldMap__legend__NA__square {
+  height: 20px;
+  width: 20px;
+}
+
+.WorldMap__legend__gradientRange {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+}
+
+.WorldMap__legend__gradientColor {
+  height: 20px;
+}

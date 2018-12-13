@@ -6,16 +6,25 @@ import {
   mergeAll,
   groupBy,
   map,
+  omit,
 } from 'ramda';
 
-import { getAllStatistics, getStatisticOfCountry } from '../api/statistics';
-import { countrySelector } from './countries';
+import {
+  getAllStatistics,
+  getStatisticOfCountry,
+  getStatisticOfAllCountries,
+} from '../api/statistics';
+import { countrySelector, countriesSelector } from './countries';
 
 export const STATISTICS_LOAD_ACTION = 'STATISTICS_LOAD_ACTION';
 export const STATISTICS_RECEIVE_ACTION = 'STATISTICS_RECEIVE_ACTION';
 export const COUNTRY_STATISTIC_LOAD_ACTION = 'COUNTRY_STATISTIC_LOAD_ACTION';
 export const COUNTRY_STATISTIC_RECEIVE_ACTION =
   'COUNTRY_STATISTIC_RECEIVE_ACTION';
+export const STATISTIC_LOAD_ALL_COUNTRIES_ACTION =
+  'STATISTIC_LOAD_ALL_COUNTRIES_ACTION';
+export const STATISTIC_RECEIVE_ALL_COUNTRIES_ACTION =
+  'STATISTIC_RECEIVE_ALL_COUNTRIES_ACTION';
 
 function loadStatisticsAction() {
   return { type: STATISTICS_LOAD_ACTION };
@@ -44,22 +53,59 @@ function receiveCountryStatisticAction({
   };
 }
 
+function loadStatisticOfCountriesAction(statisticCode, countries) {
+  return {
+    type: STATISTIC_LOAD_ALL_COUNTRIES_ACTION,
+    statisticCode,
+    countries,
+  };
+}
+
+function receiveStatisticOfCountriesAction({
+  statisticCode,
+  countries,
+  data,
+  errors,
+}) {
+  return {
+    type: STATISTIC_RECEIVE_ALL_COUNTRIES_ACTION,
+    countries,
+    statisticCode,
+    data,
+    errors,
+  };
+}
+
 const initialCountryStatistic = {
   loading: true,
   loaded: false,
   errors: null,
   values: [],
 };
-function countryStatisticReducer(countryStatistic, action) {
+function countryStatisticReducer(
+  countryStatistic = initialCountryStatistic,
+  action,
+  countryCode,
+) {
   switch (action.type) {
-    case COUNTRY_STATISTIC_LOAD_ACTION:
-      return initialCountryStatistic;
     case COUNTRY_STATISTIC_RECEIVE_ACTION:
       return {
         loading: false,
         loaded: !action.errors,
         errors: action.errors || null,
-        values: action.data || {},
+        values: action.data || [],
+      };
+    case STATISTIC_RECEIVE_ALL_COUNTRIES_ACTION:
+      return {
+        loading: false,
+        loaded: !action.errors,
+        errors: action.errors || null,
+        values:
+          (action.data &&
+            action.data
+              .filter(d => d.countryCode === countryCode)
+              .map(omit(['countryCode']))) ||
+          [],
       };
     default:
       return countryStatistic;
@@ -99,6 +145,58 @@ function statisticsReducer(state = initialState, action) {
               [action.countryCode]: countryStatisticReducer(
                 countryStatistic,
                 action,
+              ),
+            },
+          },
+        },
+      };
+    }
+    case STATISTIC_LOAD_ALL_COUNTRIES_ACTION: {
+      const statistic = state.data[action.statisticCode];
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [action.statisticCode]: {
+            ...statistic,
+            values: {
+              ...statistic.values,
+              ...action.countries.reduce(
+                (acc, country) => ({
+                  ...acc,
+                  [country.alpha2Code]: countryStatisticReducer(
+                    undefined,
+                    action,
+                    country.alpha2Code,
+                  ),
+                }),
+                {},
+              ),
+            },
+          },
+        },
+      };
+    }
+    case STATISTIC_RECEIVE_ALL_COUNTRIES_ACTION: {
+      const statistic = state.data[action.statisticCode];
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [action.statisticCode]: {
+            ...statistic,
+            values: {
+              ...statistic.values,
+              ...action.countries.reduce(
+                (acc, country) => ({
+                  ...acc,
+                  [country.alpha2Code]: countryStatisticReducer(
+                    statistic.values[country.alpha2Code],
+                    action,
+                    country.alpha2Code,
+                  ),
+                }),
+                {},
               ),
             },
           },
@@ -167,6 +265,15 @@ export function countryStatisticsLoadedSelector(
   );
 }
 
+export function statisticOfAllCountriesLoadedSelector(statisticCode, state) {
+  const countryCodes = countriesSelector(state).map(
+    country => country.alpha2Code,
+  );
+  return countryCodes.every(countryCode =>
+    countryStatisticLoadedSelector({ statisticCode, countryCode }),
+  );
+}
+
 export function compiledCountryStatisticsSelector(
   { mapOfStatisticCodes, countryCode },
   state,
@@ -210,6 +317,25 @@ export function compiledCountryStatisticsSelector(
   return compiledStatistics;
 }
 
+export function compiledStatisticForCountriesAndYear(
+  { statisticCode, year },
+  state,
+) {
+  const countries = countriesSelector(state);
+
+  return countries.map(({ alpha2Code: countryCode }) => {
+    const countryStatisticValues = countryStatisticValuesSelector(
+      { statisticCode, countryCode },
+      state,
+    );
+    const yearValue = countryStatisticValues.find(v => v.year === year);
+    return {
+      countryCode,
+      value: (yearValue && yearValue.value) || null,
+    };
+  });
+}
+
 export function loadAllStatistics() {
   return function dispatchLoadStatistics(dispatch) {
     dispatch(loadStatisticsAction());
@@ -236,8 +362,7 @@ export function loadCountryStatistic({ statisticCode, countryCode }) {
     const statistic = statisticSelector(statisticCode, state);
     const country = countrySelector(countryCode, state);
 
-    // TODO
-    if (statistic.values[countryCode] && statistic.values[countryCode].loaded) {
+    if (countryStatisticLoadedSelector({ statisticCode, countryCode }, state)) {
       return;
     }
 
@@ -273,6 +398,32 @@ export function loadCountryStatistics({ statisticCodes, countryCode }) {
         ),
       ),
     );
+  };
+}
+
+export function loadStatisticOfCountries(statisticCode) {
+  return function dispatchLoadStatisticOfCountries(dispatch, getState) {
+    const countries = countriesSelector(getState());
+    dispatch(loadStatisticOfCountriesAction(statisticCode, countries));
+    return getStatisticOfAllCountries(statisticCode)
+      .then(data =>
+        dispatch(
+          receiveStatisticOfCountriesAction({
+            statisticCode,
+            countries,
+            data,
+          }),
+        ),
+      )
+      .catch(errors =>
+        dispatch(
+          receiveStatisticOfCountriesAction({
+            statisticCode,
+            countries,
+            errors,
+          }),
+        ),
+      );
   };
 }
 

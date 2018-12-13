@@ -133,7 +133,7 @@ const statistics = [
     name: 'Primary energy consumption',
     description: '',
     startingYear: 1980,
-    endingYear: 2016,
+    endingYear: 2013,
     unit: 'Mtoe',
     sources: 'EIA, U.S. Energy Information Administration',
     api: EIA_API,

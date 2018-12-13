@@ -1,9 +1,14 @@
-const countriesData = require('world-countries/countries');
+import { feature } from 'topojson-client';
+import countriesData from 'world-countries/countries';
+import worldTopo from 'world-atlas/world/110m.json';
 
 const noData = ['AD', 'LI', 'MH', 'FM', 'MC', 'PW', 'SM', 'TV', 'VA'];
 
-const countries = countriesData
-  .map(country => ({
+function countryMapValues(country) {
+  const a = worldTopo.objects.countries.geometries.find(
+    c => c.id === country.ccn3,
+  );
+  return {
     id: Number(country.ccn3),
     alpha2Code: country.cca2,
     commonName: country.name.common,
@@ -13,15 +18,23 @@ const countries = countriesData
     subregion: country.subregion,
     isIndependent: country.independent,
     area: country.area,
-    capital: country.capital,
+    capital: country.capital[0], // TODO
     latlng: country.latlng,
     disabled: noData.includes(country.cca2),
-  }))
-  .filter(c => c.region !== 'Antarctic')
-  .filter(c => c.isIndependent);
+    geojson: a && feature(worldTopo, a),
+  };
+}
+
+export function getDependentCountries() {
+  return countriesData.filter(c => !c.independent).map(countryMapValues);
+}
 
 function getAllCountries() {
-  return Promise.resolve(countries);
+  return Promise.resolve(
+    countriesData.filter(c => c.independent).map(countryMapValues),
+  );
 }
+
+// getAllCountries().then(data => console.log(data.filter(c => !c.geojson)));
 
 export default getAllCountries;

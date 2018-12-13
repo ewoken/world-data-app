@@ -5,12 +5,11 @@ export const WORLD_BANK_API = 'WORLD_BANK_API';
 export async function fetchStatisticFromWorldBank(statistic, country) {
   const { worldBankCode } = statistic;
 
-  const response = await retryFetch(
+  const data = await retryFetch(
     `http://api.worldbank.org/v2/countries/${
       country.alpha2Code
     }/indicators/${worldBankCode}?format=json&per_page=100`,
   );
-  const data = await response.json();
 
   if (!data[1]) {
     return [];

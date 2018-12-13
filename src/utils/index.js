@@ -1,46 +1,20 @@
-import PropTypes from 'prop-types';
-import { values, mapObjIndexed, mergeAll, groupBy } from 'ramda';
+import L from 'leaflet';
 
 // eslint-disable-next-line import/prefer-default-export
-export function compileStatistics(mapOfStatisticValues) {
-  const arrayOfStatisticValues = values(mapOfStatisticValues);
+export function coordsToLatLng(coords) {
+  const [longitude, latitude] = coords;
 
-  const startingYears = arrayOfStatisticValues.map(statisticValues =>
-    Math.min(...statisticValues.map(v => v.year)),
-  );
-  const endingYears = arrayOfStatisticValues.map(statisticValues =>
-    Math.max(...statisticValues.map(v => v.year)),
-  );
-
-  const startingYear = Math.max(...startingYears);
-  const endingYear = Math.min(...endingYears);
-
-  const mapOfNamedStatisticValues = mapObjIndexed(
-    (statisticValues, compileName) =>
-      statisticValues.map(({ year, value }) => ({
-        year,
-        [compileName]: value,
-      })),
-    mapOfStatisticValues,
-  );
-  const allValues = [].concat(...values(mapOfNamedStatisticValues));
-  const allValuesByYear = groupBy(value => value.year, allValues);
-  const compiledStatistics = Object.keys(allValuesByYear)
-    .sort()
-    .map(year => {
-      const valuesOfYear = allValuesByYear[year];
-
-      return mergeAll(valuesOfYear);
-    })
-    .filter(value => startingYear <= value.year && value.year <= endingYear);
-
-  return compiledStatistics;
+  if (longitude < -168.51) {
+    return L.latLng(latitude, 360 + longitude);
+  }
+  return L.latLng(latitude, longitude).wrap();
 }
 
-// TODO types ?
-export const StatisticValues = PropTypes.arrayOf(
-  PropTypes.shape({
-    year: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  }),
-);
+// function bindEvent(countries, onCountryClick) {
+//   return function onEachFeature(feature, layer) {
+//     const country = countries.find(c => c.numericCode === feature.id);
+//     layer.on({
+//       click: () => onCountryClick(country),
+//     });
+//   };
+// }

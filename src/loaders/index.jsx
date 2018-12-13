@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { loadAllCountries } from '../store/countries';
-import { loadAllStatistics } from '../store/statistics';
+import {
+  loadAllStatistics,
+  loadStatisticOfCountries,
+} from '../store/statistics';
 
 export function withLoader(config) {
   const {
@@ -56,4 +59,10 @@ export const CountriesLoader = withLoader({
 
 export const StatisticsLoader = withLoader({
   loadFunctions: [loadAllStatistics],
+})();
+
+export const StatisticAllCountriesLoader = withLoader({
+  loadFunctions: [
+    ({ statisticCode }) => loadStatisticOfCountries(statisticCode),
+  ],
 })();

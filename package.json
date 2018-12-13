@@ -4,7 +4,14 @@
   "private": true,
   "homepage": "http://worldenergydata.tk",
   "dependencies": {
-    "antd": "^3.10.0",
+    "antd": "^3.11.2",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "d3-interpolate": "^1.3.2",
+    "isomorphic-fetch": "^2.2.1",
     "leaflet": "^1.3.4",
     "prop-types": "^15.6.2",
     "query-string": "^6.2.0",
@@ -20,6 +27,8 @@
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.5",
     "redux-thunk": "^2.3.0",
+    "topojson-client": "^3.0.0",
+    "world-atlas": "^1.1.4",
     "world-countries": "^2.0.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import { retryFetch } from '../helpers';
 
-const EIA_API_KEY = process.env.REACT_APP_EIA_API_KEY;
+const EIA_API_KEY = '20cf4469dcd5b4da5fc7cb448d9d934e';
 export const EIA_API = 'EIA_API';
 
 function parseValue(value) {
@@ -16,10 +16,9 @@ function parseValue(value) {
 
 export async function fetchStatisticFromEIA(statistic, country) {
   const seriesId = statistic.seriesOfCountry(country);
-  const response = await retryFetch(
+  const data = await retryFetch(
     `http://api.eia.gov/series/?api_key=${EIA_API_KEY}&series_id=${seriesId}`,
   );
-  const data = await response.json();
 
   if (
     data.data &&
@@ -32,8 +31,6 @@ export async function fetchStatisticFromEIA(statistic, country) {
   return data.series[0].data.map(d => {
     const value = parseValue(d[1]);
     return {
-      statisticCode: statistic.code,
-      countryCode: country.alpha2Code,
       year: Number(d[0]),
       value: value !== null ? statistic.unitConverter(value) : null,
     };

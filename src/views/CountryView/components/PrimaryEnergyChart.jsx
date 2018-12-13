@@ -33,11 +33,11 @@ function CustomTooltip(props) {
                 key={p.dataKey}
                 style={{ lineHeight: '22px', color: p.color }}
               >
-                {`${p.name} : ${p.value} ${p.unit}`}
+                {`${p.name} : ${p.value.toLocaleString()} ${p.unit}`}
               </div>
             ))}
           <div key="total" style={{ lineHeight: '22px', color: 'red' }}>
-            {`Total : ${total.toFixed(2)} ${unit}`}
+            {`Total : ${Number(total.toFixed(2)).toLocaleString()} ${unit}`}
           </div>
         </div>
       </div>
@@ -199,9 +199,8 @@ function PrimaryEnergyChart(props) {
           )}
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
-          <XAxis dataKey="year" domain={['dataMin', 'dataMax']} interval={4} />
+          <XAxis dataKey="year" interval={4} />
           <YAxis
-            // label={{ value: unit, position: 'insideTopLeft', offset: -20 }}
             label={{
               value: unit,
               angle: -90,
@@ -209,7 +208,7 @@ function PrimaryEnergyChart(props) {
             }}
           />
           <Tooltip content={CustomTooltip} />
-          <Legend iconType="plainLine" />
+          <Legend iconType="circle" />
         </ComposedChart>
       </ResponsiveContainer>
     </div>
