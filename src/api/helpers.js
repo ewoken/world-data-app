@@ -11,6 +11,7 @@ export function retryFetch(url, options, retryCount = 0) {
 
       return new Promise((resolve, reject) => {
         setTimeout(() => {
+          console.log(`Retry ${url}`);
           retryFetch(url, options, retryCount + 1)
             .then(resolve)
             .catch(reject);

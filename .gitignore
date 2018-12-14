@@ -1,5 +1,6 @@
 build
 coverage
+data
 node_modules
 public/img/flags
 public/geo

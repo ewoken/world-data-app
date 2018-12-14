@@ -11,5 +11,6 @@ cp CNAME public
 rm -rf public/data
 mkdir data
 node build_api/generateData.js || exit 1
-mv data public/
+cp -r data public/
+rm public/data/statisticsCache.json
 rm -rf build_api

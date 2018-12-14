@@ -187,6 +187,20 @@ const statistics = [
     worldBankCode: 'NY.GDP.MKTP.KD',
     unitConverter: value => Number((value / 10 ** 6).toFixed(2)),
   },
+  {
+    code: 'CO2_EMISSIONS_GT',
+    name: 'CO2 Emissions',
+    description: '',
+    startingYear: 1960,
+    endingYear: 2014,
+    unit: 'Mtonnes',
+    baseUnit: 'tonnes',
+    unitFactor: 10 ** 6,
+    sources: 'World Bank',
+    api: WORLD_BANK_API,
+    worldBankCode: 'EN.ATM.CO2E.KT',
+    unitConverter: value => Number((value / 10 ** 3).toFixed(2)),
+  },
 ];
 
 export default statistics;
