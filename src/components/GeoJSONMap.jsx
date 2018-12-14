@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Map, TileLayer, withLeaflet } from 'react-leaflet';
 import L from 'leaflet';
 
-import { coordsToLatLng } from '../../../utils';
+import { coordsToLatLng } from '../utils';
 
 class CustomGeoJSON extends Component {
   componentDidMount() {
@@ -42,32 +42,26 @@ CustomGeoJSON.propTypes = {
 };
 const GeoJSON = withLeaflet(CustomGeoJSON);
 
-function CountryMap(props) {
-  const { country } = props;
+function GeoJSONMap(props) {
+  const { geojson, center } = props;
 
   return (
-    <div className="CountryMap">
-      <Map
-        center={country.latlng}
-        zoom={2}
-        style={{ height: '200px', zIndex: 0 }}
-      >
+    <div className="GeoJSONMap">
+      <Map center={center} zoom={2} style={{ height: '300px', zIndex: 0 }}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {country.geojson && <GeoJSON data={country.geojson} />}
+        {geojson && <GeoJSON data={geojson} />}
       </Map>
     </div>
   );
 }
 
-CountryMap.propTypes = {
-  country: PropTypes.shape({
-    latlng: PropTypes.arrayOf(PropTypes.number).isRequired,
-    area: PropTypes.number.isRequired,
-    geojson: PropTypes.object.isRequired,
-  }).isRequired,
+GeoJSONMap.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  geojson: PropTypes.object.isRequired,
+  center: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
-export default CountryMap;
+export default GeoJSONMap;

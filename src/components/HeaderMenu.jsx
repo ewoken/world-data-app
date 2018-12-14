@@ -6,11 +6,11 @@ import { sortBy } from 'ramda';
 import { Menu, Select } from 'antd';
 import GitHubLink from './GitHubLink';
 
-import { CountryType } from '../utils/types';
+import { CountryType, AreaType } from '../utils/types';
 import { isMobileOrTablet } from '../utils';
 
 function HeaderMenu(props) {
-  const { countries, goTo } = props;
+  const { countries, areas, goTo } = props;
   return (
     <Menu
       mode="horizontal"
@@ -44,6 +44,13 @@ function HeaderMenu(props) {
           ))}
         </Select>
       </Menu.Item>
+      <Menu.SubMenu title="Areas">
+        {sortBy(a => a.name, areas).map(area => (
+          <Menu.Item key={area.code}>
+            <Link to={`/area/${area.code}`}>{area.name}</Link>
+          </Menu.Item>
+        ))}
+      </Menu.SubMenu>
       <Menu.Item key="about">
         <Link to="/about">About</Link>
       </Menu.Item>
@@ -56,6 +63,7 @@ function HeaderMenu(props) {
 
 HeaderMenu.propTypes = {
   countries: PropTypes.arrayOf(CountryType).isRequired,
+  areas: PropTypes.arrayOf(AreaType).isRequired,
   goTo: PropTypes.func.isRequired,
 };
 

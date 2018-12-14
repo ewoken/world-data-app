@@ -27,3 +27,10 @@ export const StatisticValues = PropTypes.arrayOf(
     value: PropTypes.number.isRequired,
   }),
 );
+
+export const AreaType = PropTypes.shape({
+  code: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  countryCodes: PropTypes.arrayOf(PropTypes.string),
+  countries: PropTypes.arrayOf(CountryType),
+});

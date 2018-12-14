@@ -1,8 +1,9 @@
 const fs = require('fs');
-const { forEachObjIndexed, groupBy } = require('ramda');
+const { forEachObjIndexed, groupBy, indexBy, map } = require('ramda');
 const { countries } = require('./countries');
 const statistics = require('./statistics');
 const { fetchStatisticFromSource } = require('./api');
+const areas = require('./areas.json');
 
 function assertStatisticPath(statisticCode) {
   const statisticPath = `./data/${statisticCode}`;
@@ -12,13 +13,13 @@ function assertStatisticPath(statisticCode) {
   return statisticPath;
 }
 
-function writeCountryFiles(statisticPath, dataByCountry) {
-  forEachObjIndexed((countryValues, countryCode) => {
+function writeFiles(statisticPath, dataByKey) {
+  forEachObjIndexed((countryValues, key) => {
     fs.writeFileSync(
-      `${statisticPath}/${countryCode}.json`,
+      `${statisticPath}/${key}.json`,
       JSON.stringify(countryValues),
     );
-  }, dataByCountry);
+  }, dataByKey);
 }
 
 async function generateData() {
@@ -35,7 +36,7 @@ async function generateData() {
     stats.push(fullStatistic);
 
     const statisticPath = assertStatisticPath(statistic.code);
-    writeCountryFiles(statisticPath, dataByCountry);
+    writeFiles(statisticPath, dataByCountry);
 
     const countriesData = Object.keys(dataByCountry).reduce(
       (acc, countryCode) => {
@@ -49,14 +50,24 @@ async function generateData() {
     );
 
     const dataByYear = groupBy(d => d.year, countriesData);
-    const worldData = Object.keys(dataByYear).reduce((acc, year) => {
-      const countryValues = dataByYear[year];
-      const value = countryValues.reduce((sum, d) => sum + d.value, 0);
+    const areasData = areas.map(area => {
+      const areaData = Object.keys(dataByYear).reduce((acc, year) => {
+        const countryValues = dataByYear[year].filter(
+          data =>
+            // !area.countryCode is for WOLRD
+            !area.countryCodes || area.countryCodes.includes(data.countryCode),
+        );
+        const value = countryValues.reduce((sum, d) => sum + d.value, 0);
 
-      return [...acc, { year: Number(year), value }];
-    }, []);
+        return [...acc, { year: Number(year), value }];
+      }, []);
 
-    fs.writeFileSync(`${statisticPath}/WORLD.json`, JSON.stringify(worldData));
+      return { areaCode: area.code, data: areaData };
+    });
+    const dataByArea = map(d => d.data, indexBy(d => d.areaCode, areasData));
+    const worldData = dataByArea.WORLD;
+
+    writeFiles(statisticPath, dataByArea);
 
     const allData = countriesData.concat(
       worldData.map(d => ({ ...d, countryCode: 'WORLD' })),

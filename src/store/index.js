@@ -4,11 +4,13 @@ import thunk from 'redux-thunk';
 
 import countriesReducer from './countries';
 import statisticsReducer from './statistics';
+import areasReducer from './areas';
 
 const rootReducer = combineReducers({
   // ...reducers,
   countries: countriesReducer,
   statistics: statisticsReducer,
+  areas: areasReducer,
 });
 
 const enhancers = [applyMiddleware(thunk)];

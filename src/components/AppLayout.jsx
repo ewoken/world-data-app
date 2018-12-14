@@ -8,6 +8,7 @@ import { Layout, Spin } from 'antd';
 import HomeView from '../views/HomeView';
 import CountryView from '../views/CountryView';
 import AboutView from '../views/AboutView';
+import AreaView from '../views/AreaView';
 
 import HeaderMenu from './HeaderMenu';
 
@@ -22,13 +23,20 @@ import {
   loadAllStatistics,
   statisticsLoadedSelector,
 } from '../store/statistics';
+import {
+  loadAllAreas,
+  areasLoadedSelector,
+  areasSelector,
+} from '../store/areas';
 
 const CountriesLoader = buildLoader(loadAllCountries);
 const StatisticsLoader = buildLoader(loadAllStatistics);
+const AreasLoader = buildLoader(loadAllAreas);
 
 const ConnectedHeaderMenu = withRouter(
   connect((state, props) => ({
     countries: countriesSelector(state),
+    areas: areasSelector(state),
     goTo: url => props.history.push(url),
   }))(HeaderMenu),
 );
@@ -39,6 +47,7 @@ function AppLayout(props) {
     <div className="AppLayout">
       <CountriesLoader />
       <StatisticsLoader />
+      <AreasLoader />
       <Spin size="large" spinning={!isLoaded}>
         <Layout>
           <Layout.Header
@@ -56,6 +65,7 @@ function AppLayout(props) {
                   exact
                   component={CountryView}
                 />
+                <Route path="/area/:areaCode" exact component={AreaView} />
                 <Route path="/about" exact component={AboutView} />
                 <Route
                   component={() => <Redirect to={{ pathname: '/home' }} />}
@@ -77,6 +87,9 @@ AppLayout.propTypes = {
 // withRouter needed to prevent blocking
 export default withRouter(
   connect(state => ({
-    isLoaded: countriesLoadedSelector(state) && statisticsLoadedSelector(state),
+    isLoaded:
+      countriesLoadedSelector(state) &&
+      statisticsLoadedSelector(state) &&
+      areasLoadedSelector(state),
   }))(AppLayout),
 );

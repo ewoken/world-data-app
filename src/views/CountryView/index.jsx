@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { Row, Col, Card } from 'antd';
 
-import { countrySelector } from '../../store/countries';
+// import { countrySelector } from '../../store/countries';
+import { countryWithAreasSelector } from '../../store/otherSelectors';
+import { CountryType } from '../../utils/types';
 
-import CountryMap from './components/CountryMap';
+import GeoJSONMap from '../../components/GeoJSONMap';
 import SummaryTab from './components/SummaryTab';
 import IndependencyTab from './components/IndependencyTab';
 import ClimateTab from './components/ClimateTab';
@@ -63,6 +63,14 @@ class CountryView extends Component {
             <Card title={<h2>{`${flag} ${country.commonName}`}</h2>}>
               <div>{`Capital: ${country.capital}`}</div>
               <div>{`Area: ${country.area.toLocaleString()} km²`}</div>
+              <div>
+                {`Member of: `}
+                {country.areas.map((area, i) => (
+                  <Link key={area.code} to={`/area/${area.code}`}>
+                    {`${i > 0 ? ', ' : ''}${area.name}`}
+                  </Link>
+                ))}
+              </div>
               <Row style={{ marginTop: '20px' }} gutter={10}>
                 <Col xs={24} sm={24} md={24} lg={12}>
                   <PopulationChart countryCode={countryCode} color="#2c82c9" />
@@ -87,7 +95,7 @@ class CountryView extends Component {
               src={`/img/flags/${country.alpha3Code.toLowerCase()}.svg`}
               alt={`Flag of ${country.commonName}`}
             />
-            <CountryMap country={country} />
+            <GeoJSONMap geojson={country.geojson} center={country.latlng} />
           </Col>
         </Row>
         <Row>
@@ -105,15 +113,12 @@ class CountryView extends Component {
 }
 
 CountryView.propTypes = {
-  country: PropTypes.shape({
-    alpha2Code: PropTypes.string.isRequired,
-    commonName: PropTypes.string.isRequired,
-  }),
+  country: CountryType,
 };
 CountryView.defaultProps = {
   country: null,
 };
 
 export default connect((state, props) => ({
-  country: countrySelector(props.match.params.countryCode, state),
+  country: countryWithAreasSelector(props.match.params.countryCode, state),
 }))(CountryView);
