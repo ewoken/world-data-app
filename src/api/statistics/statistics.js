@@ -169,6 +169,7 @@ const statistics = [
     startingYear: 1960,
     endingYear: 2017,
     unit: 'capita',
+    baseUnit: 'capita',
     sources: 'World Bank',
     api: WORLD_BANK_API,
     worldBankCode: 'SP.POP.TOTL',

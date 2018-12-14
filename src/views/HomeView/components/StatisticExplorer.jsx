@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Select, Slider, Radio } from 'antd';
+import debounce from 'lodash.debounce';
 
 import { sortBy } from 'ramda';
 
@@ -46,10 +47,11 @@ function StatisticExplorer(props) {
       </Select>
       <Slider
         className="hideOnMobile"
-        value={currentYear}
+        defaultValue={currentYear}
         min={currentStatistic.startingYear}
         max={currentStatistic.endingYear}
-        onChange={year => setYear(year)}
+        onAfterChange={year => setYear(year)}
+        onChange={debounce(setYear, 300)}
         included={false}
         marks={{
           [currentStatistic.startingYear]: {
