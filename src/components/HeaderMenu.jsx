@@ -7,6 +7,7 @@ import { Menu, Select } from 'antd';
 import GitHubLink from './GitHubLink';
 
 import { CountryType } from '../utils/types';
+import { isMobileOrTablet } from '../utils';
 
 function HeaderMenu(props) {
   const { countries, goTo } = props;
@@ -27,7 +28,7 @@ function HeaderMenu(props) {
           id="mainCountrySelect"
           placeholder="Countries"
           optionFilterProp="title"
-          showSearch
+          showSearch={!isMobileOrTablet()}
           onSelect={value => {
             goTo(`/country/${value}`);
           }}
@@ -42,6 +43,12 @@ function HeaderMenu(props) {
             </Select.Option>
           ))}
         </Select>
+      </Menu.Item>
+      <Menu.Item key="home">
+        <Link to="/about">
+          About
+          {/* <strong>About</strong> */}
+        </Link>
       </Menu.Item>
       <Menu.Item>
         <GitHubLink />

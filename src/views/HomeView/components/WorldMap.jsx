@@ -7,7 +7,7 @@ import { Map, Tooltip, GeoJSON } from 'react-leaflet';
 
 import { getDependentCountries } from '../../../api/country';
 import { CountryType, StatisticType } from '../../../utils/types';
-import { coordsToLatLng } from '../../../utils';
+import { coordsToLatLng, isMobileOrTablet } from '../../../utils';
 
 const dependentCountries = getDependentCountries();
 
@@ -51,6 +51,7 @@ function WorldMap(props) {
         center={[0, 0]}
         style={{ height: MAP_HEIGHT, zIndex: 0 }}
         maxBounds={[[90, -180], [-90, 180]]}
+        dragging={!isMobileOrTablet()}
       >
         {countries.map(country => {
           const { value, color } = colorValueMap[country.alpha2Code];

@@ -22,7 +22,7 @@ function CountryView(props) {
   const countryCode = country.alpha2Code;
   return (
     <div className="CountryView">
-      <Row gutter={16} style={{ marginBottom: '20px' }}>
+      <Row gutter={16}>
         <Col xs={24} sm={24} md={18}>
           <h2>{country.commonName}</h2>
           <div>{`Capital: ${country.capital}`}</div>

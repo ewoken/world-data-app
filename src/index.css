@@ -1,6 +1,14 @@
 .ant-layout-content {
   margin-top: 64px;
-  padding: 20px 50px;
+  padding: 0px 50px;
+}
+
+.ant-row {
+  margin-top: 20px;
+}
+
+.ant-card-head-title h1 {
+  margin-bottom: 0px;
 }
 
 .CustomTooltip {

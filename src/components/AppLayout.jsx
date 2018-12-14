@@ -7,6 +7,7 @@ import { Layout, Spin } from 'antd';
 
 import HomeView from '../views/HomeView';
 import CountryView from '../views/CountryView';
+import AboutView from '../views/AboutView';
 
 import HeaderMenu from './HeaderMenu';
 
@@ -44,6 +45,7 @@ function AppLayout(props) {
                 exact
                 component={CountryView}
               />
+              <Route path="/about" exact component={AboutView} />
               <Route
                 component={() => <Redirect to={{ pathname: '/home' }} />}
               />

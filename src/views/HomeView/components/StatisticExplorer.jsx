@@ -6,6 +6,7 @@ import debounce from 'lodash.debounce';
 import { sortBy } from 'ramda';
 
 import { CountryType, StatisticType } from '../../../utils/types';
+import { isMobileOrTablet } from '../../../utils';
 
 function StatisticExplorer(props) {
   const {
@@ -36,7 +37,7 @@ function StatisticExplorer(props) {
         placeholder="Statistics"
         optionFilterProp="title"
         value={currentStatistic.code}
-        showSearch
+        showSearch={!isMobileOrTablet}
         onChange={value => setStatistic(value)}
       >
         {sortBy(s => s.name, statistics).map(statistic => (

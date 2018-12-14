@@ -93,6 +93,9 @@ class HomeView extends Component {
 
     return (
       <div className="HomeView">
+        <Row>
+          <h1>Welcome to the World Energy Data Explorer</h1>
+        </Row>
         <Row gutter={{ md: 20 }}>
           <Col md={16}>
             <ConnectedWorldMap
