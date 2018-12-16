@@ -14,7 +14,7 @@ import {
   getStatisticOfCountry,
   getStatisticOfAllCountries,
 } from '../api/statistics';
-import { countrySelector, countriesSelector } from './countries';
+import { countriesSelector } from './countries';
 
 export const STATISTICS_LOAD_ACTION = 'STATISTICS_LOAD_ACTION';
 export const STATISTICS_RECEIVE_ACTION = 'STATISTICS_RECEIVE_ACTION';
@@ -337,7 +337,7 @@ export function compiledStatisticForCountriesAndYear(
     // TODO
     const value = yearValue && yearValue.value !== null && (yearValue.pop || !perCapita) // eslint-disable-line
         ? perCapita
-          ? (yearValue.value * statistic.unitFactor) / yearValue.pop
+          ? (yearValue.value * statistic.unit.factor) / yearValue.pop
           : yearValue.value
         : null;
 
@@ -371,8 +371,6 @@ export function loadAllStatistics() {
 export function loadCountryStatistic({ statisticCode, countryCode }) {
   return function dispatchLoadCountryStatistic(dispatch, getState) {
     const state = getState();
-    const statistic = statisticSelector(statisticCode, state);
-    const country = countrySelector(countryCode, state);
 
     if (countryStatisticLoadedSelector({ statisticCode, countryCode }, state)) {
       return;
@@ -380,7 +378,7 @@ export function loadCountryStatistic({ statisticCode, countryCode }) {
 
     dispatch(loadCountryStatisticAction(statisticCode, countryCode));
 
-    getStatisticOfCountry(statistic, country)
+    getStatisticOfCountry(statisticCode, countryCode)
       .then(res => {
         const data = res.map(statisticValue => ({
           year: statisticValue.year,

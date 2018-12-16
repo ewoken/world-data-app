@@ -93,8 +93,8 @@ function WorldMap(props) {
           <div>
             {`${currentStatistic.name} (${
               perCapita
-                ? `${currentStatistic.baseUnit}/capita`
-                : currentStatistic.unit
+                ? `${currentStatistic.unit.base}/capita`
+                : currentStatistic.unit.main
             })`}
           </div>
           <div

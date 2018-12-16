@@ -12,8 +12,10 @@ export const CountryType = PropTypes.shape({
 
 export const StatisticType = PropTypes.shape({
   name: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired,
-  baseUnit: PropTypes.string.isRequired,
+  unit: PropTypes.shape({
+    main: PropTypes.string.isRequired,
+    base: PropTypes.string.isRequired,
+  }),
   perCapita: PropTypes.bool,
   startingYear: PropTypes.number.isRequired,
   endingYear: PropTypes.number.isRequired,

@@ -69,7 +69,7 @@ function ProdConsoChart(props) {
       consoStatistic.code,
     ]);
   }
-  const { unit } = consoStatistic;
+  const unit = consoStatistic.unit.main;
   const dataWithImportAndExport = data.map(l => {
     const diff = Number((l.prod - l.conso).toFixed(2));
     return {

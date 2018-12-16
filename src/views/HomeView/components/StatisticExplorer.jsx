@@ -100,8 +100,8 @@ function StatisticExplorer(props) {
           },
           {
             title: perCapita
-              ? `${currentStatistic.baseUnit}/capita`
-              : currentStatistic.unit,
+              ? `${currentStatistic.unit.base}/capita`
+              : currentStatistic.unit.main,
             dataIndex: 'value',
             defaultSortOrder: 'descend',
             sorter: (a, b) => a.value - b.value,

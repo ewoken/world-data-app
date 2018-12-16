@@ -7,10 +7,7 @@ cp node_modules/world-countries/data/*.svg public/img/flags
 cp node_modules/world-countries/data/*.topo.json public/geo
 cp CNAME public
 
-./node_modules/.bin/babel src/api -d build_api || exit 1
 rm -rf public/data
 mkdir data
-node build_api/generateData.js || exit 1
+node dataSources/index.js || exit 1
 cp -r data public/
-rm public/data/statisticsCache.json
-rm -rf build_api
