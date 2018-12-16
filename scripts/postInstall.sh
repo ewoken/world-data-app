@@ -8,6 +8,14 @@ cp node_modules/world-countries/data/*.topo.json public/geo
 cp CNAME public
 
 rm -rf public/data
-mkdir data
-node dataSources/index.js || exit 1
+
+if ([ -d "data" ] && git diff --quiet HEAD^1 dataSources); then
+  echo "No change to dataSources => nothing to do"
+else
+  echo "Build data"
+  rm -rf data
+  mkdir data
+  (node dataSources/index.js || exit 1)
+fi
+
 cp -r data public/
