@@ -1,9 +1,12 @@
 const fs = require('fs');
 const { forEachObjIndexed } = require('ramda');
+const { countries } = require('./countries');
 const statistics = require('./statistics');
 const { fetchStatisticFromSource } = require('./api');
 
 async function generateData() {
+  fs.writeFileSync('./data/countries.json', JSON.stringify(countries));
+
   const fullStatistics = await statistics.reduce(async (p, statistic) => {
     const stats = await p;
 

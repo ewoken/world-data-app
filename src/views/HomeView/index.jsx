@@ -7,7 +7,10 @@ import { Row, Col } from 'antd';
 import WorldMap from './components/WorldMap';
 import StatisticExplorer from './components/StatisticExplorer';
 
-import { countriesSelector } from '../../store/countries';
+import {
+  countriesSelector,
+  dependentCountriesSelector,
+} from '../../store/countries';
 import {
   allStatisticsSelector,
   statisticSelector,
@@ -18,6 +21,7 @@ import {
 const ConnectedWorldMap = connect(
   (state, { statisticCode, currentYear, perCapita }) => ({
     countries: countriesSelector(state),
+    dependentCountries: dependentCountriesSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
     data: compiledStatisticForCountriesAndYear(
       {

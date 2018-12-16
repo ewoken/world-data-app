@@ -12,9 +12,14 @@ const config = {
   },
 };
 
-async function fetchStatisticFromIEA(statistic) {
-  const statisticCode = statistic.code;
-  const { ieaId } = config[statisticCode];
+async function fetchStatisticFromIEA(statisticCode) {
+  const statisticConfig = config[statisticCode];
+
+  if (!statisticConfig) {
+    throw new Error(`Statistic ${statisticCode} not configured for World Bank`);
+  }
+
+  const { ieaId } = statisticConfig;
 
   const data = await retryFetch(
     `http://energyatlas.iea.org/DataServlet?edition=WORLD&lang=en&datasets=${ieaId}&cmd=getdatavalues`,
@@ -42,30 +47,11 @@ async function fetchStatisticFromIEA(statistic) {
     };
   }, {});
 
-  const startingYear = dataByCountry.US.map(d => d.year).reduce(
-    (acc, v) => Math.min(acc, v),
-    10000,
-  );
-  const endingYear = dataByCountry.US.map(d => d.year).reduce(
-    (acc, v) => Math.max(acc, v),
-    0,
-  );
-
-  return {
-    ...statistic,
-    startingYear,
-    endingYear,
-    sourceAttribution: 'IEA',
-    data: dataByCountry,
-  };
-}
-
-function getConfigObject() {
-  return config;
+  return dataByCountry;
 }
 
 module.exports = {
-  IEA_API,
-  fetchStatisticFromIEA,
-  getConfigObject,
+  apiCode: IEA_API,
+  fetchStatistic: fetchStatisticFromIEA,
+  sourceAttribution: 'IEA',
 };

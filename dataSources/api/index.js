@@ -1,41 +1,53 @@
-const {
-  IEA_API,
-  fetchStatisticFromIEA,
-  getConfigObject: getIeaConfig,
-} = require('./iea');
-const {
-  WORLD_BANK_API,
-  fetchStatisticFromWorldBank,
-  getConfigObject: getWorldBankConfig,
-} = require('./worldBank');
-const {
-  EIA_API,
-  fetchStatisticFromEIA,
-  getConfigObject: getEiaConfig,
-} = require('./eia');
+const { mergeAll } = require('ramda');
 
-function fetchStatisticFromSource(statistic) {
-  switch (statistic.source) {
-    case EIA_API:
-      return fetchStatisticFromEIA(statistic);
-    case IEA_API:
-      return fetchStatisticFromIEA(statistic);
-    case WORLD_BANK_API:
-      return fetchStatisticFromWorldBank(statistic);
-    default:
-      throw new Error('Unknown source');
-  }
+const ieaAPI = require('./iea');
+const worldBankAPI = require('./worldBank');
+const eiaAPI = require('./eia');
+const { independentCountries } = require('../countries');
+
+const apis = [eiaAPI, ieaAPI, worldBankAPI];
+
+async function fetchStatisticForAllCountries(statistic, api) {
+  const dataByCountry = await Promise.all(
+    independentCountries.map(country =>
+      api.fetchCountryStatistic(statistic.code, country).then(data => ({
+        [country.alpha2Code]: data,
+      })),
+    ),
+  );
+
+  return mergeAll(dataByCountry);
 }
 
-function getApiConfig() {
+async function fetchStatisticFromSource(statistic) {
+  const api = apis.find(a => a.apiCode === statistic.source);
+
+  if (!api) {
+    throw new Error('Unknown source');
+  }
+
+  const data = await (api === ieaAPI
+    ? ieaAPI.fetchStatistic(statistic.code)
+    : fetchStatisticForAllCountries(statistic, api));
+
+  const startingYear = data.US.map(d => d.year).reduce(
+    (acc, v) => Math.min(acc, v),
+    10000,
+  );
+  const endingYear = data.US.map(d => d.year).reduce(
+    (acc, v) => Math.max(acc, v),
+    0,
+  );
+
   return {
-    eiaConfig: getEiaConfig(),
-    ieaConfig: getIeaConfig(),
-    worldBankConfig: getWorldBankConfig(),
+    ...statistic,
+    startingYear,
+    endingYear,
+    sourceAttribution: api.sourceAttribution,
+    data,
   };
 }
 
 module.exports = {
   fetchStatisticFromSource,
-  getApiConfig,
 };

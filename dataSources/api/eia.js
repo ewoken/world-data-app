@@ -1,7 +1,4 @@
-const { mergeAll, map } = require('ramda');
-
 const { retryFetch } = require('./helpers');
-const { independentCountries } = require('../countries');
 const {
   generationToConsumption,
   // eslint-disable-next-line camelcase
@@ -56,7 +53,13 @@ function parseValue(value) {
 }
 
 async function fetchCountryStatisticFromEIA(statisticCode, country) {
-  const { seriesOfCountry, unitConverter = i => i } = config[statisticCode];
+  const statisticConfig = config[statisticCode];
+
+  if (!statisticConfig) {
+    throw new Error(`Statistic ${statisticCode} not configured for EIA`);
+  }
+
+  const { seriesOfCountry, unitConverter = i => i } = statisticConfig;
   const seriesId = seriesOfCountry(country.alpha3Code);
   const data = await retryFetch(
     `http://api.eia.gov/series/?api_key=${EIA_API_KEY}&series_id=${seriesId}`,
@@ -79,47 +82,8 @@ async function fetchCountryStatisticFromEIA(statisticCode, country) {
   });
 }
 
-async function fetchStatisticFromEIA(statistic) {
-  const statisticCode = statistic.code;
-  const dataByCountry = await Promise.all(
-    independentCountries.map(country =>
-      fetchCountryStatisticFromEIA(statisticCode, country).then(data => ({
-        [country.alpha2Code]: data,
-      })),
-    ),
-  );
-
-  const data = mergeAll(dataByCountry);
-  const startingYear = data.US.map(d => d.year).reduce(
-    (acc, v) => Math.min(acc, v),
-    10000,
-  );
-  const endingYear = data.US.map(d => d.year).reduce(
-    (acc, v) => Math.max(acc, v),
-    0,
-  );
-
-  return {
-    ...statistic,
-    startingYear,
-    endingYear,
-    sourceAttribution: 'EIA',
-    data,
-  };
-}
-
-function getConfigObject() {
-  return map(
-    ({ seriesOfCountry, unitConverter = i => i }) => ({
-      seriesOfCountry: seriesOfCountry('TEST'),
-      unitConverter: unitConverter(123456789.123456789),
-    }),
-    config,
-  );
-}
-
 module.exports = {
-  EIA_API,
-  fetchStatisticFromEIA,
-  getConfigObject,
+  apiCode: EIA_API,
+  fetchCountryStatistic: fetchCountryStatisticFromEIA,
+  sourceAttribution: 'EIA',
 };

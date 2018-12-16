@@ -1,6 +1,6 @@
-const { EIA_API } = require('./api/eia');
-const { IEA_API } = require('./api/iea');
-const { WORLD_BANK_API } = require('./api/worldBank');
+const eiaAPI = require('./api/eia');
+const ieaAPI = require('./api/iea');
+const worldBankAPI = require('./api/worldBank');
 
 const MTOE_UNIT = {
   main: 'Mtoe',
@@ -32,91 +32,91 @@ const statistics = [
     name: 'Coal production',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'COAL_CONSUMPTION_MTOE',
     name: 'Coal consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'GAS_PRODUCTION_MTOE',
     name: 'Gas production',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'GAS_CONSUMPTION_MTOE',
     name: 'Gas consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'OIL_PRODUCTION_MTOE',
     name: 'Oil production',
     description: '',
     unit: MTOE_UNIT,
-    source: IEA_API,
+    source: ieaAPI.apiCode,
   },
   {
     code: 'OIL_CONSUMPTION_MTOE',
     name: 'Oil consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: IEA_API,
+    source: ieaAPI.apiCode,
   },
   {
     code: 'HYDRO_CONSUMPTION_MTOE',
     name: 'Hydroelectricity consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'NUCLEAR_CONSUMPTION_MTOE',
     name: 'Nuclear consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'NON_HYDRO_RENEWABLES_CONSUMPTION_MTOE',
     name: 'Non-Hydroelectric renewables consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'PRIMARY_ENERGY_MTOE',
     name: 'Primary energy consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: EIA_API,
+    source: eiaAPI.apiCode,
   },
   {
     code: 'POPULATION',
     name: 'Population',
     description: '',
     unit: CAPITA,
-    source: WORLD_BANK_API,
+    source: worldBankAPI.apiCode,
   },
   {
     code: 'GDP_2010_USD',
     name: 'Gross Domestic Product',
     description: '',
     unit: MILLION_2010_USD,
-    source: WORLD_BANK_API,
+    source: worldBankAPI.apiCode,
   },
   {
     code: 'CO2_EMISSIONS_GT',
     name: 'CO2 Emissions',
     description: '',
     unit: MT,
-    source: WORLD_BANK_API,
+    source: worldBankAPI.apiCode,
   },
 ];
 

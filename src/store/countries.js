@@ -1,6 +1,6 @@
 import { values, indexBy, prop } from 'ramda';
 
-import getAllCountries from '../api/country';
+import getAllCountries from '../api/countries';
 
 export const COUNTRIES_LOAD_ACTION = 'COUNTRIES_LOAD_ACTION';
 export const COUNTRIES_RECEIVE_ACTION = 'COUNTRIES_RECEIVE_ACTION';
@@ -58,7 +58,11 @@ export function countriesLoadedSelector(state) {
 }
 
 export function countriesSelector(state) {
-  return values(state.countries.data);
+  return values(state.countries.data).filter(c => c.isIndependent);
+}
+
+export function dependentCountriesSelector(state) {
+  return values(state.countries.data).filter(c => !c.isIndependent);
 }
 
 export function countrySelector(countryCode, state) {

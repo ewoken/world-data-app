@@ -26,7 +26,8 @@
 }
 
 .HomeView .leaflet-container {
-  background-color: rgb(253, 248, 222);
+  /* background-color: rgb(253, 248, 222); */
+  background-color: white;
 }
 
 .WorldMap__yearLabel {

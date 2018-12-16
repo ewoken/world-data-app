@@ -5,11 +5,8 @@ import { interpolateRgb } from 'd3-interpolate';
 
 import { Map, Tooltip, GeoJSON } from 'react-leaflet';
 
-import { getDependentCountries } from '../../../api/country';
 import { CountryType, StatisticType } from '../../../utils/types';
 import { coordsToLatLng, isMobileOrTablet } from '../../../utils';
-
-const dependentCountries = getDependentCountries();
 
 const MAP_HEIGHT = '540px';
 const MIN_COLOR = 'rgb(107, 185, 240)';
@@ -40,7 +37,14 @@ function computeColorMap(data) {
 }
 
 function WorldMap(props) {
-  const { countries, data, currentStatistic, currentYear, perCapita } = props;
+  const {
+    countries,
+    dependentCountries,
+    data,
+    currentStatistic,
+    currentYear,
+    perCapita,
+  } = props;
   const maxValue = Math.max(...data.map(d => d.value));
   const colorValueMap = computeColorMap(data);
   return (
@@ -63,7 +67,8 @@ function WorldMap(props) {
               ref={ref =>
                 ref &&
                 ref.leafletElement.setStyle({
-                  color,
+                  color: 'white',
+                  weight: 0.5,
                   fillColor: color,
                   fillOpacity: 1,
                 })
@@ -81,9 +86,9 @@ function WorldMap(props) {
             data={country.geojson}
             style={{
               fillOpacity: 1,
-              stroke: false,
+              color: 'white',
+              weight: 0.5,
               fillColor: NA_COLOR,
-              color: NA_COLOR,
             }}
           />
         ))}
@@ -123,6 +128,7 @@ function WorldMap(props) {
 
 WorldMap.propTypes = {
   countries: PropTypes.arrayOf(CountryType).isRequired,
+  dependentCountries: PropTypes.arrayOf(CountryType).isRequired,
   currentStatistic: StatisticType.isRequired,
   currentYear: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(

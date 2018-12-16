@@ -1,6 +1,4 @@
-const { mergeAll, map } = require('ramda');
 const { retryFetch } = require('./helpers');
-const { independentCountries } = require('../countries');
 
 const WORLD_BANK_API = 'WORLD_BANK_API';
 
@@ -19,7 +17,13 @@ const config = {
 };
 
 async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
-  const { worldBankCode, unitConverter = i => i } = config[statisticCode];
+  const statisticConfig = config[statisticCode];
+
+  if (!statisticConfig) {
+    throw new Error(`Statistic ${statisticCode} not configured for World Bank`);
+  }
+
+  const { worldBankCode, unitConverter = i => i } = statisticConfig;
   const { alpha2Code } = country;
 
   const data = await retryFetch(
@@ -36,47 +40,8 @@ async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
   }));
 }
 
-async function fetchStatisticFromWorldBank(statistic) {
-  const statisticCode = statistic.code;
-  const dataByCountry = await Promise.all(
-    independentCountries.map(country =>
-      fetchCountryStatisticFromWorldBank(statisticCode, country).then(data => ({
-        [country.alpha2Code]: data,
-      })),
-    ),
-  );
-
-  const data = mergeAll(dataByCountry);
-  const startingYear = data.US.map(d => d.year).reduce(
-    (acc, v) => Math.min(acc, v),
-    10000,
-  );
-  const endingYear = data.US.map(d => d.year).reduce(
-    (acc, v) => Math.max(acc, v),
-    0,
-  );
-
-  return {
-    ...statistic,
-    startingYear,
-    endingYear,
-    sourceAttribution: 'World Bank',
-    data,
-  };
-}
-
-function getConfigObject() {
-  return map(
-    ({ worldBankCode, unitConverter = i => i }) => ({
-      worldBankCode,
-      unitConverter: unitConverter(123456789.123456789),
-    }),
-    config,
-  );
-}
-
 module.exports = {
-  fetchStatisticFromWorldBank,
-  WORLD_BANK_API,
-  getConfigObject,
+  apiCode: WORLD_BANK_API,
+  fetchCountryStatistic: fetchCountryStatisticFromWorldBank,
+  sourceAttribution: 'World Bank',
 };
