@@ -10,6 +10,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts';
+import { StatisticType } from '../../../utils/types';
 
 function CustomTooltip(props) {
   const { active } = props;
@@ -62,7 +63,7 @@ function ProdConsoChart(props) {
     data,
   } = props;
 
-  if (consoStatistic.unit !== prodStatistic.unit) {
+  if (consoStatistic.unit.main !== prodStatistic.unit.main) {
     // eslint-disable-next-line no-console
     console.warn('Production and consommation have not the same unit', [
       prodStatistic.code,
@@ -187,14 +188,9 @@ function ProdConsoChart(props) {
   );
 }
 
-const Statistic = PropTypes.shape({
-  name: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired,
-});
-
 ProdConsoChart.propTypes = {
-  prodStatistic: Statistic.isRequired,
-  consoStatistic: Statistic.isRequired,
+  prodStatistic: StatisticType.isRequired,
+  consoStatistic: StatisticType.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number.isRequired,

@@ -18,7 +18,7 @@ const ConnectedProdConsoChart = connect((state, props) => ({
   consoStatistic: statisticSelector(props.consoStatisticCode, state),
   data: compiledCountryStatisticsSelector(
     {
-      mapOfStatisticCodes: {
+      mapOfCountryStatistics: {
         prod: props.prodStatisticCode,
         conso: props.consoStatisticCode,
       },

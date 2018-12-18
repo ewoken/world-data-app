@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { map, omit } from 'ramda';
 
 import {
   ResponsiveContainer,
@@ -21,24 +20,40 @@ function CustomTooltip(props) {
   if (active && payload && payload.length > 0) {
     const { label } = props;
     const { unit } = payload[0];
-    const total = payload.reduce((sum, { value }) => sum + value, 0);
+    const payloadWithoutWorld = payload
+      ? payload.filter(p => p.dataKey !== 'worldPrimary')
+      : [];
+    const worldPrimary = payload
+      ? payload.find(p => p.dataKey === 'worldPrimary')
+      : [];
+    const total = payloadWithoutWorld.reduce(
+      (sum, { value }) => sum + value,
+      0,
+    );
 
     return (
       <div className="CustomTooltip">
         <div>{label}</div>
         <div>
-          {payload &&
-            payload.map(p => (
-              <div
-                key={p.dataKey}
-                style={{ lineHeight: '22px', color: p.color }}
-              >
-                {`${p.name} : ${p.value.toLocaleString()} ${p.unit}`}
-              </div>
-            ))}
-          <div key="total" style={{ lineHeight: '22px', color: 'red' }}>
+          {payloadWithoutWorld.map(p => (
+            <div key={p.dataKey} style={{ lineHeight: '22px', color: p.color }}>
+              {`${p.name} : ${p.value.toLocaleString()} ${p.unit}`}
+            </div>
+          ))}
+          <hr size={1} />
+          <div key="total" style={{ lineHeight: '22px', color: 'black' }}>
             {`Total : ${Number(total.toFixed(2)).toLocaleString()} ${unit}`}
           </div>
+          {worldPrimary && (
+            <div
+              key="primaryWorld"
+              style={{ lineHeight: '22px', color: 'red' }}
+            >
+              {`World : ${Number(
+                worldPrimary.value.toFixed(2),
+              ).toLocaleString()} ${unit}`}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -71,16 +86,8 @@ function PrimaryEnergyChart(props) {
       (v.coal + v.oil + v.gas + v.hydro + v.nuclear + v.renewables).toFixed(2),
     ),
   }));
-  const finalData = perCapita
-    ? dataWithTotal.map(v => ({
-        ...v,
-        ...map(
-          w => Number(((w * 10 ** 6) / v.population).toFixed(2)),
-          omit(['year', 'population'], v),
-        ),
-      }))
-    : dataWithTotal;
 
+  // TODO
   const hasCoal = data.some(v => v.coal >= 0.01);
   const hasOil = data.some(v => v.oil >= 0.01);
   const hasGas = data.some(v => v.gas >= 0.01);
@@ -116,7 +123,7 @@ function PrimaryEnergyChart(props) {
       </div>
       <ResponsiveContainer height={300} width="100%">
         <ComposedChart
-          data={finalData}
+          data={dataWithTotal}
           margin={{ top: 10, right: 0, bottom: 10, left: 0 }}
         >
           {hasCoal && (
@@ -197,6 +204,17 @@ function PrimaryEnergyChart(props) {
               unit={unit}
             />
           )}
+          {perCapita && (
+            <Line
+              type="monotone"
+              dataKey="worldPrimary"
+              dot={false}
+              activeDot={false}
+              name="World"
+              stroke="red"
+              unit={unit}
+            />
+          )}
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={4} />
@@ -225,6 +243,7 @@ PrimaryEnergyChart.propTypes = {
       hydro: PropTypes.number,
       nuclear: PropTypes.number,
       renewables: PropTypes.number,
+      worldPrimary: PropTypes.number,
       total: PropTypes.number,
     }).isRequired,
   ).isRequired,

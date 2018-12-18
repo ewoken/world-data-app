@@ -7,6 +7,7 @@ import {
   groupBy,
   map,
   omit,
+  uniq,
 } from 'ramda';
 
 import {
@@ -198,6 +199,11 @@ function statisticsReducer(state = initialState, action) {
                 }),
                 {},
               ),
+              WORLD: countryStatisticReducer(
+                statistic.values.WORLD,
+                action,
+                'WORLD',
+              ),
             },
           },
         },
@@ -274,26 +280,69 @@ export function statisticOfAllCountriesLoadedSelector(statisticCode, state) {
   );
 }
 
-export function compiledCountryStatisticsSelector(
-  { mapOfStatisticCodes, countryCode },
-  state,
-) {
-  const mapOfStatisticValues = map(
-    statisticCode =>
-      countryStatisticValuesSelector({ statisticCode, countryCode }, state),
-    mapOfStatisticCodes,
-  );
+function computeYearInterval(mapOfStatisticValues) {
   const arrayOfStatisticValues = values(mapOfStatisticValues);
-
   const startingYears = arrayOfStatisticValues.map(statisticValues =>
     Math.min(...statisticValues.map(v => v.year)),
   );
   const endingYears = arrayOfStatisticValues.map(statisticValues =>
     Math.max(...statisticValues.map(v => v.year)),
   );
-
   const startingYear = Math.max(...startingYears);
   const endingYear = Math.min(...endingYears);
+  return [startingYear, endingYear];
+}
+
+function computeValue(value, population, perCapita, factor) {
+  if (!value || (!population && perCapita)) {
+    return null;
+  }
+
+  return perCapita ? (value * factor) / population : value;
+}
+
+function parseMapOfStatistics(
+  mapOfCountryStatistics,
+  defaultCountry,
+  perCapita,
+) {
+  const parsed = map(
+    statistics =>
+      typeof statistics === 'string'
+        ? { statisticCode: statistics, countryCode: defaultCountry }
+        : statistics,
+    mapOfCountryStatistics,
+  );
+  const countryCodes = uniq(values(parsed).map(d => d.countryCode));
+  const populations = mergeAll(
+    countryCodes.map(countryCode => ({
+      [`pop/${countryCode}`]: { statisticCode: 'POPULATION', countryCode },
+    })),
+  );
+  return {
+    ...(perCapita ? populations : {}),
+    ...parsed,
+  };
+}
+
+export function compiledCountryStatisticsSelector(
+  { mapOfCountryStatistics, countryCode, perCapita },
+  state,
+) {
+  const parsedMapOfCountryStatistics = parseMapOfStatistics(
+    mapOfCountryStatistics,
+    countryCode,
+    perCapita,
+  );
+  const mapOfStatistic = map(
+    ({ statisticCode }) => statisticSelector(statisticCode, state),
+    parsedMapOfCountryStatistics,
+  );
+  const mapOfStatisticValues = map(
+    countryStatistic => countryStatisticValuesSelector(countryStatistic, state),
+    parsedMapOfCountryStatistics,
+  );
+  const [startingYear, endingYear] = computeYearInterval(mapOfStatisticValues);
 
   const mapOfNamedStatisticValues = mapObjIndexed(
     (statisticValues, compileName) =>
@@ -307,12 +356,23 @@ export function compiledCountryStatisticsSelector(
   const allValuesByYear = groupBy(value => value.year, allValues);
   const compiledStatistics = Object.keys(allValuesByYear)
     .sort()
-    .map(year => {
-      const valuesOfYear = allValuesByYear[year];
-
-      return mergeAll(valuesOfYear);
-    })
-    .filter(value => startingYear <= value.year && value.year <= endingYear);
+    .map(year => mergeAll(allValuesByYear[year]))
+    .filter(value => startingYear <= value.year && value.year <= endingYear)
+    .map(compiledValue => ({
+      ...compiledValue,
+      ...mapObjIndexed(
+        (value, compileName) =>
+          computeValue(
+            value,
+            compiledValue[
+              `pop/${parsedMapOfCountryStatistics[compileName].countryCode}`
+            ],
+            perCapita,
+            mapOfStatistic[compileName].unit.factor,
+          ),
+        omit(['year', 'pop'], compiledValue),
+      ),
+    }));
 
   return compiledStatistics;
 }
@@ -322,30 +382,23 @@ export function compiledStatisticForCountriesAndYear(
   state,
 ) {
   const countries = countriesSelector(state);
-  const statistic = statisticSelector(statisticCode, state);
-  const mapOfStatisticCodes = {
+  const mapOfCountryStatistics = {
     value: statisticCode,
-    ...(perCapita ? { pop: 'POPULATION' } : {}),
   };
 
-  return countries.map(({ alpha2Code: countryCode }) => {
+  const a = countries.map(({ alpha2Code: countryCode }) => {
     const countryStatisticValues = compiledCountryStatisticsSelector(
-      { mapOfStatisticCodes, countryCode },
+      { mapOfCountryStatistics, countryCode, perCapita },
       state,
     );
     const yearValue = countryStatisticValues.find(v => v.year === year);
-    // TODO
-    const value = yearValue && yearValue.value !== null && (yearValue.pop || !perCapita) // eslint-disable-line
-        ? perCapita
-          ? (yearValue.value * statistic.unit.factor) / yearValue.pop
-          : yearValue.value
-        : null;
 
     return {
       countryCode,
-      value,
+      value: yearValue ? yearValue.value : null,
     };
   });
+  return a;
 }
 
 export function loadAllStatistics() {

@@ -26,9 +26,10 @@ async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
   const { worldBankCode, unitConverter = i => i } = statisticConfig;
   const { alpha2Code } = country;
 
-  const data = await retryFetch(
+  const res = await retryFetch(
     `http://api.worldbank.org/v2/countries/${alpha2Code}/indicators/${worldBankCode}?format=json&per_page=100`,
   );
+  const data = await res.json();
 
   if (!data[1]) {
     return [];

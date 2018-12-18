@@ -1,6 +1,7 @@
 const eiaAPI = require('./api/eia');
 const ieaAPI = require('./api/iea');
 const worldBankAPI = require('./api/worldBank');
+const ieaSankey = require('./api/ieaSankey');
 
 const MTOE_UNIT = {
   main: 'Mtoe',
@@ -32,28 +33,28 @@ const statistics = [
     name: 'Coal production',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaAPI.apiCode,
   },
   {
     code: 'COAL_CONSUMPTION_MTOE',
     name: 'Coal consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaAPI.apiCode,
   },
   {
     code: 'GAS_PRODUCTION_MTOE',
     name: 'Gas production',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaAPI.apiCode,
   },
   {
     code: 'GAS_CONSUMPTION_MTOE',
     name: 'Gas consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaAPI.apiCode,
   },
   {
     code: 'OIL_PRODUCTION_MTOE',
@@ -74,14 +75,14 @@ const statistics = [
     name: 'Hydroelectricity consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaSankey.apiCode,
   },
   {
     code: 'NUCLEAR_CONSUMPTION_MTOE',
     name: 'Nuclear consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaSankey.apiCode,
   },
   {
     code: 'NON_HYDRO_RENEWABLES_CONSUMPTION_MTOE',
@@ -95,7 +96,7 @@ const statistics = [
     name: 'Primary energy consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaAPI.apiCode,
   },
   {
     code: 'POPULATION',

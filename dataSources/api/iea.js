@@ -1,3 +1,4 @@
+const { memoizeWith } = require('ramda');
 const { retryFetch } = require('./helpers');
 const { independentCountries } = require('../countries');
 
@@ -10,6 +11,21 @@ const config = {
   OIL_CONSUMPTION_MTOE: {
     ieaId: '642753284',
   },
+  GAS_PRODUCTION_MTOE: {
+    ieaId: '315313026',
+  },
+  GAS_CONSUMPTION_MTOE: {
+    ieaId: '2053304192',
+  },
+  COAL_PRODUCTION_MTOE: {
+    ieaId: '1206244417',
+  },
+  COAL_CONSUMPTION_MTOE: {
+    ieaId: '673476799',
+  },
+  PRIMARY_ENERGY_MTOE: {
+    ieaId: '-943463622',
+  },
 };
 
 async function fetchStatisticFromIEA(statisticCode) {
@@ -21,9 +37,10 @@ async function fetchStatisticFromIEA(statisticCode) {
 
   const { ieaId } = statisticConfig;
 
-  const data = await retryFetch(
+  const res = await retryFetch(
     `http://energyatlas.iea.org/DataServlet?edition=WORLD&lang=en&datasets=${ieaId}&cmd=getdatavalues`,
   );
+  const data = await res.json();
   const years = data.datasets[ieaId].values;
 
   const dataByCountry = independentCountries.reduce((map, country) => {
@@ -49,9 +66,19 @@ async function fetchStatisticFromIEA(statisticCode) {
 
   return dataByCountry;
 }
+const memoizedFetchStatisticFromIEA = memoizeWith(
+  i => i,
+  fetchStatisticFromIEA,
+);
+
+async function fetchCountryStatisticFromIEA(statisticCode, country) {
+  const dataByCountry = await memoizedFetchStatisticFromIEA(statisticCode);
+
+  return dataByCountry[country.alpha2Code];
+}
 
 module.exports = {
   apiCode: IEA_API,
-  fetchStatistic: fetchStatisticFromIEA,
+  fetchCountryStatistic: fetchCountryStatisticFromIEA,
   sourceAttribution: 'IEA',
 };

@@ -13,26 +13,37 @@ import {
   compiledCountryStatisticsSelector,
 } from '../../../store/statistics';
 
-const mapOfStatisticCodes = {
+const WORLD = 'WORLD';
+
+const mapOfStatistics = {
   coal: 'COAL_CONSUMPTION_MTOE',
   gas: 'GAS_CONSUMPTION_MTOE',
   oil: 'OIL_CONSUMPTION_MTOE',
   hydro: 'HYDRO_CONSUMPTION_MTOE',
   nuclear: 'NUCLEAR_CONSUMPTION_MTOE',
   renewables: 'NON_HYDRO_RENEWABLES_CONSUMPTION_MTOE',
-  population: 'POPULATION',
 };
-const statisticCodes = values(mapOfStatisticCodes);
+const statisticCodes = values(mapOfStatistics).concat(['POPULATION']);
+const worldReferences = ['POPULATION', 'PRIMARY_ENERGY_MTOE'];
 
-const ConnectedPrimaryEnergyChart = connect((state, { countryCode }) => ({
-  data: compiledCountryStatisticsSelector(
-    {
-      mapOfStatisticCodes,
-      countryCode,
-    },
-    state,
-  ),
-}))(PrimaryEnergyChart);
+const ConnectedPrimaryEnergyChart = connect(
+  (state, { countryCode, perCapita }) => ({
+    data: compiledCountryStatisticsSelector(
+      {
+        mapOfCountryStatistics: {
+          ...mapOfStatistics,
+          worldPrimary: {
+            statisticCode: 'PRIMARY_ENERGY_MTOE',
+            countryCode: WORLD,
+          },
+        },
+        countryCode,
+        perCapita,
+      },
+      state,
+    ),
+  }),
+)(PrimaryEnergyChart);
 
 class PrimaryEnergyChartContainer extends Component {
   constructor() {
@@ -48,6 +59,10 @@ class PrimaryEnergyChartContainer extends Component {
     const { countryCode, loadStatistics } = this.props;
 
     loadStatistics({ statisticCodes, countryCode });
+    loadStatistics({
+      statisticCodes: worldReferences,
+      countryCode: WORLD,
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -91,13 +106,21 @@ PrimaryEnergyChartContainer.propTypes = {
 
 export default connect(
   (state, props) => ({
-    isLoaded: countryStatisticsLoadedSelector(
-      {
-        statisticCodes,
-        countryCode: props.countryCode,
-      },
-      state,
-    ),
+    isLoaded:
+      countryStatisticsLoadedSelector(
+        {
+          statisticCodes,
+          countryCode: props.countryCode,
+        },
+        state,
+      ) &&
+      countryStatisticsLoadedSelector(
+        {
+          statisticCodes: worldReferences,
+          countryCode: WORLD,
+        },
+        state,
+      ),
   }),
   { loadStatistics: loadCountryStatistics },
 )(PrimaryEnergyChartContainer);

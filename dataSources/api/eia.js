@@ -61,9 +61,10 @@ async function fetchCountryStatisticFromEIA(statisticCode, country) {
 
   const { seriesOfCountry, unitConverter = i => i } = statisticConfig;
   const seriesId = seriesOfCountry(country.alpha3Code);
-  const data = await retryFetch(
+  const res = await retryFetch(
     `http://api.eia.gov/series/?api_key=${EIA_API_KEY}&series_id=${seriesId}`,
   );
+  const data = await res.json();
 
   if (
     data.data &&

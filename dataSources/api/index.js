@@ -3,9 +3,10 @@ const { mergeAll } = require('ramda');
 const ieaAPI = require('./iea');
 const worldBankAPI = require('./worldBank');
 const eiaAPI = require('./eia');
+const ieaSankey = require('./ieaSankey');
 const { independentCountries } = require('../countries');
 
-const apis = [eiaAPI, ieaAPI, worldBankAPI];
+const apis = [eiaAPI, ieaAPI, worldBankAPI, ieaSankey];
 
 async function fetchStatisticForAllCountries(statistic, api) {
   const dataByCountry = await Promise.all(
@@ -26,9 +27,7 @@ async function fetchStatisticFromSource(statistic) {
     throw new Error('Unknown source');
   }
 
-  const data = await (api === ieaAPI
-    ? ieaAPI.fetchStatistic(statistic.code)
-    : fetchStatisticForAllCountries(statistic, api));
+  const data = await fetchStatisticForAllCountries(statistic, api);
 
   const startingYear = data.US.map(d => d.year).reduce(
     (acc, v) => Math.min(acc, v),

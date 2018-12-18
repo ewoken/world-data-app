@@ -30,7 +30,8 @@
     "redux-thunk": "^2.3.0",
     "topojson-client": "^3.0.0",
     "world-atlas": "^1.1.4",
-    "world-countries": "^2.0.0"
+    "world-countries": "^2.0.0",
+    "xml-js": "^1.6.8"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.9.1",

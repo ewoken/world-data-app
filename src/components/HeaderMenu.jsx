@@ -44,11 +44,8 @@ function HeaderMenu(props) {
           ))}
         </Select>
       </Menu.Item>
-      <Menu.Item key="home">
-        <Link to="/about">
-          About
-          {/* <strong>About</strong> */}
-        </Link>
+      <Menu.Item key="about">
+        <Link to="/about">About</Link>
       </Menu.Item>
       <Menu.Item>
         <GitHubLink />
