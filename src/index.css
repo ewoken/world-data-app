@@ -25,6 +25,10 @@
   text-align: center
 }
 
+.AppLayout__splash {
+  height: 80vh;
+}
+
 .HomeView .leaflet-container {
   /* background-color: rgb(253, 248, 222); */
   background-color: white;

@@ -24,13 +24,12 @@ const ConnectedHeaderMenu = withRouter(
 );
 
 function AppLayout(props) {
-  const { isReady } = props;
+  const { isLoaded } = props;
   return (
     <div className="AppLayout">
       <CountriesLoader />
       <StatisticsLoader />
-      {!isReady && <Spin size="large" />}
-      {isReady && (
+      <Spin size="large" spinning={!isLoaded}>
         <Layout>
           <Layout.Header
             style={{ position: 'fixed', zIndex: 10, width: '100%' }}
@@ -38,33 +37,36 @@ function AppLayout(props) {
             <ConnectedHeaderMenu />
           </Layout.Header>
           <Layout.Content>
-            <Switch>
-              <Route path="/home" exact component={HomeView} />
-              <Route
-                path="/country/:countryCode"
-                exact
-                component={CountryView}
-              />
-              <Route path="/about" exact component={AboutView} />
-              <Route
-                component={() => <Redirect to={{ pathname: '/home' }} />}
-              />
-            </Switch>
+            {!isLoaded && <div className="AppLayout__splash" />}
+            {isLoaded && (
+              <Switch>
+                <Route path="/home" exact component={HomeView} />
+                <Route
+                  path="/country/:countryCode"
+                  exact
+                  component={CountryView}
+                />
+                <Route path="/about" exact component={AboutView} />
+                <Route
+                  component={() => <Redirect to={{ pathname: '/home' }} />}
+                />
+              </Switch>
+            )}
           </Layout.Content>
           <Layout.Footer>Sources: IEA, EIA, World Data Bank</Layout.Footer>
         </Layout>
-      )}
+      </Spin>
     </div>
   );
 }
 
 AppLayout.propTypes = {
-  isReady: PropTypes.bool.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
 };
 
 // withRouter needed to prevent blocking
 export default withRouter(
   connect(state => ({
-    isReady: countriesLoadedSelector(state) && statisticsLoadedSelector(state),
+    isLoaded: countriesLoadedSelector(state) && statisticsLoadedSelector(state),
   }))(AppLayout),
 );

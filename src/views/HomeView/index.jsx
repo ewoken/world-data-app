@@ -16,6 +16,7 @@ import {
   statisticSelector,
   compiledStatisticForCountriesAndYear,
   loadStatisticOfCountries,
+  statisticOfAllCountriesLoadedSelector,
 } from '../../store/statistics';
 
 const ConnectedWorldMap = connect(
@@ -39,6 +40,7 @@ const ConnectedStatisticExplorer = connect(
     countries: countriesSelector(state),
     statistics: allStatisticsSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
+    isLoaded: statisticOfAllCountriesLoadedSelector(statisticCode, state),
     data: compiledStatisticForCountriesAndYear(
       {
         statisticCode,

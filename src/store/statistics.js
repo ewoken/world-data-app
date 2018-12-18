@@ -276,7 +276,7 @@ export function statisticOfAllCountriesLoadedSelector(statisticCode, state) {
     country => country.alpha2Code,
   );
   return countryCodes.every(countryCode =>
-    countryStatisticLoadedSelector({ statisticCode, countryCode }),
+    countryStatisticLoadedSelector({ statisticCode, countryCode }, state),
   );
 }
 

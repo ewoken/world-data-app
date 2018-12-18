@@ -20,6 +20,7 @@ function StatisticExplorer(props) {
     setStatistic,
     setYear,
     setPerCapita,
+    isLoaded,
   } = props;
 
   const formatedData = data
@@ -97,6 +98,7 @@ function StatisticExplorer(props) {
         size="small"
         pagination={false}
         dataSource={formatedData}
+        loading={!isLoaded}
         scroll={{ y: 380 }}
         columns={[
           {
@@ -147,6 +149,7 @@ StatisticExplorer.propTypes = {
   setYear: PropTypes.func.isRequired,
   perCapita: PropTypes.bool.isRequired,
   setPerCapita: PropTypes.func.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
 };
 
 export default StatisticExplorer;
