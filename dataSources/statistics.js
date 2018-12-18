@@ -113,7 +113,7 @@ const statistics = [
     source: worldBankAPI.apiCode,
   },
   {
-    code: 'CO2_EMISSIONS_GT',
+    code: 'CO2_EMISSIONS_MT',
     name: 'CO2 Emissions',
     description: '',
     unit: MT,

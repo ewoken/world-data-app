@@ -10,7 +10,7 @@ const config = {
     worldBankCode: 'NY.GDP.MKTP.KD',
     unitConverter: value => Number((value / 10 ** 6).toFixed(2)),
   },
-  CO2_EMISSIONS_GT: {
+  CO2_EMISSIONS_MT: {
     worldBankCode: 'EN.ATM.CO2E.KT',
     unitConverter: value => Number((value / 10 ** 3).toFixed(2)),
   },

@@ -7,6 +7,18 @@ const PERCENTAGE_UNIT = {
   factor: 1,
 };
 
+const ENERGY_INTENSITY_UNIT = {
+  main: 'toe/million 2010 $',
+  base: 'toe/million 2010 $',
+  factor: 1,
+};
+
+const CO2_INTENSITY_OF_ENERGY_UNIT = {
+  main: 'tCO2/toe',
+  base: 'tCO2/toe',
+  factor: 1,
+};
+
 const derivedStatistics = [
   {
     code: 'ENERGY_SELF_SUFFICIENCY',
@@ -25,13 +37,47 @@ const derivedStatistics = [
       return Math.floor((production / consumption) * 100);
     },
   },
+  {
+    code: 'ENERGY_INTENSITY',
+    name: 'Energy Intensity',
+    description: '',
+    unit: ENERGY_INTENSITY_UNIT,
+    source: {
+      energy: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
+      gdp: 'GDP_2010_USD',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    sourceAttribution: 'IEA, World Bank',
+    isIntensive: true,
+    compute({ energy, gdp }) {
+      return Math.floor((energy * 10 ** 5) / gdp) * 10;
+    },
+  },
+  {
+    code: 'CO2_INTENSITY_OF_ENERGY',
+    name: 'CO2 Intensity of energy',
+    description: '',
+    unit: CO2_INTENSITY_OF_ENERGY_UNIT,
+    source: {
+      co2: 'CO2_EMISSIONS_MT',
+      energy: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    sourceAttribution: 'IEA, World Bank',
+    isIntensive: true,
+    compute({ energy, co2 }) {
+      return Number((co2 / energy).toFixed(2));
+    },
+  },
 ];
 const derivedCodes = derivedStatistics.map(d => d.code);
 
 function computeDerivedValueFromCompiled(statistic) {
   return function compute({ year, countryCode, ...sources }) {
     const value = statistic.compute(sources);
-    return Number.isNaN(value)
+    return Number.isNaN(value) || !Number.isFinite(value)
       ? { year, countryCode, value: null }
       : { year, countryCode, value };
   };
