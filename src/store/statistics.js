@@ -381,12 +381,13 @@ export function compiledStatisticForCountriesAndYear(
   { statisticCode, year, perCapita },
   state,
 ) {
-  const countries = countriesSelector(state);
+  const countryCodes = countriesSelector(state).map(c => c.alpha2Code);
   const mapOfCountryStatistics = {
     value: statisticCode,
   };
+  countryCodes.push('WORLD');
 
-  const a = countries.map(({ alpha2Code: countryCode }) => {
+  const countryValues = countryCodes.map(countryCode => {
     const countryStatisticValues = compiledCountryStatisticsSelector(
       { mapOfCountryStatistics, countryCode, perCapita },
       state,
@@ -398,7 +399,7 @@ export function compiledStatisticForCountriesAndYear(
       value: yearValue ? yearValue.value : null,
     };
   });
-  return a;
+  return countryValues;
 }
 
 export function loadAllStatistics() {

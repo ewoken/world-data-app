@@ -26,7 +26,10 @@ function StatisticExplorer(props) {
     .filter(s => s.value !== null)
     .map(s => ({
       countryCode: s.countryCode,
-      country: countries.find(c => c.alpha2Code === s.countryCode).commonName,
+      country:
+        s.countryCode === 'WORLD'
+          ? 'World'
+          : countries.find(c => c.alpha2Code === s.countryCode).commonName,
       value: s.value,
     }));
 
@@ -96,7 +99,11 @@ function StatisticExplorer(props) {
             sorter: (a, b) => a.country.localeCompare(b.country),
             width: 'auto',
             // TODO
-          render: text => <a href="javascript:;">{text}</a>, // eslint-disable-line
+            render: text =>
+              text === 'World' ? (
+                <strong>World</strong>
+              ) : (
+              <a href="javascript:;">{text}</a>), // eslint-disable-line
           },
           {
             title: perCapita
