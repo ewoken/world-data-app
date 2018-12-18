@@ -36,7 +36,7 @@ const config = {
     seriesOfCountry: alpha3Code => `INTL.34-12-${alpha3Code}-BKWH.A`,
     unitConverter: BKWHConverter,
   },
-  PRIMARY_ENERGY_MTOE: {
+  PRIMARY_ENERGY_CONSUMPTION_MTOE: {
     seriesOfCountry: alpha3Code => `INTL.44-2-${alpha3Code}-MTOE.A`,
   },
 };

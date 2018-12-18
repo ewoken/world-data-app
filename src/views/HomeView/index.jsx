@@ -54,7 +54,7 @@ class HomeView extends Component {
   constructor() {
     super();
     this.state = {
-      statisticCode: 'PRIMARY_ENERGY_MTOE',
+      statisticCode: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
       currentYear: 2010,
       perCapita: false,
     };

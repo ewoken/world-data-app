@@ -24,7 +24,7 @@ const mapOfStatistics = {
   renewables: 'NON_HYDRO_RENEWABLES_CONSUMPTION_MTOE',
 };
 const statisticCodes = values(mapOfStatistics).concat(['POPULATION']);
-const worldReferences = ['POPULATION', 'PRIMARY_ENERGY_MTOE'];
+const worldReferences = ['POPULATION', 'PRIMARY_ENERGY_CONSUMPTION_MTOE'];
 
 const ConnectedPrimaryEnergyChart = connect(
   (state, { countryCode, perCapita }) => ({
@@ -33,7 +33,7 @@ const ConnectedPrimaryEnergyChart = connect(
         mapOfCountryStatistics: {
           ...mapOfStatistics,
           worldPrimary: {
-            statisticCode: 'PRIMARY_ENERGY_MTOE',
+            statisticCode: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
             countryCode: WORLD,
           },
         },

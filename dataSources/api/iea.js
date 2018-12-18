@@ -23,8 +23,11 @@ const config = {
   COAL_CONSUMPTION_MTOE: {
     ieaId: '673476799',
   },
-  PRIMARY_ENERGY_MTOE: {
+  PRIMARY_ENERGY_CONSUMPTION_MTOE: {
     ieaId: '-943463622',
+  },
+  PRIMARY_ENERGY_PRODUCTION_MTOE: {
+    ieaId: '1890877781',
   },
 };
 

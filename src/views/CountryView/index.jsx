@@ -11,6 +11,7 @@ import { countrySelector } from '../../store/countries';
 import PrimaryEnergyChartContainer from './containers/PrimaryEnergyChartContainer';
 import ProdConsoChartContainer from './containers/ProdConsoCharContainer';
 import CountryMap from './components/CountryMap';
+import SelfSufficiencyContainer from './containers/SelfSufficiencyContainer';
 
 function CountryView(props) {
   const { country } = props;
@@ -27,6 +28,7 @@ function CountryView(props) {
           <h2>{country.commonName}</h2>
           <div>{`Capital: ${country.capital}`}</div>
           <div>{`Area: ${country.area.toLocaleString()} km²`}</div>
+          <SelfSufficiencyContainer countryCode={countryCode} />
           <div>
             <PrimaryEnergyChartContainer countryCode={country.alpha2Code} />
           </div>

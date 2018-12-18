@@ -92,7 +92,7 @@ const statistics = [
     source: eiaAPI.apiCode,
   },
   {
-    code: 'PRIMARY_ENERGY_MTOE',
+    code: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
     name: 'Primary energy consumption',
     description: '',
     unit: MTOE_UNIT,
@@ -118,6 +118,13 @@ const statistics = [
     description: '',
     unit: MT,
     source: worldBankAPI.apiCode,
+  },
+  {
+    code: 'PRIMARY_ENERGY_PRODUCTION_MTOE',
+    name: 'Primary energy production',
+    description: '',
+    unit: MTOE_UNIT,
+    source: ieaAPI.apiCode,
   },
 ];
 

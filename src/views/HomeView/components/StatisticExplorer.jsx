@@ -81,7 +81,13 @@ function StatisticExplorer(props) {
         onChange={e => setPerCapita(e.target.value)}
       >
         <Radio.Button value={false}>Absolute</Radio.Button>
-        <Radio.Button value disabled={currentStatistic.code === 'POPULATION'}>
+        <Radio.Button
+          value
+          disabled={
+            currentStatistic.code === 'POPULATION' ||
+            currentStatistic.isIntensive
+          }
+        >
           Per capita
         </Radio.Button>
       </Radio.Group>
