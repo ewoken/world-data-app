@@ -1,4 +1,4 @@
-const eiaAPI = require('./api/eia');
+// const eiaAPI = require('./api/eia');
 const ieaAPI = require('./api/iea');
 const worldBankAPI = require('./api/worldBank');
 const ieaSankey = require('./api/ieaSankey');
@@ -89,7 +89,7 @@ const statistics = [
     name: 'Non-Hydroelectric renewables consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: eiaAPI.apiCode,
+    source: ieaSankey.apiCode,
   },
   {
     code: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',

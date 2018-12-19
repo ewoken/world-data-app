@@ -1,27 +1,8 @@
+const { indexBy } = require('ramda');
 const countries = require('world-countries/countries');
 const convert = require('xml-js');
-const { memoizeWith, indexBy, range } = require('ramda');
 
-const { retryFetch } = require('./helpers');
-
-const IEA_SANKEY_API = 'IEA_SANKEY_API';
-const OTHER_MAP = {
-  'Plurinational state of Bolivia': 'BO',
-  'Brunei Darussalam': 'BN',
-  "Cote d'Ivoire": 'CI',
-  Korea: 'KR',
-  'Viet Nam': 'VN',
-};
-
-const SUPPORTED_UNITS = ['Mtoe', 'ktoe'];
-
-const ZEROS = range(1973, 2017).map(year => ({ year, value: 0 }));
-const NULLS = range(1973, 2017).map(year => ({ year, value: null }));
-
-const statisticCodeMap = {
-  NUCLEAR_CONSUMPTION_MTOE: '118',
-  HYDRO_CONSUMPTION_MTOE: '115',
-};
+const { retryFetch } = require('../helpers');
 
 let allHeaders = {};
 function addHeaders(headers) {
@@ -30,6 +11,8 @@ function addHeaders(headers) {
     ...indexBy(h => h.code, headers),
   };
 }
+
+const SUPPORTED_UNITS = ['Mtoe', 'ktoe'];
 
 function parseBalanceFile(string) {
   const lines = string.split('\r\n');
@@ -72,14 +55,13 @@ function parseBalanceFile(string) {
   return indexBy(s => s.code, statistics);
 }
 
-async function getBalanceData(file) {
-  const res = await retryFetch(`https://www.iea.org/sankey/${file}`);
-  const data = await res.text();
-  const countryStatistics = parseBalanceFile(data);
-
-  return countryStatistics;
-}
-
+const OTHER_MAP = {
+  'Plurinational state of Bolivia': 'BO',
+  'Brunei Darussalam': 'BN',
+  "Cote d'Ivoire": 'CI',
+  Korea: 'KR',
+  'Viet Nam': 'VN',
+};
 async function getSourceByCountry() {
   const res = await retryFetch(`https://www.iea.org/sankey/config.xml`);
   const data = await res.text();
@@ -118,59 +100,8 @@ async function getSourceByCountry() {
   );
   return sourcefileByCountry;
 }
-const memoizedGetSourceByCountry = memoizeWith(i => i, getSourceByCountry);
-
-async function getCountryBalanceData(countryCode) {
-  const sourcefileByCountry = await memoizedGetSourceByCountry();
-  const sourceFile = sourcefileByCountry[countryCode];
-
-  if (!sourceFile) {
-    return null;
-  }
-
-  return getBalanceData(sourceFile);
-}
-const memoizedGetCountryBalanceData = memoizeWith(
-  i => i,
-  getCountryBalanceData,
-);
-
-async function fetchCountryStatisticFromIEASankey(statisticCode, country) {
-  const balanceData = await memoizedGetCountryBalanceData(country.alpha2Code);
-
-  if (!balanceData) {
-    return NULLS;
-  }
-  const statistic = balanceData[statisticCodeMap[statisticCode]];
-
-  if (!statistic) {
-    return ZEROS;
-  }
-
-  return statistic.values;
-}
-
-// (async function test() {
-//   await Promise.all(
-//     countries.map(country =>
-//       fetchCountryStatisticFromIEASankey('NUCLEAR_CONSUMPTION_MTOE', {
-//         alpha2Code: country.cca2,
-//       }),
-//     ),
-//   );
-//   require('fs').writeFileSync(
-//     'headers.json',
-//     JSON.stringify(allHeaders, null, 2),
-//   );
-// })();
-
-// getCountryBalanceData('SA')
-//   .then(res => res[117].values)
-//   .then(res => console.log(res))
-//   .catch(err => console.log(err));
 
 module.exports = {
-  apiCode: IEA_SANKEY_API,
-  fetchCountryStatistic: fetchCountryStatisticFromIEASankey,
-  sourceAttribution: 'IEA',
+  parseBalanceFile,
+  getSourceByCountry,
 };

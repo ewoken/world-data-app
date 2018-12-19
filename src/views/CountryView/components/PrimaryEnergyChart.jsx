@@ -197,7 +197,7 @@ function PrimaryEnergyChart(props) {
               dataKey="renewables"
               dot={false}
               activeDot={false}
-              name="Other renewables"
+              name="Other renewables & waste"
               stroke="green"
               fill="green"
               stackId="1"
