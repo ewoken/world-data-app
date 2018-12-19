@@ -55,14 +55,10 @@ CustomTooltip.defaultProps = {
 };
 
 function ProdConsoChart(props) {
-  const {
-    fuel,
-    prodStatistic,
-    consoStatistic,
-    // reservesStatistic,
-    data,
-  } = props;
+  const { fuel, statistics, data } = props;
 
+  const consoStatistic = statistics.conso;
+  const prodStatistic = statistics.prod;
   if (consoStatistic.unit.main !== prodStatistic.unit.main) {
     // eslint-disable-next-line no-console
     console.warn('Production and consommation have not the same unit', [
@@ -189,8 +185,10 @@ function ProdConsoChart(props) {
 }
 
 ProdConsoChart.propTypes = {
-  prodStatistic: StatisticType.isRequired,
-  consoStatistic: StatisticType.isRequired,
+  statistics: PropTypes.shape({
+    prod: StatisticType.isRequired,
+    conso: StatisticType.isRequired,
+  }).isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number.isRequired,

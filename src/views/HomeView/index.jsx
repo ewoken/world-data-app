@@ -40,7 +40,10 @@ const ConnectedStatisticExplorer = connect(
     countries: countriesSelector(state),
     statistics: allStatisticsSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
-    isLoaded: statisticOfAllCountriesLoadedSelector(statisticCode, state),
+    isLoaded:
+      statisticOfAllCountriesLoadedSelector(statisticCode, state) &&
+      (!perCapita ||
+        statisticOfAllCountriesLoadedSelector('POPULATION', state)),
     data: compiledStatisticForCountriesAndYear(
       {
         statisticCode,

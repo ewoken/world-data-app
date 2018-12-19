@@ -7,11 +7,21 @@ import { Redirect } from 'react-router-dom';
 import { Row, Col } from 'antd';
 
 import { countrySelector } from '../../store/countries';
+import withCountryStatistics from '../../HOC/withCountryStatistics';
 
 import PrimaryEnergyChartContainer from './containers/PrimaryEnergyChartContainer';
-import ProdConsoChartContainer from './containers/ProdConsoCharContainer';
 import CountryMap from './components/CountryMap';
-import SelfSufficiencyContainer from './containers/SelfSufficiencyContainer';
+import SelfSufficiencyChart from './components/SelfSufficiencyChart';
+import ProdConsoChart from './components/ProdConsoChart';
+
+const SelfSufficiencyContainer = withCountryStatistics({
+  value: 'ENERGY_SELF_SUFFICIENCY',
+})(SelfSufficiencyChart);
+
+const ProdConsoChartContainer = withCountryStatistics((state, props) => ({
+  prod: props.prodStatisticCode,
+  conso: props.consoStatisticCode,
+}))(ProdConsoChart);
 
 function CountryView(props) {
   const { country } = props;

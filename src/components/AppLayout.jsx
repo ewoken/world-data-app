@@ -11,10 +11,20 @@ import AboutView from '../views/AboutView';
 
 import HeaderMenu from './HeaderMenu';
 
-import { CountriesLoader, StatisticsLoader } from '../loaders';
+import buildLoader from '../HOC/buildLoader';
 
-import { countriesLoadedSelector, countriesSelector } from '../store/countries';
-import { statisticsLoadedSelector } from '../store/statistics';
+import {
+  loadAllCountries,
+  countriesLoadedSelector,
+  countriesSelector,
+} from '../store/countries';
+import {
+  loadAllStatistics,
+  statisticsLoadedSelector,
+} from '../store/statistics';
+
+const CountriesLoader = buildLoader(loadAllCountries);
+const StatisticsLoader = buildLoader(loadAllStatistics);
 
 const ConnectedHeaderMenu = withRouter(
   connect((state, props) => ({
