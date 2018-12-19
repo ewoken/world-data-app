@@ -15,6 +15,11 @@ else
   echo "Build data"
   rm -rf data
   mkdir data
+
+  if [ ! -f data/2018_bpData.csv ]; then
+    curl https://www.bp.com/content/dam/bp/business-sites/en/global/corporate/xlsx/energy-economics/statistical-review/bp-stats-review-2018-consolidated-dataset-narrow-format.csv -o data/2018_bpData.csv
+  fi
+
   (node dataSources/index.js || exit 1)
 fi
 

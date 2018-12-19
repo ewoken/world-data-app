@@ -17,6 +17,27 @@ function retryFetch(url, options, retryCount = 0) {
   });
 }
 
+function parseCSV(string) {
+  const lines = string.split('\r\n');
+  lines.pop(); // remove last empty line
+
+  const headers = lines
+    .shift()
+    .split(',')
+    .map(header => header.replace(/"/g, ''));
+
+  const data = lines.map(l => {
+    const array = l.match(/(?<=^|,)("(?:[^"]|"")*"|[^,]*)/g);
+    return array.reduce((object, cell, i) => {
+      // eslint-disable-next-line no-param-reassign
+      object[headers[i]] = cell.replace(/"/g, '');
+      return object;
+    }, {});
+  });
+  return data;
+}
+
 module.exports = {
   retryFetch,
+  parseCSV,
 };
