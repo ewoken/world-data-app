@@ -40,7 +40,7 @@ const derivedStatistics = [
     sourceAttribution: 'IEA',
     isIntensive: true,
     compute({ consumption, production }) {
-      return Math.floor((production / consumption) * 100);
+      return (production / consumption) * 100;
     },
   },
   {
@@ -57,7 +57,7 @@ const derivedStatistics = [
     sourceAttribution: 'IEA, World Bank',
     isIntensive: true,
     compute({ energy, gdp }) {
-      return Math.floor((energy * 10 ** 8) / gdp) * 10;
+      return (energy / gdp) * 10 ** 3;
     },
   },
   {
@@ -74,7 +74,7 @@ const derivedStatistics = [
     sourceAttribution: 'IEA, World Bank',
     isIntensive: true,
     compute({ energy, co2 }) {
-      return Number((co2 / energy).toFixed(2));
+      return co2 / energy;
     },
   },
   // ...['COAL', 'OIL', 'GAS'].map(fuel => ({ TODO bicolors

@@ -45,7 +45,9 @@ function WorldMap(props) {
     currentYear,
     perCapita,
   } = props;
-  const maxValue = Math.max(...data.map(d => d.value));
+  const maxValue = Math.max(
+    ...data.filter(d => d.countryCode !== 'WORLD').map(d => d.value),
+  );
   const colorValueMap = computeColorMap(data);
   return (
     <div className="WorldMap">
