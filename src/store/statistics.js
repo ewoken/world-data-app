@@ -293,12 +293,12 @@ function computeYearInterval(mapOfStatisticValues) {
   return [startingYear, endingYear];
 }
 
-function computeValue(value, population, perCapita, factor) {
+function computeValue(value, population, perCapita, factor, populationFactor) {
   if (!value || (!population && perCapita)) {
     return null;
   }
 
-  return perCapita ? (value * factor) / population : value;
+  return perCapita ? (value * factor) / (populationFactor * population) : value;
 }
 
 function parseMapOfStatistics(
@@ -360,18 +360,20 @@ export function compiledCountryStatisticsSelector(
     .filter(value => startingYear <= value.year && value.year <= endingYear)
     .map(compiledValue => ({
       ...compiledValue,
-      ...mapObjIndexed(
-        (value, compileName) =>
-          computeValue(
-            value,
-            compiledValue[
-              `pop/${parsedMapOfCountryStatistics[compileName].countryCode}`
-            ],
-            perCapita,
-            mapOfStatistic[compileName].unit.factor,
-          ),
-        omit(['year', 'pop'], compiledValue),
-      ),
+      ...mapObjIndexed((value, compileName) => {
+        const popCompileName = `pop/${
+          parsedMapOfCountryStatistics[compileName].countryCode
+        }`;
+        return computeValue(
+          value,
+          compiledValue[popCompileName],
+          perCapita,
+          mapOfStatistic[compileName].unit.factor,
+          mapOfStatistic[popCompileName]
+            ? mapOfStatistic[popCompileName].unit.factor
+            : null,
+        );
+      }, omit(['year', 'pop'], compiledValue)),
     }));
 
   return compiledStatistics;

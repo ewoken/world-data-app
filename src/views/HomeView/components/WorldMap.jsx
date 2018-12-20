@@ -6,7 +6,7 @@ import { interpolateRgb } from 'd3-interpolate';
 import { Map, Tooltip, GeoJSON } from 'react-leaflet';
 
 import { CountryType, StatisticType } from '../../../utils/types';
-import { coordsToLatLng, isMobileOrTablet } from '../../../utils';
+import { coordsToLatLng, isMobileOrTablet, formatNumber } from '../../../utils';
 
 const MAP_HEIGHT = '540px';
 const MIN_COLOR = 'rgb(107, 185, 240)';
@@ -75,7 +75,7 @@ function WorldMap(props) {
               }
             >
               <Tooltip sticky>
-                {`${country.commonName}: ${value.toLocaleString()}`}
+                {`${country.commonName}: ${formatNumber(value)}`}
               </Tooltip>
             </GeoJSON>
           );
@@ -110,7 +110,7 @@ function WorldMap(props) {
           />
           <div className="WorldMap__legend__gradientRange">
             <div>0</div>
-            <div>{maxValue.toLocaleString()}</div>
+            <div>{formatNumber(maxValue)}</div>
           </div>
         </div>
         <div>

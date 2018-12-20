@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 import { sortBy } from 'ramda';
 
 import { CountryType, StatisticType } from '../../../utils/types';
-import { isMobileOrTablet } from '../../../utils';
+import { isMobileOrTablet, formatNumber } from '../../../utils';
 
 function StatisticExplorer(props) {
   const {
@@ -120,7 +120,7 @@ function StatisticExplorer(props) {
             dataIndex: 'value',
             defaultSortOrder: 'descend',
             sorter: (a, b) => a.value - b.value,
-            render: value => value.toLocaleString(),
+            render: formatNumber,
             align: 'right',
           },
         ]}

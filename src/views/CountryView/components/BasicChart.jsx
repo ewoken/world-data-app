@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import { StatisticType } from '../../../utils/types';
 import { tickFormatter } from '../../../utils/chartHelpers';
+import { formatNumber } from '../../../utils';
 
 function CustomTooltip(props) {
   const { active } = props;
@@ -21,9 +22,7 @@ function CustomTooltip(props) {
       <div className="CustomTooltip">
         {payload[0] && (
           <div style={{ lineHeight: '22px', color: payload[0].color }}>
-            {`${label} : ${payload[0].value.toLocaleString()} ${
-              payload[0].unit
-            }`}
+            {`${label} : ${formatNumber(payload[0].value)} ${payload[0].unit}`}
           </div>
         )}
       </div>

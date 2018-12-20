@@ -10,15 +10,15 @@ const MTOE_UNIT = {
 };
 
 const CAPITA = {
-  main: 'capita',
-  base: 'capita',
-  factor: 1,
+  main: 'million people',
+  base: 'people',
+  factor: 10 ** 6,
 };
 
-const MILLION_2010_USD = {
-  main: 'million 2010 USD',
+const BILLION_2010_USD = {
+  main: 'billion 2010 USD',
   base: '2010 $',
-  factor: 10 ** 6,
+  factor: 10 ** 9,
 };
 
 const MT = {
@@ -109,7 +109,7 @@ const statistics = [
     code: 'GDP_2010_USD',
     name: 'Gross Domestic Product',
     description: '',
-    unit: MILLION_2010_USD,
+    unit: BILLION_2010_USD,
     source: worldBankAPI.apiCode,
   },
   {

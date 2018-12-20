@@ -5,14 +5,15 @@ const WORLD_BANK_API = 'WORLD_BANK_API';
 const config = {
   POPULATION: {
     worldBankCode: 'SP.POP.TOTL',
+    unitConverter: value => value / 10 ** 6,
   },
   GDP_2010_USD: {
     worldBankCode: 'NY.GDP.MKTP.KD',
-    unitConverter: value => Number((value / 10 ** 6).toFixed(2)),
+    unitConverter: value => value / 10 ** 9,
   },
   CO2_EMISSIONS_MT: {
     worldBankCode: 'EN.ATM.CO2E.KT',
-    unitConverter: value => Number((value / 10 ** 3).toFixed(2)),
+    unitConverter: value => value / 10 ** 3,
   },
 };
 

@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { StatisticType } from '../../../utils/types';
 import { tickFormatter } from '../../../utils/chartHelpers';
+import { formatNumber } from '../../../utils';
 
 function CustomTooltip(props) {
   const { active } = props;
@@ -28,7 +29,7 @@ function CustomTooltip(props) {
                 key={p.dataKey}
                 style={{ lineHeight: '22px', color: p.color }}
               >
-                {`${p.name} : ${p.value.toLocaleString()} ${p.unit}`}
+                {`${p.name} : ${formatNumber(p.value)} ${p.unit}`}
               </div>
             ))}
         </div>

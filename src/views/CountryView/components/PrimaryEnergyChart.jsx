@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { Radio } from 'antd';
 import { tickFormatter } from '../../../utils/chartHelpers';
+import { formatNumber } from '../../../utils';
 
 function CustomTooltip(props) {
   const { active, payload } = props;
@@ -38,21 +39,19 @@ function CustomTooltip(props) {
         <div>
           {payloadWithoutWorld.map(p => (
             <div key={p.dataKey} style={{ lineHeight: '22px', color: p.color }}>
-              {`${p.name} : ${p.value.toLocaleString()} ${p.unit}`}
+              {`${p.name} : ${formatNumber(p.value)} ${p.unit}`}
             </div>
           ))}
           <hr size={1} />
           <div key="total" style={{ lineHeight: '22px', color: 'black' }}>
-            {`Total : ${Number(total.toFixed(2)).toLocaleString()} ${unit}`}
+            {`Total : ${formatNumber(total)} ${unit}`}
           </div>
           {worldPrimary && (
             <div
               key="primaryWorld"
               style={{ lineHeight: '22px', color: 'red' }}
             >
-              {`World : ${Number(
-                worldPrimary.value.toFixed(2),
-              ).toLocaleString()} ${unit}`}
+              {`World : ${formatNumber(worldPrimary.value)} ${unit}`}
             </div>
           )}
         </div>

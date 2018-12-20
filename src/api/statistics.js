@@ -57,7 +57,7 @@ const derivedStatistics = [
     sourceAttribution: 'IEA, World Bank',
     isIntensive: true,
     compute({ energy, gdp }) {
-      return Math.floor((energy * 10 ** 5) / gdp) * 10;
+      return Math.floor((energy * 10 ** 8) / gdp) * 10;
     },
   },
   {

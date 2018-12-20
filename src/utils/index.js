@@ -27,11 +27,6 @@ export function isMobileOrTablet() {
   return check;
 }
 
-// function bindEvent(countries, onCountryClick) {
-//   return function onEachFeature(feature, layer) {
-//     const country = countries.find(c => c.numericCode === feature.id);
-//     layer.on({
-//       click: () => onCountryClick(country),
-//     });
-//   };
-// }
+export function formatNumber(value) {
+  return Number(Number(value).toPrecision(3)).toLocaleString();
+}
