@@ -27,6 +27,7 @@ function withCountryStatistic(mapOfCountryStatisticsSelector) {
           {
             mapOfCountryStatistics,
             countryCode: props.countryCode,
+            perCapita: props.perCapita,
           },
           state,
         ),

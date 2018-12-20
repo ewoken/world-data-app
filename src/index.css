@@ -7,7 +7,15 @@
   margin-top: 20px;
 }
 
+.ant-card-body .ant-row {
+  margin-top: 0px;
+}
+
 .ant-card-head-title h1 {
+  margin-bottom: 0px;
+}
+
+.ant-card-head-title h2 {
   margin-bottom: 0px;
 }
 

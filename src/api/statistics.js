@@ -7,6 +7,12 @@ const PERCENTAGE_UNIT = {
   factor: 1,
 };
 
+// const MTOE_UNIT = {
+//   main: 'Mtoe',
+//   base: 'toe',
+//   factor: 10 ** 6,
+// };
+
 const ENERGY_INTENSITY_UNIT = {
   main: 'toe/million 2010 $',
   base: 'toe/million 2010 $',
@@ -71,6 +77,23 @@ const derivedStatistics = [
       return Number((co2 / energy).toFixed(2));
     },
   },
+  // ...['COAL', 'OIL', 'GAS'].map(fuel => ({ TODO bicolors
+  //   code: `${fuel}_TRADE`,
+  //   name: `Trade of ${fuel.toLowerCase()}`,
+  //   description: '',
+  //   unit: MTOE_UNIT,
+  //   source: {
+  //     prod: `${fuel}_PRODUCTION_MTOE`,
+  //     conso: `${fuel}_CONSUMPTION_MTOE`,
+  //   },
+  //   startingYear: 1973,
+  //   endingYear: 2016,
+  //   sourceAttribution: 'IEA, World Bank',
+  //   isIntensive: true,
+  //   compute({ prod, conso }) {
+  //     return conso - prod;
+  //   },
+  // })),
 ];
 const derivedCodes = derivedStatistics.map(d => d.code);
 
