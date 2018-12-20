@@ -13,6 +13,7 @@ import {
   Legend,
 } from 'recharts';
 import { Radio } from 'antd';
+import { tickFormatter } from '../../../utils/chartHelpers';
 
 function CustomTooltip(props) {
   const { active, payload } = props;
@@ -219,6 +220,7 @@ function PrimaryEnergyChart(props) {
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={4} />
           <YAxis
+            tickFormatter={tickFormatter}
             label={{
               value: unit,
               angle: -90,

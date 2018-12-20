@@ -10,10 +10,47 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { StatisticType } from '../../../utils/types';
+import { tickFormatter } from '../../../utils/chartHelpers';
+
+function CustomTooltip(props) {
+  const { active } = props;
+
+  if (active) {
+    const { payload, label } = props;
+    return (
+      <div className="CustomTooltip">
+        {payload[0] && (
+          <div style={{ lineHeight: '22px', color: payload[0].color }}>
+            {`${label} : ${payload[0].value.toLocaleString()} ${
+              payload[0].unit
+            }`}
+          </div>
+        )}
+      </div>
+    );
+  }
+  return null;
+}
+CustomTooltip.propTypes = {
+  active: PropTypes.bool.isRequired,
+  payload: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+      unit: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+    }).isRequired,
+  ).isRequired,
+  label: PropTypes.string,
+};
+CustomTooltip.defaultProps = {
+  label: '',
+};
 
 function BasicChart(props) {
-  const { data, statistics } = props;
+  const { data, statistics, color } = props;
   const statistic = statistics.value;
+
   return (
     <div className="SelfSufficiency">
       <strong>{`${statistic.name} (${statistic.unit.main})`}</strong>
@@ -22,18 +59,15 @@ function BasicChart(props) {
           <Line
             type="monotone"
             dataKey="value"
-            stroke="red"
+            stroke={color}
+            strokeWidth={3}
             dot={false}
             name={statistic.name}
             unit={` ${statistic.unit.main}`}
           />
           <XAxis dataKey="year" interval={9} padding={{ left: 5, right: 5 }} />
-          <YAxis
-            tickFormatter={v =>
-              v > 10 ** 7 ? v.toPrecision(2) : v.toLocaleString()
-            }
-          />
-          <Tooltip />
+          <YAxis tickFormatter={tickFormatter} />
+          <Tooltip content={CustomTooltip} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -50,6 +84,11 @@ BasicChart.propTypes = {
   statistics: PropTypes.shape({
     value: StatisticType,
   }).isRequired,
+  color: PropTypes.string,
+};
+
+BasicChart.defaultProps = {
+  color: '#2c82c9',
 };
 
 export default BasicChart;

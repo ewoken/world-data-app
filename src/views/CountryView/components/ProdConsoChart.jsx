@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { StatisticType } from '../../../utils/types';
+import { tickFormatter } from '../../../utils/chartHelpers';
 
 function CustomTooltip(props) {
   const { active } = props;
@@ -106,7 +107,7 @@ function ProdConsoChart(props) {
             activeDot={false}
             stroke="green"
             strokeOpacity={0}
-            fillOpacity={1}
+            fillOpacity={0.8}
             fill="green"
             stackId="1"
           />
@@ -119,7 +120,7 @@ function ProdConsoChart(props) {
             activeDot={false}
             stroke="red"
             strokeOpacity={0}
-            fillOpacity={1}
+            fillOpacity={0.8}
             fill="red"
             stackId="1"
           />
@@ -128,7 +129,7 @@ function ProdConsoChart(props) {
             dataKey="conso"
             dot={false}
             unit={unit}
-            stroke="#880000"
+            stroke="#96281b"
             strokeWidth={3}
             name={consoStatistic.name}
           />
@@ -143,37 +144,13 @@ function ProdConsoChart(props) {
             name={prodStatistic.name}
           />
 
-          {/* {reservesStatisticCode && (
-            <Line
-              type="monotone"
-              dataKey="reserves"
-              dot={false}
-              unit={reservesStatistic.unit}
-              stroke="blue"
-              strokeWidth={3}
-              strokeOpacity={0.7}
-              name={reservesStatistic.name}
-              yAxisId="1"
-            />
-          )} */}
-
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={9} />
           <YAxis
             label={{ value: unit, position: 'insideTopLeft', offset: -20 }}
           />
-          {/* {reservesStatisticCode && (
-            <YAxis
-              orientation="right"
-              label={{
-                value: reservesStatistic.unit,
-                position: 'insideTopRight',
-                offset: -20,
-              }}
-              yAxisId="1"
-            />
-          )} */}
           <Tooltip
+            tickFormatter={tickFormatter}
             content={props2 => (
               <CustomTooltip {...props2} filter={p => p.name !== 'base'} />
             )}
