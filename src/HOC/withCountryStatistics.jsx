@@ -14,13 +14,26 @@ import {
 
 const StatisticsLoader = buildLoader(loadCountryStatistics);
 
-function withCountryStatistic(mapOfCountryStatisticsSelector) {
+function defaultSelector(state, props) {
+  return {
+    value: props.statisticCode,
+  };
+}
+
+function withCountryStatistic(
+  mapOfCountryStatisticsSelectorInput = defaultSelector,
+) {
+  const mapOfCountryStatisticsSelector =
+    typeof mapOfCountryStatisticsSelectorInput === 'object'
+      ? () => mapOfCountryStatisticsSelectorInput
+      : mapOfCountryStatisticsSelectorInput;
+
   return function withCountryStatisticWrapper(WrappedComponent) {
     return connect((state, props) => {
-      const mapOfCountryStatistics =
-        typeof mapOfCountryStatisticsSelector === 'object'
-          ? mapOfCountryStatisticsSelector
-          : mapOfCountryStatisticsSelector(state, props);
+      const mapOfCountryStatistics = mapOfCountryStatisticsSelector(
+        state,
+        props,
+      );
       const statisticCodes = values(mapOfCountryStatistics);
       return {
         data: compiledCountryStatisticsSelector(
@@ -43,6 +56,7 @@ function withCountryStatistic(mapOfCountryStatisticsSelector) {
           state,
         ),
         statisticCodes,
+        perCapita: props.perCapita || false,
       };
     })(props => (
       <Spin spinning={!props.isLoaded}>

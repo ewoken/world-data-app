@@ -29,6 +29,9 @@ const config = {
   PRIMARY_ENERGY_PRODUCTION_MTOE: {
     ieaId: '1890877781',
   },
+  ELECTRICITY_GENERATION_TWH: {
+    ieaId: '-361163217',
+  },
 };
 
 async function fetchStatisticFromIEA(statisticCode) {

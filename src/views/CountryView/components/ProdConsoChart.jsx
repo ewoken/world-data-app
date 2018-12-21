@@ -11,8 +11,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { StatisticType } from '../../../utils/types';
-import { tickFormatter } from '../../../utils/chartHelpers';
-import { formatNumber } from '../../../utils';
+import { formatNumber, tickFormatter } from '../../../utils';
 
 function CustomTooltip(props) {
   const { active } = props;

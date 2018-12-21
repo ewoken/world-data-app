@@ -5,6 +5,7 @@ import { Row, Col } from 'antd';
 
 import withCountryStatistics from '../../../HOC/withCountryStatistics';
 import ProdConsoChart from './ProdConsoChart';
+import BasicChartContainer from '../containers/BasicChartContainer';
 
 const ProdConsoChartContainer = withCountryStatistics((state, props) => ({
   prod: props.prodStatisticCode,
@@ -15,6 +16,15 @@ function IndependencyTab(props) {
   const { countryCode } = props;
   return (
     <div className="IndependencyTab">
+      <Row>
+        <Col md={8} sm={24}>
+          <BasicChartContainer
+            statisticCode="ENERGY_SELF_SUFFICIENCY"
+            countryCode={countryCode}
+            color="#f15a22"
+          />
+        </Col>
+      </Row>
       <Row>
         <h3>Imports/Exports</h3>
         <Col md={8} sm={24}>

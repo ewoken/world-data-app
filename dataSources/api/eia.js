@@ -1,15 +1,14 @@
 const { retryFetch } = require('./helpers');
 const {
-  generationToConsumption,
-  // eslint-disable-next-line camelcase
-  convert_TWh_to_Mtoe,
+  TWH_TO_MTOE,
+  GENERATION_TO_CONSUMPTION_FACTOR,
 } = require('./converters');
 
 const EIA_API_KEY = '20cf4469dcd5b4da5fc7cb448d9d934e'; // TODO
 const EIA_API = 'EIA_API';
 
 const BKWHConverter = value =>
-  Number(generationToConsumption(convert_TWh_to_Mtoe(value)).toFixed(2));
+  Number(value * TWH_TO_MTOE * GENERATION_TO_CONSUMPTION_FACTOR).toFixed(2);
 
 const config = {
   COAL_PRODUCTION_MTOE: {
@@ -24,15 +23,15 @@ const config = {
   GAS_CONSUMPTION_MTOE: {
     seriesOfCountry: alpha3Code => `INTL.26-2-${alpha3Code}-MTOE.A`,
   },
-  HYDRO_CONSUMPTION_MTOE: {
+  HYDRO_PRODUCTION_MTOE: {
     seriesOfCountry: alpha3Code => `INTL.33-12-${alpha3Code}-BKWH.A`,
     unitConverter: BKWHConverter,
   },
-  NUCLEAR_CONSUMPTION_MTOE: {
+  NUCLEAR_PRODUCTION_MTOE: {
     seriesOfCountry: alpha3Code => `INTL.27-12-${alpha3Code}-BKWH.A`,
     unitConverter: BKWHConverter,
   },
-  NON_HYDRO_RENEWABLES_CONSUMPTION_MTOE: {
+  OTHER_RENEWABLES_CONSUMPTION_MTOE: {
     seriesOfCountry: alpha3Code => `INTL.34-12-${alpha3Code}-BKWH.A`,
     unitConverter: BKWHConverter,
   },

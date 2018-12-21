@@ -50,7 +50,7 @@ function CountryMap(props) {
       <Map
         center={country.latlng}
         zoom={2}
-        style={{ height: '300px', zIndex: 0 }}
+        style={{ height: '200px', zIndex: 0 }}
       >
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

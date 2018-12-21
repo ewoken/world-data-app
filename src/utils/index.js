@@ -28,5 +28,17 @@ export function isMobileOrTablet() {
 }
 
 export function formatNumber(value) {
+  if (value === null || value === undefined || Number.isNaN(value)) {
+    return 'NA';
+  }
+
   return Number(Number(value).toPrecision(3)).toLocaleString();
+}
+
+export function tickFormatter(value) {
+  return value.toLocaleString();
+}
+
+export function displayUnit(unit, perCapita) {
+  return perCapita ? `${unit.base}/capita` : unit.main;
 }

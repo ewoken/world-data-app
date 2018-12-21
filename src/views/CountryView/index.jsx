@@ -8,11 +8,20 @@ import { Row, Col, Card } from 'antd';
 
 import { countrySelector } from '../../store/countries';
 
-import PrimaryEnergyChartContainer from './containers/PrimaryEnergyChartContainer';
 import CountryMap from './components/CountryMap';
 import SummaryTab from './components/SummaryTab';
 import IndependencyTab from './components/IndependencyTab';
 import ClimateTab from './components/ClimateTab';
+
+import BasicChart from './components/BasicChart';
+import withCountryStatistics from '../../HOC/withCountryStatistics';
+
+const [PopulationChart, GDPChart] = ['POPULATION', 'GDP_2010_USD'].map(
+  statisticCode =>
+    withCountryStatistics({
+      value: statisticCode,
+    })(BasicChart),
+);
 
 const tabList = [
   { key: 'summary', tab: 'Summary' },
@@ -52,7 +61,18 @@ class CountryView extends Component {
             <Card title={<h2>{country.commonName}</h2>}>
               <div>{`Capital: ${country.capital}`}</div>
               <div>{`Area: ${country.area.toLocaleString()} km²`}</div>
-              <PrimaryEnergyChartContainer countryCode={country.alpha2Code} />
+              <Row style={{ marginTop: '20px' }} gutter={10}>
+                <Col xs={24} sm={24} md={24} lg={12}>
+                  <PopulationChart countryCode={countryCode} color="#2c82c9" />
+                </Col>
+                <Col xs={24} sm={24} md={24} lg={12}>
+                  <GDPChart
+                    countryCode={countryCode}
+                    color="#f22613"
+                    perCapita
+                  />
+                </Col>
+              </Row>
             </Card>
           </Col>
           <Col xs={0} sm={0} md={6}>
@@ -77,25 +97,6 @@ class CountryView extends Component {
             {tabContent[currentTab](countryCode)}
           </Card>
         </Row>
-
-        {/*  */}
-        {/* <Row>
-        <Col md={8} sm={24}>
-          <SelfSufficiencyContainer countryCode={countryCode} />
-        </Col>
-        <Col md={8} sm={24}>
-          <PopulationContainer countryCode={countryCode} />
-        </Col>
-        <Col md={8} sm={24}>
-          <GrossDomesticProductContainer countryCode={countryCode} />
-        </Col>
-        <Col md={8} sm={24}>
-          <CO2EmissionContainer countryCode={countryCode} />
-        </Col>
-        <Col md={8} sm={24}>
-          <PrimaryEnergyContainer countryCode={countryCode} />
-        </Col>
-      </Row> */}
       </div>
     );
   }

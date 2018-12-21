@@ -14,24 +14,32 @@ import {
 } from 'recharts';
 import { Radio } from 'antd';
 import { tickFormatter } from '../../../utils';
-
 import CustomTooltip from './CustomTooltip';
 
-function PrimaryEnergyChart(props) {
+function ElectricityMixChart(props) {
   const {
     data,
-    sourceConsumed,
     stacked,
     setStacked,
     perCapita,
     setPerCapita,
+    sourceConsumed,
   } = props;
-  const unit = perCapita ? ' toe/capita' : ' Mtoe';
+  const unit = perCapita ? ' kWh/capita' : ' TWh';
+  const factor = perCapita ? 1000 : 1;
 
+  // TODO
+  const processedData = data.map(v => ({
+    ...v,
+    nuclear: v.nuclear * 0.33 * 11.63 * factor,
+    hydro: v.hydro * 11.63 * factor,
+    solarWindTideGeoth: v.solarWindTideGeoth * 11.63 * factor,
+  }));
   const LineArea = stacked ? Area : Line;
+
   return (
-    <div className="PrimaryEnergyChart">
-      <h3 className="PrimaryEnergyChart__title">Primary Energy Consumption</h3>
+    <div className="ElectricityMixChart">
+      <h3 className="ElectricityMixChart__title">Electricity generation</h3>
       <div>
         <Radio.Group
           buttonStyle="solid"
@@ -55,7 +63,7 @@ function PrimaryEnergyChart(props) {
       </div>
       <ResponsiveContainer height={300} width="100%">
         <ComposedChart
-          data={data}
+          data={processedData}
           margin={{ top: 10, right: 0, bottom: 10, left: 0 }}
         >
           {sourceConsumed.coal && (
@@ -142,7 +150,7 @@ function PrimaryEnergyChart(props) {
               dataKey="solarWindTideGeoth"
               dot={false}
               activeDot={false}
-              name="Geothermal, Wind, Solar & Tide"
+              name="Geothermy, Wind, Solar & Tide"
               stroke="green"
               fill="green"
               stackId="1"
@@ -181,7 +189,7 @@ function PrimaryEnergyChart(props) {
   );
 }
 
-PrimaryEnergyChart.propTypes = {
+ElectricityMixChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number,
@@ -196,13 +204,13 @@ PrimaryEnergyChart.propTypes = {
     }).isRequired,
   ).isRequired,
   sourceConsumed: PropTypes.shape({
-    coal: PropTypes.bool,
-    oil: PropTypes.bool,
-    gas: PropTypes.bool,
-    hydro: PropTypes.bool,
-    nuclear: PropTypes.bool,
-    biofuelsWaste: PropTypes.bool,
-    solarWindTideGeoth: PropTypes.bool,
+    coal: PropTypes.number,
+    oil: PropTypes.number,
+    gas: PropTypes.number,
+    hydro: PropTypes.number,
+    nuclear: PropTypes.number,
+    biofuelsWaste: PropTypes.number,
+    solarWindTideGeoth: PropTypes.number,
   }).isRequired,
   setStacked: PropTypes.func.isRequired,
   setPerCapita: PropTypes.func.isRequired,
@@ -210,4 +218,4 @@ PrimaryEnergyChart.propTypes = {
   perCapita: PropTypes.bool.isRequired,
 };
 
-export default PrimaryEnergyChart;
+export default ElectricityMixChart;

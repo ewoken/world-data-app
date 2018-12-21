@@ -23,6 +23,7 @@
   background-color: white;
   border: 1px solid #cccccc;
   padding: 10px;
+  font-size: 11;
 }
 
 .CustomTooltip ul {
@@ -30,6 +31,10 @@
 }
 
 .PrimaryEnergyChart__title {
+  text-align: center
+}
+
+.ElectricityMixChart__title {
   text-align: center
 }
 

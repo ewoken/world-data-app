@@ -27,6 +27,12 @@ const MT = {
   factor: 10 ** 6,
 };
 
+const TWH = {
+  main: 'TWh',
+  base: 'kWh',
+  factor: 10 ** 9,
+};
+
 const statistics = [
   {
     code: 'COAL_PRODUCTION_MTOE',
@@ -71,22 +77,29 @@ const statistics = [
     source: ieaAPI.apiCode,
   },
   {
-    code: 'HYDRO_CONSUMPTION_MTOE',
-    name: 'Hydroelectricity consumption',
+    code: 'HYDRO_PRODUCTION_MTOE',
+    name: 'Hydroelectricity production',
     description: '',
     unit: MTOE_UNIT,
     source: ieaSankey.apiCode,
   },
   {
-    code: 'NUCLEAR_CONSUMPTION_MTOE',
-    name: 'Nuclear consumption',
+    code: 'NUCLEAR_PRODUCTION_MTOE',
+    name: 'Nuclear production',
     description: '',
     unit: MTOE_UNIT,
     source: ieaSankey.apiCode,
   },
   {
-    code: 'NON_HYDRO_RENEWABLES_CONSUMPTION_MTOE',
-    name: 'Non-Hydroelectric renewables consumption',
+    code: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
+    name: 'Biofuels & waste consumption',
+    description: '',
+    unit: MTOE_UNIT,
+    source: ieaSankey.apiCode,
+  },
+  {
+    code: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
+    name: 'Geothermal, solar, wind, tide, energy production',
     description: '',
     unit: MTOE_UNIT,
     source: ieaSankey.apiCode,
@@ -125,6 +138,48 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+  },
+  {
+    code: 'ELECTRICITY_GENERATION_TWH',
+    name: 'Electricity generation',
+    descrition: '',
+    unit: TWH,
+    source: ieaAPI.apiCode,
+  },
+  {
+    code: 'OIL_ELECTRICITY_GENERATION_TWH',
+    name: 'Electricity consumption from oil',
+    descrition: '',
+    unit: TWH,
+    source: ieaSankey.apiCode,
+  },
+  {
+    code: 'GAS_ELECTRICITY_GENERATION_TWH',
+    name: 'Electricity consumption from gas',
+    descrition: '',
+    unit: TWH,
+    source: ieaSankey.apiCode,
+  },
+  {
+    code: 'COAL_ELECTRICITY_GENERATION_TWH',
+    name: 'Electricity consumption from coal',
+    descrition: '',
+    unit: TWH,
+    source: ieaSankey.apiCode,
+  },
+  {
+    code: 'BIOFUELS_WASTE_ELECTRICITY_GENERATION_TWH',
+    name: 'Electricity consumption from biofuels & waste',
+    descrition: '',
+    unit: TWH,
+    source: ieaSankey.apiCode,
+  },
+  {
+    code: 'GEOTH_SOLAR_WIND_TIDE_ELECTRICITY_GENERATION_TWH',
+    name: 'Electricity consumption from wind, solar, geothermal and tide',
+    descrition: '',
+    unit: TWH,
+    source: ieaSankey.apiCode,
   },
 ];
 

@@ -9,52 +9,21 @@ import {
   LineChart,
   ResponsiveContainer,
 } from 'recharts';
+import CustomTooltip from './CustomTooltip';
+
 import { StatisticType } from '../../../utils/types';
-import { tickFormatter } from '../../../utils/chartHelpers';
-import { formatNumber } from '../../../utils';
-
-function CustomTooltip(props) {
-  const { active } = props;
-
-  if (active) {
-    const { payload, label } = props;
-    return (
-      <div className="CustomTooltip">
-        {payload[0] && (
-          <div style={{ lineHeight: '22px', color: payload[0].color }}>
-            {`${label} : ${formatNumber(payload[0].value)} ${payload[0].unit}`}
-          </div>
-        )}
-      </div>
-    );
-  }
-  return null;
-}
-CustomTooltip.propTypes = {
-  active: PropTypes.bool.isRequired,
-  payload: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-      unit: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
-    }).isRequired,
-  ).isRequired,
-  label: PropTypes.string,
-};
-CustomTooltip.defaultProps = {
-  label: '',
-};
+import { tickFormatter, displayUnit } from '../../../utils';
 
 function BasicChart(props) {
-  const { data, statistics, color } = props;
+  const { data, statistics, color, perCapita } = props;
   const statistic = statistics.value;
+  const unit = displayUnit(statistic.unit, perCapita);
 
   return (
     <div className="SelfSufficiency">
-      <strong>{`${statistic.name} (${statistic.unit.main})`}</strong>
+      <strong>{`${statistic.name} (${unit})`}</strong>
       <ResponsiveContainer height={200}>
-        <LineChart data={data} margin={{ left: 20, top: 10 }}>
+        <LineChart data={data}>
           <Line
             type="monotone"
             dataKey="value"
@@ -62,7 +31,7 @@ function BasicChart(props) {
             strokeWidth={3}
             dot={false}
             name={statistic.name}
-            unit={` ${statistic.unit.main}`}
+            unit={` ${unit}`}
           />
           <XAxis dataKey="year" interval={9} padding={{ left: 5, right: 5 }} />
           <YAxis tickFormatter={tickFormatter} />
@@ -84,6 +53,7 @@ BasicChart.propTypes = {
     value: StatisticType,
   }).isRequired,
   color: PropTypes.string,
+  perCapita: PropTypes.bool.isRequired,
 };
 
 BasicChart.defaultProps = {

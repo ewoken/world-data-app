@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { Row, Col } from 'antd';
 
-import BasicChart from './BasicChart';
-import withCountryStatistics from '../../../HOC/withCountryStatistics';
+import BasicChartContainer from '../containers/BasicChartContainer';
 
 const statisticCodes = [
+  'CO2_EMISSIONS_MT',
   'CO2_INTENSITY_OF_ENERGY',
   'ENERGY_INTENSITY',
   // 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
@@ -17,17 +17,14 @@ function ClimateTab(props) {
   return (
     <div className="ClimateTab">
       <Row gutter={20}>
-        {statisticCodes.map(statisticCode => {
-          const StatisticContainer = withCountryStatistics({
-            value: statisticCode,
-          })(BasicChart);
-
-          return (
-            <Col md={12} sm={24}>
-              <StatisticContainer countryCode={countryCode} />
-            </Col>
-          );
-        })}
+        {statisticCodes.map(statisticCode => (
+          <Col md={24 / statisticCodes.length} sm={24}>
+            <BasicChartContainer
+              statisticCode={statisticCode}
+              countryCode={countryCode}
+            />
+          </Col>
+        ))}
       </Row>
     </div>
   );

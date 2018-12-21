@@ -5,7 +5,7 @@ import { values } from 'ramda';
 
 import { Spin } from 'antd';
 
-import PrimaryEnergyChart from '../components/PrimaryEnergyChart';
+import ElectricityMixChart from '../components/ElectricityMixChart';
 
 import {
   loadCountryStatistics,
@@ -17,25 +17,26 @@ import {
 const WORLD = 'WORLD';
 
 const mapOfStatistics = {
-  coal: 'COAL_CONSUMPTION_MTOE',
-  gas: 'GAS_CONSUMPTION_MTOE',
-  oil: 'OIL_CONSUMPTION_MTOE',
+  coal: 'COAL_ELECTRICITY_GENERATION_TWH',
+  gas: 'GAS_ELECTRICITY_GENERATION_TWH',
+  oil: 'OIL_ELECTRICITY_GENERATION_TWH',
   hydro: 'HYDRO_PRODUCTION_MTOE',
   nuclear: 'NUCLEAR_PRODUCTION_MTOE',
-  biofuelsWaste: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
+  biofuelsWaste: 'BIOFUELS_WASTE_ELECTRICITY_GENERATION_TWH',
   solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
+  gen: 'ELECTRICITY_GENERATION_TWH',
 };
 const statisticCodes = values(mapOfStatistics).concat(['POPULATION']);
-const worldReferences = ['POPULATION', 'PRIMARY_ENERGY_CONSUMPTION_MTOE'];
+const worldReferences = ['POPULATION', 'ELECTRICITY_GENERATION_TWH'];
 
-const ConnectedPrimaryEnergyChart = connect(
+const ConnectedElectricityMixChart = connect(
   (state, { countryCode, perCapita }) => ({
     data: compiledCountryStatisticsSelector(
       {
         mapOfCountryStatistics: {
           ...mapOfStatistics,
           world: {
-            statisticCode: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
+            statisticCode: 'ELECTRICITY_GENERATION_TWH',
             countryCode: WORLD,
           },
         },
@@ -46,7 +47,7 @@ const ConnectedPrimaryEnergyChart = connect(
     ),
     sourceConsumed: energySourceCountryConsumedSelector(countryCode, state),
   }),
-)(PrimaryEnergyChart);
+)(ElectricityMixChart);
 
 class PrimaryEnergyChartContainer extends Component {
   constructor() {
@@ -89,7 +90,7 @@ class PrimaryEnergyChartContainer extends Component {
 
     return (
       <Spin spinning={!isLoaded}>
-        <ConnectedPrimaryEnergyChart
+        <ConnectedElectricityMixChart
           countryCode={countryCode}
           setStacked={value => this.setStacked(value)}
           setPerCapita={value => this.setPerCapita(value)}

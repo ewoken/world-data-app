@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 import { sortBy } from 'ramda';
 
 import { CountryType, StatisticType } from '../../../utils/types';
-import { isMobileOrTablet, formatNumber } from '../../../utils';
+import { isMobileOrTablet, formatNumber, displayUnit } from '../../../utils';
 
 function StatisticExplorer(props) {
   const {
@@ -114,9 +114,7 @@ function StatisticExplorer(props) {
               <a href="javascript:;">{text}</a>), // eslint-disable-line
           },
           {
-            title: perCapita
-              ? `${currentStatistic.unit.base}/capita`
-              : currentStatistic.unit.main,
+            title: displayUnit(currentStatistic.unit, perCapita),
             dataIndex: 'value',
             defaultSortOrder: 'descend',
             sorter: (a, b) => a.value - b.value,

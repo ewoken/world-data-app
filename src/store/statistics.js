@@ -231,7 +231,7 @@ export function countryStatisticSelector(
   state,
 ) {
   const statistic = statisticSelector(statisticCode, state);
-  return statistic.values[countryCode];
+  return statistic && statistic.values[countryCode];
 }
 
 export function countryStatisticLoadedSelector(
@@ -294,7 +294,7 @@ function computeYearInterval(mapOfStatisticValues) {
 }
 
 function computeValue(value, population, perCapita, factor, populationFactor) {
-  if (!value || (!population && perCapita)) {
+  if (value === null || (!population && perCapita)) {
     return null;
   }
 
@@ -377,6 +377,27 @@ export function compiledCountryStatisticsSelector(
     }));
 
   return compiledStatistics;
+}
+
+export function energySourceCountryConsumedSelector(countryCode, state) {
+  const check = d => d.value > 0.01;
+  const statisticCodeMap = {
+    coal: 'COAL_CONSUMPTION_MTOE',
+    gas: 'GAS_CONSUMPTION_MTOE',
+    oil: 'OIL_CONSUMPTION_MTOE',
+    hydro: 'HYDRO_PRODUCTION_MTOE',
+    nuclear: 'NUCLEAR_PRODUCTION_MTOE',
+    biofuelsWaste: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
+    solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
+  };
+  return map(
+    statisticCode =>
+      countryStatisticValuesSelector(
+        { statisticCode, countryCode },
+        state,
+      ).some(check),
+    statisticCodeMap,
+  );
 }
 
 export function compiledStatisticForCountriesAndYear(

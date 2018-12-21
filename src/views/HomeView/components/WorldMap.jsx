@@ -6,7 +6,12 @@ import { interpolateRgb } from 'd3-interpolate';
 import { Map, Tooltip, GeoJSON } from 'react-leaflet';
 
 import { CountryType, StatisticType } from '../../../utils/types';
-import { coordsToLatLng, isMobileOrTablet, formatNumber } from '../../../utils';
+import {
+  coordsToLatLng,
+  isMobileOrTablet,
+  formatNumber,
+  displayUnit,
+} from '../../../utils';
 
 const MAP_HEIGHT = '540px';
 const MIN_COLOR = 'rgb(107, 185, 240)';
@@ -23,10 +28,10 @@ function computeColorMap(data) {
 
   const colorMap = map(value => {
     if (value === null || value === undefined) {
-      return { color: NA_COLOR, value: 'NA' };
+      return { color: NA_COLOR, value };
     }
     if (value === 0) {
-      return { color: MIN_COLOR, value: 0 };
+      return { color: MIN_COLOR, value };
     }
     return {
       color: gradiant(func(value / minValue) / func(maxValue / minValue)),
@@ -98,11 +103,10 @@ function WorldMap(props) {
       <div className="WorldMap__legend">
         <div className="WorldMap__legend__gradient">
           <div>
-            {`${currentStatistic.name} (${
-              perCapita
-                ? `${currentStatistic.unit.base}/capita`
-                : currentStatistic.unit.main
-            })`}
+            {`${currentStatistic.name} (${displayUnit(
+              currentStatistic.unit,
+              perCapita,
+            )})`}
           </div>
           <div
             className="WorldMap__legend__gradientColor"
