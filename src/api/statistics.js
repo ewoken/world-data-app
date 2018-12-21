@@ -7,11 +7,11 @@ const PERCENTAGE_UNIT = {
   factor: 1,
 };
 
-// const MTOE_UNIT = {
-//   main: 'Mtoe',
-//   base: 'toe',
-//   factor: 10 ** 6,
-// };
+const MTOE_UNIT = {
+  main: 'Mtoe',
+  base: 'toe',
+  factor: 10 ** 6,
+};
 
 const ENERGY_INTENSITY_UNIT = {
   main: 'toe/million 2010 $',
@@ -77,23 +77,39 @@ const derivedStatistics = [
       return co2 / energy;
     },
   },
-  // ...['COAL', 'OIL', 'GAS'].map(fuel => ({ TODO bicolors
-  //   code: `${fuel}_TRADE`,
-  //   name: `Trade of ${fuel.toLowerCase()}`,
-  //   description: '',
-  //   unit: MTOE_UNIT,
-  //   source: {
-  //     prod: `${fuel}_PRODUCTION_MTOE`,
-  //     conso: `${fuel}_CONSUMPTION_MTOE`,
-  //   },
-  //   startingYear: 1973,
-  //   endingYear: 2016,
-  //   sourceAttribution: 'IEA, World Bank',
-  //   isIntensive: true,
-  //   compute({ prod, conso }) {
-  //     return conso - prod;
-  //   },
-  // })),
+  {
+    code: 'RENEWABLES_PRODUCTION_MTOE',
+    name: 'Renewables production',
+    description: '',
+    unit: MTOE_UNIT,
+    source: {
+      hydro: 'HYDRO_PRODUCTION_MTOE',
+      geothSolarWindTide: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    sourceAttribution: 'IEA',
+    compute({ hydro, geothSolarWindTide }) {
+      return hydro + geothSolarWindTide;
+    },
+  },
+  {
+    code: 'LOW_CARBON_ENERGY_PRODUCTION_MTOE',
+    name: 'Low-carbon energy production',
+    description: '',
+    unit: MTOE_UNIT,
+    source: {
+      hydro: 'HYDRO_PRODUCTION_MTOE',
+      geothSolarWindTide: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
+      nuclear: 'NUCLEAR_PRODUCTION_MTOE',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    sourceAttribution: 'IEA',
+    compute({ hydro, geothSolarWindTide, nuclear }) {
+      return hydro + geothSolarWindTide + nuclear;
+    },
+  },
 ];
 const derivedCodes = derivedStatistics.map(d => d.code);
 
