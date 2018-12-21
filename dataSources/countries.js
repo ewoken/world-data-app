@@ -1,6 +1,6 @@
 const countriesData = require('world-countries/countries');
 
-const noData = ['AD', 'LI', 'MH', 'FM', 'MC', 'PW', 'SM', 'TV', 'VA'];
+const noDataCountries = require('./noDataCountries.json');
 
 function countryMapValues(country) {
   return {
@@ -15,7 +15,7 @@ function countryMapValues(country) {
     area: country.area,
     capital: country.capital[0], // TODO
     latlng: country.latlng,
-    disabled: noData.includes(country.cca2),
+    disabled: noDataCountries.includes(country.cca2),
   };
 }
 const countries = countriesData.map(countryMapValues);
