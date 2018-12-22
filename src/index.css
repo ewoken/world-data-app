@@ -59,10 +59,14 @@
 
 .WorldMap__legend {
   margin-top: 10px;
+}
+
+.WorldMap__legend__colors {
   display: flex;
 }
 
 .WorldMap__legend__gradient {
+  height: 20px;
   width: 300px;
   margin-right: 10px;
 }
@@ -76,10 +80,6 @@
   display: flex;
   justify-content: space-between;
   width: 300px;
-}
-
-.WorldMap__legend__gradientColor {
-  height: 20px;
 }
 
 #mainCountrySelect {

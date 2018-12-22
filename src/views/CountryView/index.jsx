@@ -15,6 +15,7 @@ import ClimateTab from './components/ClimateTab';
 
 import BasicChart from './components/BasicChart';
 import withCountryStatistics from '../../HOC/withCountryStatistics';
+import { isMobileOrTablet } from '../../utils';
 
 const [PopulationChart, GDPChart] = ['POPULATION', 'GDP_2010_USD'].map(
   statisticCode =>
@@ -54,11 +55,12 @@ class CountryView extends Component {
     }
 
     const countryCode = country.alpha2Code;
+    const flag = isMobileOrTablet() ? country.flagIcon : '';
     return (
       <div className="CountryView">
         <Row gutter={16}>
           <Col xs={24} sm={24} md={18}>
-            <Card title={<h2>{country.commonName}</h2>}>
+            <Card title={<h2>{`${flag} ${country.commonName}`}</h2>}>
               <div>{`Capital: ${country.capital}`}</div>
               <div>{`Area: ${country.area.toLocaleString()} km²`}</div>
               <Row style={{ marginTop: '20px' }} gutter={10}>

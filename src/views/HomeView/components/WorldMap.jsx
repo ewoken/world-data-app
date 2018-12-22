@@ -101,31 +101,32 @@ function WorldMap(props) {
         ))}
       </Map>
       <div className="WorldMap__legend">
-        <div className="WorldMap__legend__gradient">
-          <div>
-            {`${currentStatistic.name} (${displayUnit(
-              currentStatistic.unit,
-              perCapita,
-            )})`}
-          </div>
-          <div
-            className="WorldMap__legend__gradientColor"
-            style={{
-              background: colorGradient,
-            }}
-          />
-          <div className="WorldMap__legend__gradientRange">
-            <div>0</div>
-            <div>{formatNumber(maxValue)}</div>
-          </div>
-        </div>
         <div>
-          <div>{' '}</div>
-          <div
-            className="WorldMap__legend__NA__square"
-            style={{ backgroundColor: NA_COLOR }}
-          />
-          <div>NA</div>
+          {`${currentStatistic.name} (${displayUnit(
+            currentStatistic.unit,
+            perCapita,
+          )})`}
+        </div>
+        <div className="WorldMap__legend__colors">
+          <div>
+            <div
+              className="WorldMap__legend__gradient"
+              style={{
+                background: colorGradient,
+              }}
+            />
+            <div className="WorldMap__legend__gradientRange">
+              <div>0</div>
+              <div>{formatNumber(maxValue)}</div>
+            </div>
+          </div>
+          <div>
+            <div
+              className="WorldMap__legend__NA__square"
+              style={{ backgroundColor: NA_COLOR }}
+            />
+            <div>NA</div>
+          </div>
         </div>
       </div>
     </div>

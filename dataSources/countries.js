@@ -16,6 +16,7 @@ function countryMapValues(country) {
     capital: country.capital[0], // TODO
     latlng: country.latlng,
     disabled: noDataCountries.includes(country.cca2),
+    flagIcon: country.flag,
   };
 }
 const countries = countriesData.map(countryMapValues);
