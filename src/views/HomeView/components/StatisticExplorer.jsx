@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Select, Slider, Radio } from 'antd';
 import debounce from 'lodash.debounce';
 
-import { sortBy } from 'ramda';
+import { sortBy, groupBy } from 'ramda';
 
 import { CountryType, StatisticType } from '../../../utils/types';
 import { isMobileOrTablet, formatNumber, displayUnit } from '../../../utils';
@@ -34,6 +34,8 @@ function StatisticExplorer(props) {
       value: s.value,
     }));
 
+  const statisticByCategory = groupBy(s => s.category, statistics);
+
   return (
     <div className="StatisticExplorer">
       <Select
@@ -41,14 +43,21 @@ function StatisticExplorer(props) {
         placeholder="Statistics"
         optionFilterProp="title"
         value={currentStatistic.code}
-        showSearch={!isMobileOrTablet}
+        showSearch={!isMobileOrTablet()}
         onChange={value => setStatistic(value)}
       >
-        {sortBy(s => s.name, statistics).map(statistic => (
-          <Select.Option key={statistic.code} title={statistic.name}>
-            {`${statistic.name}`}
-          </Select.Option>
-        ))}
+        {Object.keys(statisticByCategory).map(category => {
+          const stats = statisticByCategory[category];
+          return (
+            <Select.OptGroup key={category} label={category}>
+              {sortBy(s => s.name, stats).map(statistic => (
+                <Select.Option key={statistic.code} title={statistic.name}>
+                  {`${statistic.name}`}
+                </Select.Option>
+              ))}
+            </Select.OptGroup>
+          );
+        })}
       </Select>
       <Slider
         className="hideOnMobile"

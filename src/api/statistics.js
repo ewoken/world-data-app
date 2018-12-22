@@ -38,6 +38,7 @@ const derivedStatistics = [
     startingYear: 1973,
     endingYear: 2016,
     sourceAttribution: 'IEA',
+    category: 'Others',
     isIntensive: true,
     compute({ consumption, production }) {
       return (production / consumption) * 100;
@@ -55,6 +56,7 @@ const derivedStatistics = [
     startingYear: 1973,
     endingYear: 2016,
     sourceAttribution: 'IEA, World Bank',
+    category: 'Climate change',
     isIntensive: true,
     compute({ energy, gdp }) {
       return (energy / gdp) * 10 ** 3;
@@ -72,6 +74,7 @@ const derivedStatistics = [
     startingYear: 1973,
     endingYear: 2016,
     sourceAttribution: 'IEA, World Bank',
+    category: 'Climate change',
     isIntensive: true,
     compute({ energy, co2 }) {
       return co2 / energy;
@@ -89,6 +92,7 @@ const derivedStatistics = [
     startingYear: 1973,
     endingYear: 2016,
     sourceAttribution: 'IEA',
+    category: 'Productions',
     compute({ hydro, geothSolarWindTide }) {
       return hydro + geothSolarWindTide;
     },
@@ -106,6 +110,7 @@ const derivedStatistics = [
     startingYear: 1973,
     endingYear: 2016,
     sourceAttribution: 'IEA',
+    category: 'Productions',
     compute({ hydro, geothSolarWindTide, nuclear }) {
       return hydro + geothSolarWindTide + nuclear;
     },

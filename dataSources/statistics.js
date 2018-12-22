@@ -40,6 +40,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Productions',
   },
   {
     code: 'COAL_CONSUMPTION_MTOE',
@@ -47,6 +48,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Consumptions',
   },
   {
     code: 'GAS_PRODUCTION_MTOE',
@@ -54,6 +56,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Productions',
   },
   {
     code: 'GAS_CONSUMPTION_MTOE',
@@ -61,6 +64,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Consumptions',
   },
   {
     code: 'OIL_PRODUCTION_MTOE',
@@ -68,6 +72,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Productions',
   },
   {
     code: 'OIL_CONSUMPTION_MTOE',
@@ -75,6 +80,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Consumptions',
   },
   {
     code: 'HYDRO_PRODUCTION_MTOE',
@@ -82,6 +88,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaSankey.apiCode,
+    category: 'Productions',
   },
   {
     code: 'NUCLEAR_PRODUCTION_MTOE',
@@ -89,6 +96,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaSankey.apiCode,
+    category: 'Productions',
   },
   {
     code: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
@@ -96,6 +104,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaSankey.apiCode,
+    category: 'Consumptions',
   },
   {
     code: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
@@ -103,6 +112,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaSankey.apiCode,
+    category: 'Productions',
   },
   {
     code: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
@@ -110,6 +120,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Consumptions',
   },
   {
     code: 'POPULATION',
@@ -117,6 +128,7 @@ const statistics = [
     description: '',
     unit: CAPITA,
     source: worldBankAPI.apiCode,
+    category: 'Others',
   },
   {
     code: 'GDP_2010_USD',
@@ -124,6 +136,7 @@ const statistics = [
     description: '',
     unit: BILLION_2010_USD,
     source: worldBankAPI.apiCode,
+    category: 'Others',
   },
   {
     code: 'CO2_EMISSIONS_MT',
@@ -131,6 +144,7 @@ const statistics = [
     description: '',
     unit: MT,
     source: worldBankAPI.apiCode,
+    category: 'Climate change',
   },
   {
     code: 'PRIMARY_ENERGY_PRODUCTION_MTOE',
@@ -138,6 +152,7 @@ const statistics = [
     description: '',
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
+    category: 'Productions',
   },
   {
     code: 'ELECTRICITY_GENERATION_TWH',
@@ -145,6 +160,7 @@ const statistics = [
     descrition: '',
     unit: TWH,
     source: ieaAPI.apiCode,
+    category: 'Electricity',
   },
   {
     code: 'OIL_ELECTRICITY_GENERATION_TWH',
@@ -152,6 +168,7 @@ const statistics = [
     descrition: '',
     unit: TWH,
     source: ieaSankey.apiCode,
+    category: 'Electricity',
   },
   {
     code: 'GAS_ELECTRICITY_GENERATION_TWH',
@@ -159,6 +176,7 @@ const statistics = [
     descrition: '',
     unit: TWH,
     source: ieaSankey.apiCode,
+    category: 'Electricity',
   },
   {
     code: 'COAL_ELECTRICITY_GENERATION_TWH',
@@ -166,6 +184,7 @@ const statistics = [
     descrition: '',
     unit: TWH,
     source: ieaSankey.apiCode,
+    category: 'Electricity',
   },
   {
     code: 'BIOFUELS_WASTE_ELECTRICITY_GENERATION_TWH',
@@ -173,6 +192,7 @@ const statistics = [
     descrition: '',
     unit: TWH,
     source: ieaSankey.apiCode,
+    category: 'Electricity',
   },
   {
     code: 'GEOTH_SOLAR_WIND_TIDE_ELECTRICITY_GENERATION_TWH',
@@ -180,6 +200,7 @@ const statistics = [
     descrition: '',
     unit: TWH,
     source: ieaSankey.apiCode,
+    category: 'Electricity',
   },
 ];
 
