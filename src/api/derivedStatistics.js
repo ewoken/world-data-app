@@ -10,6 +10,12 @@ const MTOE_UNIT = {
   factor: 10 ** 6,
 };
 
+const TWH_UNIT = {
+  main: 'TWh',
+  base: 'kWh',
+  factor: 10 ** 9,
+};
+
 const ENERGY_INTENSITY_UNIT = {
   main: 'toe/million 2010 $',
   base: 'toe/million 2010 $',
@@ -20,6 +26,13 @@ const CO2_INTENSITY_OF_ENERGY_UNIT = {
   main: 'tCO2/toe',
   base: 'tCO2/toe',
   factor: 1,
+};
+
+// TODO factorize with dataSources
+const MTOE_TO_TWH = 11.63;
+const POWER_PLANT_EFFICIENCIES = {
+  NUCLEAR: 0.33,
+  HYDRO: 1, // definition of statistics
 };
 
 const derivedStatistics = [
@@ -110,6 +123,38 @@ const derivedStatistics = [
     category: 'Productions',
     compute({ hydro, geothSolarWindTide, nuclear }) {
       return hydro + geothSolarWindTide + nuclear;
+    },
+  },
+  {
+    code: 'NUCLEAR_GENERATION_TWH',
+    name: 'Electricity generation from nuclear',
+    description: '',
+    unit: TWH_UNIT,
+    source: {
+      nuclear: 'NUCLEAR_PRODUCTION_MTOE',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    sourceAttribution: 'IEA',
+    category: 'Electricity',
+    compute({ nuclear }) {
+      return nuclear * POWER_PLANT_EFFICIENCIES.NUCLEAR * MTOE_TO_TWH;
+    },
+  },
+  {
+    code: 'HYDRO_GENERATION_TWH',
+    name: 'Electricity generation from hydro',
+    description: '',
+    unit: TWH_UNIT,
+    source: {
+      hydro: 'HYDRO_PRODUCTION_MTOE',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    sourceAttribution: 'IEA',
+    category: 'Electricity',
+    compute({ hydro }) {
+      return hydro * POWER_PLANT_EFFICIENCIES.HYDRO * MTOE_TO_TWH;
     },
   },
 ];

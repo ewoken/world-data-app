@@ -1,41 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { values } from 'ramda';
+import { values, map } from 'ramda';
 
 import { Spin } from 'antd';
-
-import PrimaryEnergyChart from '../components/PrimaryEnergyChart';
+import EnergyMixChart from '../components/EnergyMixChart';
 
 import {
   loadCountryStatistics,
   countryStatisticsLoadedSelector,
   compiledCountryStatisticsSelector,
   energySourceCountryConsumedSelector,
+  statisticSelector,
 } from '../../../store/statistics';
 
 const WORLD = 'WORLD';
+const POPULATION = 'POPULATION';
 
-const mapOfStatistics = {
-  coal: 'COAL_CONSUMPTION_MTOE',
-  gas: 'GAS_CONSUMPTION_MTOE',
-  oil: 'OIL_CONSUMPTION_MTOE',
-  hydro: 'HYDRO_PRODUCTION_MTOE',
-  nuclear: 'NUCLEAR_PRODUCTION_MTOE',
-  biofuelsWaste: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
-  solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
-};
-const statisticCodes = values(mapOfStatistics).concat(['POPULATION']);
-const worldReferences = ['POPULATION', 'PRIMARY_ENERGY_CONSUMPTION_MTOE'];
-
-const ConnectedPrimaryEnergyChart = connect(
-  (state, { countryCode, perCapita }) => ({
+const ConnectedEnergyMixChart = connect(
+  (state, { countryCode, perCapita, mapOfStatistics, worldReference }) => ({
     data: compiledCountryStatisticsSelector(
       {
         mapOfCountryStatistics: {
           ...mapOfStatistics,
           world: {
-            statisticCode: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
+            statisticCode: worldReference,
             countryCode: WORLD,
           },
         },
@@ -44,11 +33,15 @@ const ConnectedPrimaryEnergyChart = connect(
       },
       state,
     ),
+    statistics: map(
+      statisticCode => statisticSelector(statisticCode, state),
+      mapOfStatistics,
+    ),
     sourceConsumed: energySourceCountryConsumedSelector(countryCode, state),
   }),
-)(PrimaryEnergyChart);
+)(EnergyMixChart);
 
-class PrimaryEnergyChartContainer extends Component {
+class EnergyMixChartContainer extends Component {
   constructor() {
     super();
 
@@ -59,18 +52,25 @@ class PrimaryEnergyChartContainer extends Component {
   }
 
   componentDidMount() {
-    const { countryCode, loadStatistics } = this.props;
+    const {
+      countryCode,
+      loadStatistics,
+      mapOfStatistics,
+      worldReference,
+    } = this.props;
+    const statisticCodes = values(mapOfStatistics).concat([POPULATION]);
 
     loadStatistics({ statisticCodes, countryCode });
     loadStatistics({
-      statisticCodes: worldReferences,
+      statisticCodes: [worldReference, POPULATION],
       countryCode: WORLD,
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { countryCode, loadStatistics } = this.props;
+    const { countryCode, loadStatistics, mapOfStatistics } = this.props;
     if (countryCode !== prevProps.countryCode) {
+      const statisticCodes = values(mapOfStatistics);
       loadStatistics({ statisticCodes, countryCode });
     }
   }
@@ -84,13 +84,22 @@ class PrimaryEnergyChartContainer extends Component {
   }
 
   render() {
-    const { isLoaded, countryCode } = this.props;
+    const {
+      title,
+      isLoaded,
+      countryCode,
+      mapOfStatistics,
+      worldReference,
+    } = this.props;
     const { stacked, perCapita } = this.state;
 
     return (
       <Spin spinning={!isLoaded}>
-        <ConnectedPrimaryEnergyChart
+        <ConnectedEnergyMixChart
+          title={title}
           countryCode={countryCode}
+          mapOfStatistics={mapOfStatistics}
+          worldReference={worldReference}
           setStacked={value => this.setStacked(value)}
           setPerCapita={value => this.setPerCapita(value)}
           stacked={stacked}
@@ -101,10 +110,21 @@ class PrimaryEnergyChartContainer extends Component {
   }
 }
 
-PrimaryEnergyChartContainer.propTypes = {
+EnergyMixChartContainer.propTypes = {
+  title: PropTypes.string.isRequired,
   countryCode: PropTypes.string.isRequired,
   loadStatistics: PropTypes.func.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  mapOfStatistics: PropTypes.shape({
+    coal: PropTypes.string.isRequired,
+    oil: PropTypes.string.isRequired,
+    gas: PropTypes.string.isRequired,
+    hydro: PropTypes.string.isRequired,
+    nuclear: PropTypes.string.isRequired,
+    biofuelsWaste: PropTypes.string.isRequired,
+    solarWindTideGeoth: PropTypes.string.isRequired,
+  }).isRequired,
+  worldReference: PropTypes.string.isRequired,
 };
 
 export default connect(
@@ -112,18 +132,18 @@ export default connect(
     isLoaded:
       countryStatisticsLoadedSelector(
         {
-          statisticCodes,
+          statisticCodes: values(props.mapOfStatistics).concat([POPULATION]),
           countryCode: props.countryCode,
         },
         state,
       ) &&
       countryStatisticsLoadedSelector(
         {
-          statisticCodes: worldReferences,
+          statisticCodes: [props.worldReference, POPULATION],
           countryCode: WORLD,
         },
         state,
       ),
   }),
   { loadStatistics: loadCountryStatistics },
-)(PrimaryEnergyChartContainer);
+)(EnergyMixChartContainer);

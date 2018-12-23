@@ -30,11 +30,7 @@
   list-style-type: none;
 }
 
-.PrimaryEnergyChart__title {
-  text-align: center
-}
-
-.ElectricityMixChart__title {
+.EnergyMixChart__title {
   text-align: center
 }
 

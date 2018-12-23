@@ -13,25 +13,36 @@ import {
   Legend,
 } from 'recharts';
 import { Radio } from 'antd';
-import { tickFormatter } from '../../../utils';
+import { values } from 'ramda';
 
+import { tickFormatter, displayUnit } from '../../../utils';
+import { StatisticType } from '../../../utils/types';
 import CustomTooltip from './CustomTooltip';
 
-function PrimaryEnergyChart(props) {
+function EnergyMixChart(props) {
   const {
     data,
-    sourceConsumed,
     stacked,
     setStacked,
     perCapita,
     setPerCapita,
+    sourceConsumed,
+    statistics,
+    title,
   } = props;
-  const unit = perCapita ? ' toe/capita' : ' Mtoe';
-
+  const { unit: coalUnit } = statistics.coal;
+  const unit = displayUnit(coalUnit, perCapita);
   const LineArea = stacked ? Area : Line;
+
+  if (
+    values(statistics).some(statistic => statistic.unit.main !== coalUnit.main)
+  ) {
+    console.warn('EnergyMixChart : statistics have not same units');
+  }
+
   return (
-    <div className="PrimaryEnergyChart">
-      <h3 className="PrimaryEnergyChart__title">Primary Energy Consumption</h3>
+    <div className="EnergyMixChart">
+      <h3 className="EnergyMixChart__title">{title}</h3>
       <div>
         <Radio.Group
           buttonStyle="solid"
@@ -53,10 +64,10 @@ function PrimaryEnergyChart(props) {
           <Radio.Button value>Per capita</Radio.Button>
         </Radio.Group>
       </div>
-      <ResponsiveContainer height={300} width="100%">
+      <ResponsiveContainer height={280} width="100%">
         <ComposedChart
           data={data}
-          margin={{ top: 10, right: 0, bottom: 10, left: 0 }}
+          margin={{ top: 10, right: 0, bottom: 10, left: 20 }}
         >
           {sourceConsumed.coal && (
             <LineArea
@@ -142,7 +153,7 @@ function PrimaryEnergyChart(props) {
               dataKey="solarWindTideGeoth"
               dot={false}
               activeDot={false}
-              name="Geothermal, Wind, Solar & Tide"
+              name="Geothermy, Wind, Solar & Tide"
               stroke="green"
               fill="green"
               stackId="1"
@@ -169,6 +180,7 @@ function PrimaryEnergyChart(props) {
               value: unit,
               angle: -90,
               position: 'insideLeft',
+              offset: -10,
             }}
           />
           <Tooltip
@@ -181,7 +193,8 @@ function PrimaryEnergyChart(props) {
   );
 }
 
-PrimaryEnergyChart.propTypes = {
+EnergyMixChart.propTypes = {
+  title: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number,
@@ -204,10 +217,19 @@ PrimaryEnergyChart.propTypes = {
     biofuelsWaste: PropTypes.bool,
     solarWindTideGeoth: PropTypes.bool,
   }).isRequired,
+  statistics: PropTypes.shape({
+    coal: StatisticType.isRequired,
+    oil: StatisticType.isRequired,
+    gas: StatisticType.isRequired,
+    hydro: StatisticType.isRequired,
+    nuclear: StatisticType.isRequired,
+    biofuelsWaste: StatisticType.isRequired,
+    solarWindTideGeoth: StatisticType.isRequired,
+  }).isRequired,
   setStacked: PropTypes.func.isRequired,
   setPerCapita: PropTypes.func.isRequired,
   stacked: PropTypes.bool.isRequired,
   perCapita: PropTypes.bool.isRequired,
 };
 
-export default PrimaryEnergyChart;
+export default EnergyMixChart;
