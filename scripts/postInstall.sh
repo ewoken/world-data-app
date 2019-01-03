@@ -9,7 +9,7 @@ cp CNAME public
 
 rm -rf public/data
 
-if ([ -d "data/countries.json" ] && git diff --quiet HEAD^1 dataSources); then
+if ([ "data/countries.json" ] && git diff --quiet HEAD^1 dataSources); then
   echo "No change to dataSources => nothing to do"
 else
   echo "Build data"
@@ -18,4 +18,5 @@ else
   (node dataSources/index.js || exit 1)
 fi
 
+cp node_modules/world-atlas/world/110m.json data/worldTopo.json
 cp -r data public/

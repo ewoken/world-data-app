@@ -1,7 +1,6 @@
 import { feature } from 'topojson-client';
-import worldTopo from 'world-atlas/world/110m.json';
 
-function countryMapValues(country) {
+function countryMapValues(country, worldTopo) {
   const a = worldTopo.objects.countries.geometries.find(
     c => c.id === country.numericCode,
   );
@@ -12,9 +11,12 @@ function countryMapValues(country) {
 }
 
 async function getAllCountries() {
-  const res = await fetch('/data/countries.json');
-  const countries = await res.json();
-  return countries.map(countryMapValues);
+  const [countries, worldTopo] = await Promise.all(
+    [fetch('/data/countries.json'), fetch('/data/worldTopo.json')].map(p =>
+      p.then(res => res.json()),
+    ),
+  );
+  return countries.map(country => countryMapValues(country, worldTopo));
 }
 
 export default getAllCountries;
