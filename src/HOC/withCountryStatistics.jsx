@@ -35,6 +35,11 @@ function withCountryStatistic(
         props,
       );
       const statisticCodes = values(mapOfCountryStatistics);
+
+      if (props.perCapita) {
+        statisticCodes.push('POPULATION');
+      }
+
       return {
         data: compiledCountryStatisticsSelector(
           {
