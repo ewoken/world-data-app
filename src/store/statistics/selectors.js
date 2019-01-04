@@ -1,13 +1,6 @@
-import {
-  values,
-  mapObjIndexed,
-  mergeAll,
-  groupBy,
-  map,
-  omit,
-  uniq,
-} from 'ramda';
+import { values, mapObjIndexed, mergeAll, groupBy, map, omit } from 'ramda';
 import { countriesSelector } from '../countries';
+import { parseMapOfStatistics } from '../../utils';
 
 export function statisticsLoadedSelector(state) {
   return state.statistics.loaded;
@@ -89,12 +82,9 @@ export function countryStatisticValuesSelector(
   return countryStatistic ? countryStatistic.values : [];
 }
 
-export function countryStatisticsLoadedSelector(
-  { statisticCodes, countryCode },
-  state,
-) {
-  return statisticCodes.every(statisticCode =>
-    countryStatisticLoadedSelector({ statisticCode, countryCode }, state),
+export function countryStatisticsLoadedSelector(countryStatitics, state) {
+  return countryStatitics.every(countryStatistic =>
+    countryStatisticLoadedSelector(countryStatistic, state),
   );
 }
 
@@ -121,35 +111,11 @@ function computeYearInterval(mapOfStatisticValues) {
 }
 
 function computeValue(value, population, perCapita, factor, populationFactor) {
-  if (value === null || (!population && perCapita)) {
+  if (value === null || (perCapita && !population)) {
     return null;
   }
 
   return perCapita ? (value * factor) / (populationFactor * population) : value;
-}
-
-function parseMapOfStatistics(
-  mapOfCountryStatistics,
-  defaultCountry,
-  perCapita,
-) {
-  const parsed = map(
-    statistics =>
-      typeof statistics === 'string'
-        ? { statisticCode: statistics, countryCode: defaultCountry }
-        : statistics,
-    mapOfCountryStatistics,
-  );
-  const countryCodes = uniq(values(parsed).map(d => d.countryCode));
-  const populations = mergeAll(
-    countryCodes.map(countryCode => ({
-      [`pop/${countryCode}`]: { statisticCode: 'POPULATION', countryCode },
-    })),
-  );
-  return {
-    ...(perCapita ? populations : {}),
-    ...parsed,
-  };
 }
 
 export function compiledCountryStatisticsSelector(
@@ -181,10 +147,12 @@ export function compiledCountryStatisticsSelector(
   );
   const allValues = [].concat(...values(mapOfNamedStatisticValues));
   const allValuesByYear = groupBy(value => value.year, allValues);
+
   const compiledStatistics = Object.keys(allValuesByYear)
+    .map(year => Number(year))
+    .filter(year => startingYear <= year && year <= endingYear)
     .sort()
     .map(year => mergeAll(allValuesByYear[year]))
-    .filter(value => startingYear <= value.year && value.year <= endingYear)
     .map(compiledValue => ({
       ...compiledValue,
       ...mapObjIndexed((value, compileName) => {
@@ -200,7 +168,7 @@ export function compiledCountryStatisticsSelector(
             ? mapOfStatistic[popCompileName].unit.factor
             : null,
         );
-      }, omit(['year', 'pop'], compiledValue)),
+      }, omit(['year'], compiledValue)),
     }));
 
   return compiledStatistics;

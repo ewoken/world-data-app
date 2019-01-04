@@ -8,6 +8,7 @@ import {
   Tooltip,
   LineChart,
   ResponsiveContainer,
+  CartesianGrid,
 } from 'recharts';
 import CustomTooltip from './CustomTooltip';
 
@@ -15,14 +16,13 @@ import { StatisticType } from '../../../utils/types';
 import { tickFormatter, displayUnit } from '../../../utils';
 
 function BasicChart(props) {
-  const { data, statistics, color, perCapita } = props;
+  const { data, statistics, color, perCapita, height } = props;
   const statistic = statistics.value;
   const unit = displayUnit(statistic.unit, perCapita);
 
   return (
-    <div className="SelfSufficiency">
-      <strong>{`${statistic.name} (${unit})`}</strong>
-      <ResponsiveContainer height={200}>
+    <div className="BasicChart">
+      <ResponsiveContainer height={height}>
         <LineChart data={data}>
           <Line
             type="monotone"
@@ -33,9 +33,10 @@ function BasicChart(props) {
             name={statistic.name}
             unit={` ${unit}`}
           />
+          <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={9} padding={{ left: 5, right: 5 }} />
           <YAxis tickFormatter={tickFormatter} />
-          <Tooltip content={CustomTooltip} />
+          <Tooltip content={props2 => <CustomTooltip {...props2} />} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -52,8 +53,9 @@ BasicChart.propTypes = {
   statistics: PropTypes.shape({
     value: StatisticType,
   }).isRequired,
-  color: PropTypes.string,
+  height: PropTypes.number.isRequired,
   perCapita: PropTypes.bool.isRequired,
+  color: PropTypes.string,
 };
 
 BasicChart.defaultProps = {

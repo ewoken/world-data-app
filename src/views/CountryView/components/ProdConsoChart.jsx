@@ -11,52 +11,11 @@ import {
   Tooltip,
 } from 'recharts';
 import { StatisticType } from '../../../utils/types';
-import { formatNumber, tickFormatter } from '../../../utils';
-
-function CustomTooltip(props) {
-  const { active } = props;
-
-  if (active) {
-    const { payload, label, filter } = props;
-    return (
-      <div className="CustomTooltip">
-        <div>{label}</div>
-        <div>
-          {payload &&
-            payload.filter(filter).map(p => (
-              <div
-                key={p.dataKey}
-                style={{ lineHeight: '22px', color: p.color }}
-              >
-                {`${p.name} : ${formatNumber(p.value)} ${p.unit}`}
-              </div>
-            ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-}
-CustomTooltip.propTypes = {
-  active: PropTypes.bool.isRequired,
-  payload: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-      unit: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
-    }).isRequired,
-  ).isRequired,
-  label: PropTypes.string,
-  filter: PropTypes.func,
-};
-CustomTooltip.defaultProps = {
-  label: '',
-  filter: i => i,
-};
+import { tickFormatter } from '../../../utils';
+import CustomTooltip from './CustomTooltip';
 
 function ProdConsoChart(props) {
-  const { fuel, statistics, data } = props;
+  const { fuel, statistics, data, height } = props;
 
   const consoStatistic = statistics.conso;
   const prodStatistic = statistics.prod;
@@ -82,12 +41,8 @@ function ProdConsoChart(props) {
 
   return (
     <div className="ProdConsoChart">
-      <h3>{fuel}</h3>
-      <ResponsiveContainer height={250} width="100%">
-        <ComposedChart
-          data={dataWithImportAndExport}
-          margin={{ top: 30, right: 20, bottom: 5, left: 20 }}
-        >
+      <ResponsiveContainer height={height}>
+        <ComposedChart data={dataWithImportAndExport}>
           <Area
             type="monotone"
             dot={false}
@@ -146,13 +101,14 @@ function ProdConsoChart(props) {
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={9} />
-          <YAxis
-            label={{ value: unit, position: 'insideTopLeft', offset: -20 }}
-          />
+          <YAxis />
           <Tooltip
             tickFormatter={tickFormatter}
             content={props2 => (
-              <CustomTooltip {...props2} filter={p => p.name !== 'base'} />
+              <CustomTooltip
+                {...props2}
+                displayFilter={p => p.name !== 'base'}
+              />
             )}
           />
         </ComposedChart>
@@ -174,6 +130,7 @@ ProdConsoChart.propTypes = {
     }),
   ).isRequired,
   fuel: PropTypes.string.isRequired,
+  height: PropTypes.number.isRequired,
 };
 
 export default ProdConsoChart;

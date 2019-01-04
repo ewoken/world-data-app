@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import { map, uniq, values, mergeAll } from 'ramda';
 
 // eslint-disable-next-line import/prefer-default-export
 export function coordsToLatLng(coords) {
@@ -41,4 +42,33 @@ export function tickFormatter(value) {
 
 export function displayUnit(unit, perCapita) {
   return perCapita ? `${unit.base}/capita` : unit.main;
+}
+
+export function parseMapOfStatistics(
+  mapOfCountryStatistics,
+  defaultCountry,
+  perCapita,
+) {
+  const parsed = map(
+    statistics =>
+      typeof statistics === 'string'
+        ? { statisticCode: statistics, countryCode: defaultCountry }
+        : statistics,
+    mapOfCountryStatistics,
+  );
+
+  if (!perCapita) {
+    return parsed;
+  }
+
+  const countryCodes = uniq(values(parsed).map(d => d.countryCode));
+  const populations = mergeAll(
+    countryCodes.map(countryCode => ({
+      [`pop/${countryCode}`]: { statisticCode: 'POPULATION', countryCode },
+    })),
+  );
+  return {
+    ...populations,
+    ...parsed,
+  };
 }

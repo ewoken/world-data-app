@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { map, values } from 'ramda';
+import { map, values, pickBy } from 'ramda';
 
 import { Spin } from 'antd';
 
@@ -11,13 +11,40 @@ import {
   statisticSelector,
   compiledCountryStatisticsSelector,
 } from '../store/statistics';
+import { parseMapOfStatistics } from '../utils';
 
-const StatisticsLoader = buildLoader(loadCountryStatistics);
+const StatisticsLoader = buildLoader(({ countryStatistics }) =>
+  loadCountryStatistics(countryStatistics),
+);
 
 function defaultSelector(state, props) {
   return {
     value: props.statisticCode,
   };
+}
+
+function computeMapOfCountryStatistics({
+  baseMapOfCountryStatistics,
+  countryCode,
+  perCapita,
+  worldReference,
+}) {
+  const mapOfCountryStatisticsWithReference =
+    perCapita && worldReference
+      ? {
+          ...baseMapOfCountryStatistics,
+          world: {
+            countryCode: 'WORLD',
+            statisticCode: worldReference,
+          },
+        }
+      : baseMapOfCountryStatistics;
+
+  return parseMapOfStatistics(
+    mapOfCountryStatisticsWithReference,
+    countryCode,
+    perCapita,
+  );
 }
 
 function withCountryStatistic(
@@ -30,15 +57,16 @@ function withCountryStatistic(
 
   return function withCountryStatisticWrapper(WrappedComponent) {
     return connect((state, props) => {
-      const mapOfCountryStatistics = mapOfCountryStatisticsSelector(
-        state,
-        props,
-      );
-      const statisticCodes = values(mapOfCountryStatistics);
-
-      if (props.perCapita) {
-        statisticCodes.push('POPULATION');
-      }
+      const baseMapOfCountryStatistics =
+        props.mapOfCountryStatistics ||
+        mapOfCountryStatisticsSelector(state, props);
+      const mapOfCountryStatistics = computeMapOfCountryStatistics({
+        baseMapOfCountryStatistics,
+        countryCode: props.countryCode,
+        perCapita: props.perCapita,
+        worldReference: props.worldReference,
+      });
+      const countryStatistics = values(mapOfCountryStatistics);
 
       return {
         data: compiledCountryStatisticsSelector(
@@ -50,25 +78,17 @@ function withCountryStatistic(
           state,
         ),
         statistics: map(
-          statisticCode => statisticSelector(statisticCode, state),
-          mapOfCountryStatistics,
+          ({ statisticCode }) => statisticSelector(statisticCode, state),
+          // in order to remove pop statistics added for computation TODO
+          pickBy((v, k) => !k.startsWith('pop/'), mapOfCountryStatistics),
         ),
-        isLoaded: countryStatisticsLoadedSelector(
-          {
-            statisticCodes,
-            countryCode: props.countryCode,
-          },
-          state,
-        ),
-        statisticCodes,
+        isLoaded: countryStatisticsLoadedSelector(countryStatistics, state),
+        countryStatistics,
         perCapita: props.perCapita || false,
       };
     })(props => (
       <Spin spinning={!props.isLoaded}>
-        <StatisticsLoader
-          statisticCodes={props.statisticCodes}
-          countryCode={props.countryCode}
-        />
+        <StatisticsLoader countryStatistics={props.countryStatistics} />
         <WrappedComponent {...props} />
       </Spin>
     ));

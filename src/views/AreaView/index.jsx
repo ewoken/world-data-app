@@ -3,24 +3,15 @@ import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
 import { Row, Col, Card } from 'antd';
+import GeoJSONMap from '../../components/GeoJSONMap';
+
+import { areaWithCountriesSelector } from '../../store/otherSelectors';
 import { AreaType } from '../../utils/types';
 
-import GeoJSONMap from '../../components/GeoJSONMap';
 import SummaryTab from '../CountryView/components/SummaryTab';
 import IndependencyTab from '../CountryView/components/IndependencyTab';
 import ClimateTab from '../CountryView/components/ClimateTab';
-
-import BasicChart from '../CountryView/components/BasicChart';
-import withCountryStatistics from '../../HOC/withCountryStatistics';
-
-import { areaWithCountriesSelector } from '../../store/otherSelectors';
-
-const [PopulationChart, GDPChart] = ['POPULATION', 'GDP_2010_USD'].map(
-  statisticCode =>
-    withCountryStatistics({
-      value: statisticCode,
-    })(BasicChart),
-);
+import BasicChartContainer from '../CountryView/containers/BasicChartContainer';
 
 const tabList = [
   { key: 'summary', tab: 'Summary' },
@@ -78,10 +69,19 @@ class AreaView extends Component {
               )}
               <Row style={{ marginTop: '20px' }} gutter={10}>
                 <Col xs={24} sm={24} md={24} lg={12}>
-                  <PopulationChart countryCode={area.code} color="#2c82c9" />
+                  <BasicChartContainer
+                    statisticCode="POPULATION"
+                    countryCode={area.code}
+                    color="#2c82c9"
+                  />
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={12}>
-                  <GDPChart countryCode={area.code} color="#f22613" perCapita />
+                  <BasicChartContainer
+                    statisticCode="GDP_2010_USD"
+                    countryCode={area.code}
+                    color="#f22613"
+                    perCapita
+                  />
                 </Col>
               </Row>
             </Card>

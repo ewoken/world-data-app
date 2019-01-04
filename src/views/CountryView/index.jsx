@@ -13,16 +13,8 @@ import SummaryTab from './components/SummaryTab';
 import IndependencyTab from './components/IndependencyTab';
 import ClimateTab from './components/ClimateTab';
 
-import BasicChart from './components/BasicChart';
-import withCountryStatistics from '../../HOC/withCountryStatistics';
+import BasicChartContainer from './containers/BasicChartContainer';
 import { isMobileOrTablet } from '../../utils';
-
-const [PopulationChart, GDPChart] = ['POPULATION', 'GDP_2010_USD'].map(
-  statisticCode =>
-    withCountryStatistics({
-      value: statisticCode,
-    })(BasicChart),
-);
 
 const tabList = [
   { key: 'summary', tab: 'Summary' },
@@ -71,12 +63,17 @@ class CountryView extends Component {
                   </Link>
                 ))}
               </div>
-              <Row style={{ marginTop: '20px' }} gutter={10}>
+              <Row style={{ marginTop: '20px' }} gutter={20}>
                 <Col xs={24} sm={24} md={24} lg={12}>
-                  <PopulationChart countryCode={countryCode} color="#2c82c9" />
+                  <BasicChartContainer
+                    statisticCode="POPULATION"
+                    countryCode={countryCode}
+                    color="#2c82c9"
+                  />
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={12}>
-                  <GDPChart
+                  <BasicChartContainer
+                    statisticCode="GDP_2010_USD"
                     countryCode={countryCode}
                     color="#f22613"
                     perCapita

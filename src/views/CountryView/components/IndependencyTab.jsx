@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 
 import { Row, Col } from 'antd';
 
-import withCountryStatistics from '../../../HOC/withCountryStatistics';
+import buildChart from '../../../HOC/buildChart';
 import ProdConsoChart from './ProdConsoChart';
 import BasicChartContainer from '../containers/BasicChartContainer';
 
-const ProdConsoChartContainer = withCountryStatistics((state, props) => ({
-  prod: props.prodStatisticCode,
-  conso: props.consoStatisticCode,
-}))(ProdConsoChart);
+const ProdConsoChartContainer = buildChart({
+  mapOfCountryStatisticsSelector: (state, props) => ({
+    prod: props.prodStatisticCode,
+    conso: props.consoStatisticCode,
+  }),
+})(ProdConsoChart);
 
 function IndependencyTab(props) {
   const { countryCode } = props;
@@ -25,7 +27,7 @@ function IndependencyTab(props) {
           />
         </Col>
       </Row>
-      <Row>
+      <Row gutter={20}>
         <h3>Imports/Exports</h3>
         <Col md={8} sm={24}>
           <ProdConsoChartContainer
@@ -33,6 +35,7 @@ function IndependencyTab(props) {
             prodStatisticCode="COAL_PRODUCTION_MTOE"
             consoStatisticCode="COAL_CONSUMPTION_MTOE"
             fuel="Coal"
+            title="Coal Trade"
           />
         </Col>
         <Col md={8} sm={24}>
@@ -41,6 +44,7 @@ function IndependencyTab(props) {
             prodStatisticCode="OIL_PRODUCTION_MTOE"
             consoStatisticCode="OIL_CONSUMPTION_MTOE"
             fuel="Oil"
+            title="Oil Trade"
           />
         </Col>
         <Col md={8} sm={24}>
@@ -49,6 +53,7 @@ function IndependencyTab(props) {
             prodStatisticCode="GAS_PRODUCTION_MTOE"
             consoStatisticCode="GAS_CONSUMPTION_MTOE"
             fuel="Gas"
+            title="Gas Trade"
           />
         </Col>
       </Row>

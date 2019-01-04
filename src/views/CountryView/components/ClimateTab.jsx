@@ -18,7 +18,7 @@ function ClimateTab(props) {
     <div className="ClimateTab">
       <Row gutter={20}>
         {statisticCodes.map(statisticCode => (
-          <Col md={24 / statisticCodes.length} sm={24}>
+          <Col key={statisticCode} md={24 / statisticCodes.length} sm={24}>
             <BasicChartContainer
               statisticCode={statisticCode}
               countryCode={countryCode}

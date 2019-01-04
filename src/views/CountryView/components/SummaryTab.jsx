@@ -29,18 +29,26 @@ function SummaryTab(props) {
   const { countryCode } = props;
   return (
     <div className="SummaryTab">
-      <EnergyMixChartContainer
-        title="Primary energy consumption"
-        countryCode={countryCode}
-        mapOfStatistics={primaryMap}
-        worldReference={primaryReference}
-      />
-      <EnergyMixChartContainer
-        title="Electricity generation by fuels"
-        countryCode={countryCode}
-        mapOfStatistics={electrictyMap}
-        worldReference={electricityReference}
-      />
+      <div>
+        <EnergyMixChartContainer
+          title="Primary energy consumption"
+          countryCode={countryCode}
+          mapOfCountryStatistics={primaryMap}
+          worldReference={primaryReference}
+          defaultPerCapita
+          defaultStacked
+        />
+      </div>
+      <div id="test" style={{ marginTop: '20px' }}>
+        <EnergyMixChartContainer
+          title="Electricity generation by fuels"
+          countryCode={countryCode}
+          mapOfCountryStatistics={electrictyMap}
+          worldReference={electricityReference}
+          defaultPerCapita
+          defaultStacked
+        />
+      </div>
     </div>
   );
 }

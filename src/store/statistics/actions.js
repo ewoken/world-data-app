@@ -96,9 +96,13 @@ export function loadCountryStatistic({ statisticCode, countryCode }) {
 
     if (statistic.compute) {
       const sourceCodes = values(statistic.source);
+      const countryStatistics = sourceCodes.map(sourceCode => ({
+        statisticCode: sourceCode,
+        countryCode,
+      }));
       dispatch(
         // eslint-disable-next-line no-use-before-define
-        loadCountryStatistics({ statisticCodes: sourceCodes, countryCode }),
+        loadCountryStatistics(countryStatistics),
       );
     }
 
@@ -128,11 +132,11 @@ export function loadCountryStatistic({ statisticCode, countryCode }) {
 }
 
 // TODO
-export function loadCountryStatistics({ statisticCodes, countryCode }) {
+export function loadCountryStatistics(countryStatistics) {
   return function dispatchloadCountryStatistics(dispatch) {
     return Promise.all(
-      statisticCodes.map(statisticCode =>
-        dispatch(loadCountryStatistic({ statisticCode, countryCode })),
+      countryStatistics.map(countryStatistic =>
+        dispatch(loadCountryStatistic(countryStatistic)),
       ),
     );
   };

@@ -12,7 +12,6 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import { Radio } from 'antd';
 import { values } from 'ramda';
 
 import { tickFormatter, displayUnit } from '../../../utils';
@@ -20,16 +19,7 @@ import { StatisticType } from '../../../utils/types';
 import CustomTooltip from './CustomTooltip';
 
 function EnergyMixChart(props) {
-  const {
-    data,
-    stacked,
-    setStacked,
-    perCapita,
-    setPerCapita,
-    sourceConsumed,
-    statistics,
-    title,
-  } = props;
+  const { data, stacked, perCapita, sourceConsumed, statistics } = props;
   const { unit: coalUnit } = statistics.coal;
   const unit = displayUnit(coalUnit, perCapita);
   const LineArea = stacked ? Area : Line;
@@ -42,33 +32,8 @@ function EnergyMixChart(props) {
 
   return (
     <div className="EnergyMixChart">
-      <h3 className="EnergyMixChart__title">{title}</h3>
-      <div>
-        <Radio.Group
-          buttonStyle="solid"
-          size="small"
-          value={stacked}
-          onChange={e => setStacked(e.target.value)}
-          style={{ marginRight: '10px' }}
-        >
-          <Radio.Button value>Stacked</Radio.Button>
-          <Radio.Button value={false}>Split</Radio.Button>
-        </Radio.Group>
-        <Radio.Group
-          buttonStyle="solid"
-          size="small"
-          value={perCapita}
-          onChange={e => setPerCapita(e.target.value)}
-        >
-          <Radio.Button value={false}>Absolute</Radio.Button>
-          <Radio.Button value>Per capita</Radio.Button>
-        </Radio.Group>
-      </div>
       <ResponsiveContainer height={280} width="100%">
-        <ComposedChart
-          data={data}
-          margin={{ top: 10, right: 0, bottom: 10, left: 20 }}
-        >
+        <ComposedChart data={data}>
           {sourceConsumed.coal && (
             <LineArea
               type="monotone"
@@ -164,6 +129,7 @@ function EnergyMixChart(props) {
             <Line
               type="monotone"
               dataKey="world"
+              strokeWidth={2}
               dot={false}
               activeDot={false}
               name="World"
@@ -174,17 +140,15 @@ function EnergyMixChart(props) {
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={4} />
-          <YAxis
-            tickFormatter={tickFormatter}
-            label={{
-              value: unit,
-              angle: -90,
-              position: 'insideLeft',
-              offset: -10,
-            }}
-          />
+          <YAxis tickFormatter={tickFormatter} />
           <Tooltip
-            content={props2 => <CustomTooltip {...props2} withTotal />}
+            content={props2 => (
+              <CustomTooltip
+                {...props2}
+                withTotal
+                totalFilter={p => p.name !== 'World'}
+              />
+            )}
           />
           <Legend iconType="circle" />
         </ComposedChart>
@@ -194,7 +158,6 @@ function EnergyMixChart(props) {
 }
 
 EnergyMixChart.propTypes = {
-  title: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number,

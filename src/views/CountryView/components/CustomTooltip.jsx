@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 
 import { formatNumber } from '../../../utils';
 
-//
-
 function CustomTooltip(props) {
   const { active, separator, payload, withTotal } = props;
 
   if (active && payload && payload.length > 0) {
-    const { label } = props;
+    const { label, displayFilter, totalFilter } = props;
+    const filteredPayload = payload.filter(displayFilter);
 
-    if (payload.length < 2) {
+    if (filteredPayload.length < 2) {
       const { formatter = formatNumber, unit, color, value } = payload[0];
       return (
         <div className="CustomTooltip" style={{ color }}>
@@ -19,14 +18,16 @@ function CustomTooltip(props) {
         </div>
       );
     }
-    const total = payload.reduce((sum, p) => sum + p.value, 0);
-    const totalUnit = payload[0].unit;
+    const total = payload
+      .filter(totalFilter)
+      .reduce((sum, p) => sum + p.value, 0);
+    const totalUnit = filteredPayload[0].unit;
 
     return (
       <div className="CustomTooltip">
         <div>{label}</div>
         <div>
-          {payload.map(p => {
+          {filteredPayload.map(p => {
             const {
               formatter = formatNumber,
               unit,
@@ -67,10 +68,14 @@ CustomTooltip.propTypes = {
   ).isRequired,
   label: PropTypes.any, // eslint-disable-line react/forbid-prop-types
   withTotal: PropTypes.bool,
+  displayFilter: PropTypes.func,
+  totalFilter: PropTypes.func,
 };
 CustomTooltip.defaultProps = {
   label: '',
   withTotal: false,
+  displayFilter: i => i,
+  totalFilter: i => i,
 };
 
 export default CustomTooltip;

@@ -19,6 +19,16 @@
   margin-bottom: 0px;
 }
 
+.ChartWrapper__title {
+  font-weight: bold;
+  font-size: 110%;
+}
+
+.ChartWrapper__header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .CustomTooltip {
   background-color: white;
   border: 1px solid #cccccc;
