@@ -9,7 +9,7 @@ cp CNAME public
 
 rm -rf public/data
 
-if ([ "data/countries.json" ] && git diff --quiet HEAD^1 dataSources); then
+if ([ -d "data" ] && [ "data/countries.json" ] && git diff --quiet HEAD^1 dataSources); then
   echo "No change to dataSources => nothing to do"
 else
   echo "Build data"
