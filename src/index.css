@@ -29,6 +29,15 @@
   justify-content: space-between;
 }
 
+.ChartWrapper__header__right {
+  display: flex;
+}
+
+.StatisticSources__list {
+  margin-bottom: 0px;
+  padding-left: 10px;
+}
+
 .CustomTooltip {
   background-color: white;
   border: 1px solid #cccccc;
@@ -65,6 +74,8 @@
 
 .WorldMap__legend {
   margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .WorldMap__legend__colors {
@@ -86,6 +97,11 @@
   display: flex;
   justify-content: space-between;
   width: 300px;
+}
+
+.StatisticExplorer__options {
+  display: flex;
+  justify-content: space-between;
 }
 
 #mainCountrySelect {

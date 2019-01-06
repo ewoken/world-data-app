@@ -41,6 +41,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Productions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/2020991907/0',
   },
   {
     code: 'COAL_CONSUMPTION_MTOE',
@@ -49,6 +50,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Consumptions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/2020991907/2',
   },
   {
     code: 'GAS_PRODUCTION_MTOE',
@@ -57,6 +59,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Productions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1165808390/0',
   },
   {
     code: 'GAS_CONSUMPTION_MTOE',
@@ -65,6 +68,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Consumptions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1165808390/1',
   },
   {
     code: 'OIL_PRODUCTION_MTOE',
@@ -73,6 +77,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Productions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/2020991907/2',
   },
   {
     code: 'OIL_CONSUMPTION_MTOE',
@@ -81,6 +86,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Consumptions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1920537974/1',
   },
   {
     code: 'HYDRO_PRODUCTION_MTOE',
@@ -121,6 +127,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Consumptions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1002896040/0',
   },
   {
     code: 'POPULATION',
@@ -129,6 +136,7 @@ const statistics = [
     unit: CAPITA,
     source: worldBankAPI.apiCode,
     category: 'Others',
+    sourceUrl: 'https://data.worldbank.org/indicator/SP.POP.TOTL',
   },
   {
     code: 'GDP_2010_USD',
@@ -137,6 +145,7 @@ const statistics = [
     unit: BILLION_2010_USD,
     source: worldBankAPI.apiCode,
     category: 'Others',
+    sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.KD',
   },
   {
     code: 'CO2_EMISSIONS_MT',
@@ -145,6 +154,7 @@ const statistics = [
     unit: MT,
     source: worldBankAPI.apiCode,
     category: 'Climate change',
+    sourceUrl: 'https://data.worldbank.org/indicator/EN.ATM.CO2E.KT',
   },
   {
     code: 'PRIMARY_ENERGY_PRODUCTION_MTOE',
@@ -153,6 +163,7 @@ const statistics = [
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Productions',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1002896040/0',
   },
   {
     code: 'ELECTRICITY_GENERATION_TWH',
@@ -161,6 +172,7 @@ const statistics = [
     unit: TWH,
     source: ieaAPI.apiCode,
     category: 'Electricity',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1118783123/0',
   },
   {
     code: 'OIL_ELECTRICITY_GENERATION_TWH',

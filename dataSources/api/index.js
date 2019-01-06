@@ -43,6 +43,7 @@ async function fetchStatisticFromSource(statistic) {
     startingYear,
     endingYear,
     sourceAttribution: api.sourceAttribution,
+    sourceUrl: statistic.sourceUrl || api.sourceUrl,
     data,
   };
 }

@@ -37,4 +37,5 @@ module.exports = {
   apiCode: IEA_SANKEY_API,
   fetchCountryStatistic: fetchCountryStatisticFromIEASankey,
   sourceAttribution: 'IEA',
+  sourceUrl: 'https://www.iea.org/sankey/',
 };

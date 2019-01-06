@@ -44,24 +44,24 @@ export function displayUnit(unit, perCapita) {
   return perCapita ? `${unit.base}/capita` : unit.main;
 }
 
-export function parseMapOfStatistics(
-  mapOfCountryStatistics,
-  defaultCountry,
-  perCapita,
-) {
-  const parsed = map(
+export function parseMapOfStatistics(mapOfCountryStatistics, defaultCountry) {
+  return map(
     statistics =>
       typeof statistics === 'string'
         ? { statisticCode: statistics, countryCode: defaultCountry }
         : statistics,
     mapOfCountryStatistics,
   );
+}
 
+export function addPopCountryStatistics(mapOfCountryStatistics, perCapita) {
   if (!perCapita) {
-    return parsed;
+    return mapOfCountryStatistics;
   }
 
-  const countryCodes = uniq(values(parsed).map(d => d.countryCode));
+  const countryCodes = uniq(
+    values(mapOfCountryStatistics).map(d => d.countryCode),
+  );
   const populations = mergeAll(
     countryCodes.map(countryCode => ({
       [`pop/${countryCode}`]: { statisticCode: 'POPULATION', countryCode },
@@ -69,6 +69,6 @@ export function parseMapOfStatistics(
   );
   return {
     ...populations,
-    ...parsed,
+    ...mapOfCountryStatistics,
   };
 }

@@ -17,7 +17,13 @@ import {
   compiledStatisticForCountriesAndYear,
   loadStatisticOfCountries,
   statisticOfAllCountriesLoadedSelector,
+  statisticSourcesSelector,
 } from '../../store/statistics';
+
+function f(statisticCode, perCapita) {
+  // TODO
+  return perCapita ? [statisticCode, 'POPULATION'] : [statisticCode];
+}
 
 const ConnectedWorldMap = connect(
   (state, { statisticCode, currentYear, perCapita }) => ({
@@ -40,6 +46,10 @@ const ConnectedStatisticExplorer = connect(
     countries: countriesSelector(state),
     statistics: allStatisticsSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
+    statisticSources: statisticSourcesSelector(
+      f(statisticCode, perCapita),
+      state,
+    ),
     isLoaded:
       statisticOfAllCountriesLoadedSelector(statisticCode, state) &&
       (!perCapita ||

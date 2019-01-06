@@ -7,6 +7,7 @@ import { Icon, Popover, Switch } from 'antd';
 
 import withCountryStatistics from './withCountryStatistics';
 import { displayUnit } from '../utils';
+import StatisticSources from '../components/StatisticSources';
 
 const defaultHeight = 200;
 
@@ -76,6 +77,7 @@ function buildChart(options = {}) {
       const {
         title,
         statistics,
+        statisticSources,
         height,
         perCapita,
         stacked,
@@ -95,38 +97,32 @@ function buildChart(options = {}) {
               <small>{` (${displayUnit(statistic.unit, perCapita)})`}</small>
             </div>
             <div className="ChartWrapper__header__right">
-              <Popover
-                title="Source(s)"
-                content={statistic.sourceAttribution}
-                placement="bottomRight"
-              >
-                <Icon
-                  type="bars"
-                  style={{ fontSize: '15px', marginRight: '5px' }}
-                />
-              </Popover>
+              <StatisticSources statisticSources={statisticSources} />
               {hasSettings && (
-                <Popover
-                  title="Settings"
-                  content={
-                    // eslint-disable-next-line react/jsx-wrap-multilines
-                    <ChartSettings
-                      perCapitaSwitch={perCapitaSwitch}
-                      stackedSwitch={stackedSwitch}
-                      stacked={stacked}
-                      perCapita={perCapita}
-                      setPerCapita={setPerCapita}
-                      setStacked={setStacked}
+                <div>
+                  <Popover
+                    title="Settings"
+                    arrowPointAtCenter
+                    content={
+                      // eslint-disable-next-line react/jsx-wrap-multilines
+                      <ChartSettings
+                        perCapitaSwitch={perCapitaSwitch}
+                        stackedSwitch={stackedSwitch}
+                        stacked={stacked}
+                        perCapita={perCapita}
+                        setPerCapita={setPerCapita}
+                        setStacked={setStacked}
+                      />
+                    }
+                    placement="bottomRight"
+                  >
+                    <Icon
+                      type="setting"
+                      theme="filled"
+                      style={{ fontSize: '15px' }}
                     />
-                  }
-                  placement="bottomRight"
-                >
-                  <Icon
-                    type="setting"
-                    theme="filled"
-                    style={{ fontSize: '15px' }}
-                  />
-                </Popover>
+                  </Popover>
+                </div>
               )}
             </div>
           </div>

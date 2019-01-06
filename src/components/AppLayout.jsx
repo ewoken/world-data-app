@@ -73,7 +73,7 @@ function AppLayout(props) {
               </Switch>
             )}
           </Layout.Content>
-          <Layout.Footer>Sources: IEA, World Data Bank</Layout.Footer>
+          <Layout.Footer>{' '}</Layout.Footer>
         </Layout>
       </Spin>
     </div>

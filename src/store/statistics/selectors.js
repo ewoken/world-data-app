@@ -1,6 +1,6 @@
 import { values, mapObjIndexed, mergeAll, groupBy, map, omit } from 'ramda';
 import { countriesSelector } from '../countries';
-import { parseMapOfStatistics } from '../../utils';
+import { parseMapOfStatistics, addPopCountryStatistics } from '../../utils';
 
 export function statisticsLoadedSelector(state) {
   return state.statistics.loaded;
@@ -119,21 +119,24 @@ function computeValue(value, population, perCapita, factor, populationFactor) {
 }
 
 export function compiledCountryStatisticsSelector(
-  { mapOfCountryStatistics, countryCode, perCapita },
+  { mapOfCountryStatistics: baseMap, countryCode, perCapita },
   state,
 ) {
   const parsedMapOfCountryStatistics = parseMapOfStatistics(
-    mapOfCountryStatistics,
+    baseMap,
     countryCode,
+  );
+  const mapOfCountryStatistics = addPopCountryStatistics(
+    parsedMapOfCountryStatistics,
     perCapita,
   );
   const mapOfStatistic = map(
     ({ statisticCode }) => statisticSelector(statisticCode, state),
-    parsedMapOfCountryStatistics,
+    mapOfCountryStatistics,
   );
   const mapOfStatisticValues = map(
     countryStatistic => countryStatisticValuesSelector(countryStatistic, state),
-    parsedMapOfCountryStatistics,
+    mapOfCountryStatistics,
   );
   const [startingYear, endingYear] = computeYearInterval(mapOfStatisticValues);
 
@@ -157,7 +160,7 @@ export function compiledCountryStatisticsSelector(
       ...compiledValue,
       ...mapObjIndexed((value, compileName) => {
         const popCompileName = `pop/${
-          parsedMapOfCountryStatistics[compileName].countryCode
+          mapOfCountryStatistics[compileName].countryCode
         }`;
         return computeValue(
           value,
@@ -218,4 +221,19 @@ export function compiledStatisticForCountriesAndYear(
     };
   });
   return countryValues;
+}
+
+export function statisticSourcesSelector(statisticCodes, state) {
+  return statisticCodes.reduce((statisticSources, statisticCode) => {
+    const statistic = statisticSelector(statisticCode, state);
+
+    if (statistic.compute) {
+      const sources = values(statistic.source).map(code =>
+        statisticSelector(code, state),
+      );
+      return statisticSources.concat(sources);
+    }
+
+    return statisticSources.concat([statistic]);
+  }, []);
 }
