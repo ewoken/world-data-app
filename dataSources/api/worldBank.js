@@ -14,6 +14,7 @@ const config = {
   CO2_EMISSIONS_MT: {
     worldBankCode: 'EN.ATM.CO2E.KT',
     unitConverter: value => value / 10 ** 3,
+    maxYear: 2014,
   },
 };
 
@@ -36,10 +37,15 @@ async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
     return [];
   }
 
-  return data[1].map(object => ({
+  const parsedData = data[1].map(object => ({
     year: Number(object.date),
     value: unitConverter(object.value),
   }));
+
+  if (statisticConfig.maxYear) {
+    return parsedData.filter(d => d.year <= statisticConfig.maxYear);
+  }
+  return parsedData;
 }
 
 module.exports = {
