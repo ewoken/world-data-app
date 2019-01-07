@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import { map, uniq, values, mergeAll } from 'ramda';
+import domToImage from 'dom-to-image';
 
 // eslint-disable-next-line import/prefer-default-export
 export function coordsToLatLng(coords) {
@@ -71,4 +72,18 @@ export function addPopCountryStatistics(mapOfCountryStatistics, perCapita) {
     ...populations,
     ...mapOfCountryStatistics,
   };
+}
+
+export function chartToPngBlob(domElement, scale) {
+  return domToImage.toBlob(domElement, {
+    filter: element => element.className !== 'ChartWrapper__header__right',
+    bgcolor: 'white',
+    style: {
+      transform: `scale(${scale}) translate(${domElement.offsetWidth /
+        2 /
+        scale}px, ${domElement.offsetHeight / 2 / scale}px)`,
+    },
+    height: domElement.offsetHeight * scale,
+    width: domElement.offsetWidth * scale,
+  });
 }

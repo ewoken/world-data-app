@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Popover, Icon } from 'antd';
+import { Popover, Button } from 'antd';
 
 import { StatisticType } from '../utils/types';
 
@@ -30,7 +30,7 @@ function StatisticSources(props) {
         }
         placement="bottomRight"
       >
-        <Icon type="bars" style={{ fontSize: '15px', marginRight: '5px' }} />
+        <Button size="small" icon="bars" style={{ marginRight: '5px' }} />
       </Popover>
     </div>
   );

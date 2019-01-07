@@ -19,6 +19,10 @@
   margin-bottom: 0px;
 }
 
+.ChartWrapper__title__unit {
+  font-size: 80%;
+}
+
 .ChartWrapper__title {
   font-weight: bold;
   font-size: 110%;
