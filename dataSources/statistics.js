@@ -214,6 +214,14 @@ const statistics = [
     source: ieaSankey.apiCode,
     category: 'Electricity',
   },
+  {
+    code: 'FINAL_ENERGY_CONSUMPTION_MTOE',
+    name: 'Final energy consumption',
+    descrition: '',
+    unit: MTOE_UNIT,
+    source: ieaAPI.apiCode,
+    category: 'Consumptions',
+  },
 ];
 
 module.exports = statistics;

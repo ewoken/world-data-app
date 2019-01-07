@@ -32,6 +32,9 @@ const config = {
   ELECTRICITY_GENERATION_TWH: {
     ieaId: '-361163217',
   },
+  FINAL_ENERGY_CONSUMPTION_MTOE: {
+    ieaId: '-44311105',
+  },
 };
 
 async function fetchStatisticFromIEA(statisticCode) {
