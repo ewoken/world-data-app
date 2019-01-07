@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import buildChart from '../../../HOC/buildChart';
 import EnergyMixChart from '../components/EnergyMixChart';
 
-import { energySourceCountryConsumedSelector } from '../../../store/statistics';
+import { fuelConsumedCountrySelector } from '../../../store/countries';
 
 const EnergyMixChartBuilded = buildChart({
   perCapitaSwitch: true,
@@ -11,7 +11,7 @@ const EnergyMixChartBuilded = buildChart({
 })(EnergyMixChart);
 
 const EnergyMixChartContainer = connect((state, { countryCode }) => ({
-  sourceConsumed: energySourceCountryConsumedSelector(countryCode, state),
+  fuelConsumed: fuelConsumedCountrySelector(countryCode, state),
 }))(EnergyMixChartBuilded);
 
 export default EnergyMixChartContainer;

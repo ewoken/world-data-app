@@ -19,7 +19,7 @@ import { StatisticType } from '../../../utils/types';
 import CustomTooltip from './CustomTooltip';
 
 function EnergyMixChart(props) {
-  const { data, stacked, perCapita, sourceConsumed, statistics } = props;
+  const { data, stacked, perCapita, fuelConsumed, statistics } = props;
   const { unit: coalUnit } = statistics.coal;
   const unit = displayUnit(coalUnit, perCapita);
   const LineArea = stacked ? Area : Line;
@@ -34,7 +34,7 @@ function EnergyMixChart(props) {
     <div className="EnergyMixChart">
       <ResponsiveContainer height={280} width="100%">
         <ComposedChart data={data}>
-          {sourceConsumed.coal && (
+          {fuelConsumed.coal && (
             <LineArea
               type="monotone"
               dataKey="coal"
@@ -47,7 +47,7 @@ function EnergyMixChart(props) {
               unit={unit}
             />
           )}
-          {sourceConsumed.oil && (
+          {fuelConsumed.oil && (
             <LineArea
               type="monotone"
               dataKey="oil"
@@ -60,7 +60,7 @@ function EnergyMixChart(props) {
               unit={unit}
             />
           )}
-          {sourceConsumed.gas && (
+          {fuelConsumed.gas && (
             <LineArea
               type="monotone"
               dataKey="gas"
@@ -73,7 +73,7 @@ function EnergyMixChart(props) {
               unit={unit}
             />
           )}
-          {sourceConsumed.nuclear && (
+          {fuelConsumed.nuclear && (
             <LineArea
               type="monotone"
               dataKey="nuclear"
@@ -86,7 +86,7 @@ function EnergyMixChart(props) {
               unit={unit}
             />
           )}
-          {sourceConsumed.hydro && (
+          {fuelConsumed.hydro && (
             <LineArea
               type="monotone"
               dataKey="hydro"
@@ -99,7 +99,7 @@ function EnergyMixChart(props) {
               unit={unit}
             />
           )}
-          {sourceConsumed.biofuelsWaste && (
+          {fuelConsumed.biofuelsWaste && (
             <LineArea
               type="monotone"
               dataKey="biofuelsWaste"
@@ -112,7 +112,7 @@ function EnergyMixChart(props) {
               unit={unit}
             />
           )}
-          {sourceConsumed.solarWindTideGeoth && (
+          {fuelConsumed.solarWindTideGeoth && (
             <LineArea
               type="monotone"
               dataKey="solarWindTideGeoth"
@@ -171,7 +171,7 @@ EnergyMixChart.propTypes = {
       world: PropTypes.number,
     }).isRequired,
   ).isRequired,
-  sourceConsumed: PropTypes.shape({
+  fuelConsumed: PropTypes.shape({
     coal: PropTypes.bool,
     oil: PropTypes.bool,
     gas: PropTypes.bool,

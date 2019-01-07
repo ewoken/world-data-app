@@ -1,9 +1,20 @@
-import { values, indexBy, prop } from 'ramda';
+import { values, indexBy, prop, mapObjIndexed } from 'ramda';
 
 import getAllCountries from '../api/countries';
 
 export const COUNTRIES_LOAD_ACTION = 'COUNTRIES_LOAD_ACTION';
 export const COUNTRIES_RECEIVE_ACTION = 'COUNTRIES_RECEIVE_ACTION';
+
+const defaultIndicators = {
+  // for areas
+  coal: true,
+  oil: true,
+  gas: true,
+  hydro: true,
+  nuclear: true,
+  biofuelsWaste: true,
+  solarWindTideGeoth: true,
+};
 
 function loadCountriesAction() {
   return { type: COUNTRIES_LOAD_ACTION };
@@ -67,6 +78,23 @@ export function dependentCountriesSelector(state) {
 
 export function countrySelector(countryCode, state) {
   return state.countries.data[countryCode];
+}
+
+export function fuelConsumedCountrySelector(countryCode, state) {
+  const country = countrySelector(countryCode, state);
+  return country ? country.hasConsumed : defaultIndicators;
+}
+
+export function fuelProducedCountrySelector(countryCode, state) {
+  const country = countrySelector(countryCode, state);
+  return country ? country.hasProduced : defaultIndicators;
+}
+
+export function fuelProducedOrConsumedCountrySelector(countryCode, state) {
+  const country = countrySelector(countryCode, state);
+  return country
+    ? mapObjIndexed((v, k) => v || country.hasConsumed[k], country.hasProduced)
+    : defaultIndicators;
 }
 
 export default countriesReducer;

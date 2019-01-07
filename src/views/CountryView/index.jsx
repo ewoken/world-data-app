@@ -15,6 +15,7 @@ import ClimateTab from './components/ClimateTab';
 
 import BasicChartContainer from './containers/BasicChartContainer';
 import { isMobileOrTablet } from '../../utils';
+import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
 
 const tabList = [
   { key: 'summary', tab: 'Summary' },
@@ -22,9 +23,18 @@ const tabList = [
   { key: 'climate', tab: 'Climate change' },
 ];
 
+const IndependencyTabContainer = connect((state, props) => ({
+  fuelProducedOrConsumed: fuelProducedOrConsumedCountrySelector(
+    props.countryCode,
+    state,
+  ),
+}))(IndependencyTab);
+
 const tabContent = {
   summary: countryCode => <SummaryTab countryCode={countryCode} />,
-  independency: countryCode => <IndependencyTab countryCode={countryCode} />,
+  independency: countryCode => (
+    <IndependencyTabContainer countryCode={countryCode} />
+  ),
   climate: countryCode => <ClimateTab countryCode={countryCode} />,
 };
 

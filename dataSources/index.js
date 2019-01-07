@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { forEachObjIndexed, groupBy, indexBy, map } = require('ramda');
+const { forEachObjIndexed, groupBy, indexBy, map, omit } = require('ramda');
 const { countries } = require('./countries');
 const statistics = require('./statistics');
 const { fetchStatisticFromSource } = require('./api');
@@ -22,17 +22,34 @@ function writeFiles(statisticPath, dataByKey) {
   }, dataByKey);
 }
 
-async function generateData() {
-  fs.writeFileSync('./data/countries.json', JSON.stringify(countries));
+const hasConsumedMap = {
+  coal: 'COAL_CONSUMPTION_MTOE',
+  gas: 'GAS_CONSUMPTION_MTOE',
+  oil: 'OIL_CONSUMPTION_MTOE',
+  hydro: 'HYDRO_PRODUCTION_MTOE',
+  nuclear: 'NUCLEAR_PRODUCTION_MTOE',
+  biofuelsWaste: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
+  solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
+};
 
+const hasProducedMap = {
+  coal: 'COAL_PRODUCTION_MTOE',
+  gas: 'GAS_PRODUCTION_MTOE',
+  oil: 'OIL_PRODUCTION_MTOE',
+  hydro: 'HYDRO_PRODUCTION_MTOE',
+  nuclear: 'NUCLEAR_PRODUCTION_MTOE',
+  biofuelsWaste: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
+  solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
+};
+
+async function generateData() {
   const fullStatistics = await statistics.reduce(async (p, statistic) => {
     const stats = await p;
 
     console.log(`Fetching ${statistic.code}`);
-    const {
-      data: dataByCountry,
-      ...fullStatistic
-    } = await fetchStatisticFromSource(statistic);
+    const fullStatistic = await fetchStatisticFromSource(statistic);
+    const dataByCountry = fullStatistic.data;
+
     stats.push(fullStatistic);
 
     const statisticPath = assertStatisticPath(statistic.code);
@@ -78,8 +95,23 @@ async function generateData() {
     return stats;
   }, Promise.resolve([]));
 
+  const fullStatisticByCode = indexBy(s => s.code, fullStatistics);
+  const check = countryCode => code =>
+    !!fullStatisticByCode[code].data[countryCode] &&
+    fullStatisticByCode[code].data[countryCode].some(d => d.value > 0.01);
+  const countriesData = countries.map(country => ({
+    ...country,
+    hasProduced: map(check(country.alpha2Code), hasProducedMap),
+    hasConsumed: map(check(country.alpha2Code), hasConsumedMap),
+  }));
+
+  fs.writeFileSync('./data/countries.json', JSON.stringify(countriesData));
+
   console.log('Write statistics.json');
-  fs.writeFileSync('./data/statistics.json', JSON.stringify(fullStatistics));
+  fs.writeFileSync(
+    './data/statistics.json',
+    JSON.stringify(fullStatistics.map(omit(['data']))),
+  );
 }
 
 generateData().catch(err => {

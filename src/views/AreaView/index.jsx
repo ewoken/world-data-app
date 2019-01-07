@@ -13,15 +13,24 @@ import IndependencyTab from '../CountryView/components/IndependencyTab';
 import ClimateTab from '../CountryView/components/ClimateTab';
 import BasicChartContainer from '../CountryView/containers/BasicChartContainer';
 
+import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
+
 const tabList = [
   { key: 'summary', tab: 'Summary' },
   { key: 'independency', tab: 'Energy (in)dependency' },
   { key: 'climate', tab: 'Climate change' },
 ];
 
+const IndependencyTabContainer = connect((state, props) => ({
+  fuelProducedOrConsumed: fuelProducedOrConsumedCountrySelector(
+    props.countryCode,
+    state,
+  ),
+}))(IndependencyTab);
+
 const tabContent = {
   summary: areaCode => <SummaryTab countryCode={areaCode} />,
-  independency: areaCode => <IndependencyTab countryCode={areaCode} />,
+  independency: areaCode => <IndependencyTabContainer countryCode={areaCode} />,
   climate: areaCode => <ClimateTab countryCode={areaCode} />,
 };
 

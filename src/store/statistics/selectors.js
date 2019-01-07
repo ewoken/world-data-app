@@ -177,27 +177,6 @@ export function compiledCountryStatisticsSelector(
   return compiledStatistics;
 }
 
-export function energySourceCountryConsumedSelector(countryCode, state) {
-  const check = d => d.value > 0.01;
-  const statisticCodeMap = {
-    coal: 'COAL_CONSUMPTION_MTOE',
-    gas: 'GAS_CONSUMPTION_MTOE',
-    oil: 'OIL_CONSUMPTION_MTOE',
-    hydro: 'HYDRO_PRODUCTION_MTOE',
-    nuclear: 'NUCLEAR_PRODUCTION_MTOE',
-    biofuelsWaste: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
-    solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
-  };
-  return map(
-    statisticCode =>
-      countryStatisticValuesSelector(
-        { statisticCode, countryCode },
-        state,
-      ).some(check),
-    statisticCodeMap,
-  );
-}
-
 export function compiledStatisticForCountriesAndYear(
   { statisticCode, year, perCapita },
   state,

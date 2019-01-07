@@ -15,7 +15,7 @@ const ProdConsoChartContainer = buildChart({
 })(ProdConsoChart);
 
 function IndependencyTab(props) {
-  const { countryCode } = props;
+  const { countryCode, fuelProducedOrConsumed } = props;
   return (
     <div className="IndependencyTab">
       <Row>
@@ -29,33 +29,39 @@ function IndependencyTab(props) {
       </Row>
       <Row gutter={20}>
         <h3>Imports/Exports</h3>
-        <Col md={8} sm={24}>
-          <ProdConsoChartContainer
-            countryCode={countryCode}
-            prodStatisticCode="COAL_PRODUCTION_MTOE"
-            consoStatisticCode="COAL_CONSUMPTION_MTOE"
-            fuel="Coal"
-            title="Coal Trade"
-          />
-        </Col>
-        <Col md={8} sm={24}>
-          <ProdConsoChartContainer
-            countryCode={countryCode}
-            prodStatisticCode="OIL_PRODUCTION_MTOE"
-            consoStatisticCode="OIL_CONSUMPTION_MTOE"
-            fuel="Oil"
-            title="Oil Trade"
-          />
-        </Col>
-        <Col md={8} sm={24}>
-          <ProdConsoChartContainer
-            countryCode={countryCode}
-            prodStatisticCode="GAS_PRODUCTION_MTOE"
-            consoStatisticCode="GAS_CONSUMPTION_MTOE"
-            fuel="Gas"
-            title="Gas Trade"
-          />
-        </Col>
+        {fuelProducedOrConsumed.coal && (
+          <Col md={8} sm={24}>
+            <ProdConsoChartContainer
+              countryCode={countryCode}
+              prodStatisticCode="COAL_PRODUCTION_MTOE"
+              consoStatisticCode="COAL_CONSUMPTION_MTOE"
+              fuel="Coal"
+              title="Coal Trade"
+            />
+          </Col>
+        )}
+        {fuelProducedOrConsumed.oil && (
+          <Col md={8} sm={24}>
+            <ProdConsoChartContainer
+              countryCode={countryCode}
+              prodStatisticCode="OIL_PRODUCTION_MTOE"
+              consoStatisticCode="OIL_CONSUMPTION_MTOE"
+              fuel="Oil"
+              title="Oil Trade"
+            />
+          </Col>
+        )}
+        {fuelProducedOrConsumed.gas && (
+          <Col md={8} sm={24}>
+            <ProdConsoChartContainer
+              countryCode={countryCode}
+              prodStatisticCode="GAS_PRODUCTION_MTOE"
+              consoStatisticCode="GAS_CONSUMPTION_MTOE"
+              fuel="Gas"
+              title="Gas Trade"
+            />
+          </Col>
+        )}
       </Row>
     </div>
   );
@@ -63,6 +69,11 @@ function IndependencyTab(props) {
 
 IndependencyTab.propTypes = {
   countryCode: PropTypes.string.isRequired,
+  fuelProducedOrConsumed: PropTypes.shape({
+    coal: PropTypes.bool,
+    oil: PropTypes.bool,
+    gas: PropTypes.bool,
+  }).isRequired,
 };
 
 export default IndependencyTab;
