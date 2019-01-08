@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce';
 
 import { sortBy, groupBy } from 'ramda';
 
-import StatisticSources from '../../../components/StatisticSources';
+import StatisticDetails from '../../../components/StatisticDetails';
 
 import { CountryType, StatisticType } from '../../../utils/types';
 import { isMobileOrTablet, formatNumber, displayUnit } from '../../../utils';
@@ -105,7 +105,10 @@ function StatisticExplorer(props) {
             Per capita
           </Radio.Button>
         </Radio.Group>
-        <StatisticSources statisticSources={statisticSources} />
+        <StatisticDetails
+          statisticSources={statisticSources}
+          description={currentStatistic.description}
+        />
       </div>
       <Table
         className="hideOnMobile"

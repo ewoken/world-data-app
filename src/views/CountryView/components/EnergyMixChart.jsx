@@ -41,15 +41,15 @@ function EnergyMixChart(props) {
     console.warn('EnergyMixChart : statistics have not same units');
   }
 
-  const max = stacked
-    ? Math.max(
-        ...data.map(d =>
+  const max = Math.max(
+    ...(stacked
+      ? data.map(d =>
           Object.keys(fuelConsumed).reduce((sum, k) => sum + d[k], 0),
-        ),
-      )
-    : Math.max(
-        ...data.map(d => Math.max(...Object.keys(fuelConsumed).map(k => d[k]))),
-      );
+        )
+      : data.map(d => Math.max(...Object.keys(fuelConsumed).map(k => d[k])))),
+    ...(perCapita ? data.map(d => d.world) : []),
+  );
+
   const chartMax = max * 1.05;
   const ticks = getNiceTickValues([0, chartMax], 5, true);
 

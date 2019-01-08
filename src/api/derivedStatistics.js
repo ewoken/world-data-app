@@ -39,7 +39,8 @@ const derivedStatistics = [
   {
     code: 'ENERGY_SELF_SUFFICIENCY',
     name: 'Energy Self-sufficiency',
-    description: '',
+    description:
+      'This indicator made up by dividing primary energy consumption by primary energy production, gives an indication on the level of self-sufficiency (or dependency) of a country.',
     unit: PERCENTAGE_UNIT,
     source: {
       consumption: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
@@ -75,7 +76,8 @@ const derivedStatistics = [
   {
     code: 'CO2_INTENSITY_OF_ENERGY',
     name: 'CO2 Intensity of energy',
-    description: '',
+    description:
+      'Measures the mass of CO2 by unit of energy that is emitted by the country.',
     unit: CO2_INTENSITY_OF_ENERGY_UNIT,
     source: {
       co2: 'FOSSIL_CO2_EMISSIONS_MT',
@@ -93,7 +95,7 @@ const derivedStatistics = [
   {
     code: 'RENEWABLES_PRODUCTION_MTOE',
     name: 'Renewables production',
-    description: '',
+    description: 'Includes hydroelectricity, solar, wind and tide productions.',
     unit: MTOE_UNIT,
     source: {
       hydro: 'HYDRO_PRODUCTION_MTOE',
@@ -110,7 +112,8 @@ const derivedStatistics = [
   {
     code: 'LOW_CARBON_ENERGY_PRODUCTION_MTOE',
     name: 'Low-carbon energy production',
-    description: '',
+    description:
+      'Includes renewables and nuclear productions. Excludes biofuels at the moment.',
     unit: MTOE_UNIT,
     source: {
       hydro: 'HYDRO_PRODUCTION_MTOE',

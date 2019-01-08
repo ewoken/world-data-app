@@ -8,7 +8,7 @@ import { Icon, Popover, Switch, Button } from 'antd';
 
 import withCountryStatistics from './withCountryStatistics';
 import { displayUnit, chartToPngBlob } from '../utils';
-import StatisticSources from '../components/StatisticSources';
+import StatisticDetails from '../components/StatisticDetails';
 
 const defaultHeight = 200;
 
@@ -85,6 +85,7 @@ function buildChart(options = {}) {
         render() {
           const {
             title,
+            description,
             statistics,
             statisticSources,
             height,
@@ -93,12 +94,21 @@ function buildChart(options = {}) {
             setPerCapita,
             setStacked,
           } = this.props;
-
-          const statistic = values(statistics)[0];
+          const statisticList = values(statistics);
+          const statistic = statisticList[0];
           const finalHeight = options.height || height || defaultHeight;
           const file = title
             ? title.replace(/ /g, '_')
             : statistic.name.replace(/ /g, '_');
+
+          const descriptionStatistic = statisticList.find(
+            s => s.code === description,
+          );
+          const finalDescription =
+            statisticList.length < 2
+              ? description || statistic.description
+              : (descriptionStatistic && descriptionStatistic.description) ||
+                description;
 
           return (
             <div className="ChartWrapper" ref={this.chartRef}>
@@ -126,7 +136,10 @@ function buildChart(options = {}) {
                       }}
                     />
                   </div>
-                  <StatisticSources statisticSources={statisticSources} />
+                  <StatisticDetails
+                    statisticSources={statisticSources}
+                    description={finalDescription}
+                  />
                   {hasSettings && (
                     <div>
                       <Popover

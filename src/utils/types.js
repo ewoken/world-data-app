@@ -11,7 +11,9 @@ export const CountryType = PropTypes.shape({
 });
 
 export const StatisticType = PropTypes.shape({
+  code: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
   unit: PropTypes.shape({
     main: PropTypes.string.isRequired,
     base: PropTypes.string.isRequired,
@@ -19,6 +21,10 @@ export const StatisticType = PropTypes.shape({
   perCapita: PropTypes.bool,
   startingYear: PropTypes.number.isRequired,
   endingYear: PropTypes.number.isRequired,
+  category: PropTypes.string.isRequired,
+  sourceAttribution: PropTypes.string,
+  sourceUrl: PropTypes.string,
+  sourceDescriptionUrl: PropTypes.string,
 });
 
 export const StatisticValues = PropTypes.arrayOf(

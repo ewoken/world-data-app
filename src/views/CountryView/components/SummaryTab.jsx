@@ -32,6 +32,7 @@ function SummaryTab(props) {
       <div>
         <EnergyMixChartContainer
           title="Primary energy consumption"
+          description="PRIMARY_ENERGY_CONSUMPTION_MTOE"
           countryCode={countryCode}
           mapOfCountryStatistics={primaryMap}
           worldReference={primaryReference}
@@ -42,6 +43,7 @@ function SummaryTab(props) {
       <div id="test" style={{ marginTop: '20px' }}>
         <EnergyMixChartContainer
           title="Electricity generation by fuels"
+          description="ELECTRICITY_GENERATION_TWH"
           countryCode={countryCode}
           mapOfCountryStatistics={electrictyMap}
           worldReference={electricityReference}
