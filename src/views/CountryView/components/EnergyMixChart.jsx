@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { values } from 'ramda';
 
+import { getNiceTickValues } from 'recharts-scale';
 import { tickFormatter, displayUnit } from '../../../utils';
 import { StatisticType } from '../../../utils/types';
 import CustomTooltip from './CustomTooltip';
@@ -23,6 +24,16 @@ function EnergyMixChart(props) {
   const { unit: coalUnit } = statistics.coal;
   const unit = displayUnit(coalUnit, perCapita);
   const LineArea = stacked ? Area : Line;
+  const defaultLineAreaProps = {
+    type: 'monotone',
+    dot: false,
+    activeDot: false,
+    unit,
+  };
+
+  const lineAreaProps = stacked
+    ? { stackId: '1', ...defaultLineAreaProps }
+    : { strokeWidth: 2, ...defaultLineAreaProps };
 
   if (
     values(statistics).some(statistic => statistic.unit.main !== coalUnit.main)
@@ -30,99 +41,88 @@ function EnergyMixChart(props) {
     console.warn('EnergyMixChart : statistics have not same units');
   }
 
+  const max = stacked
+    ? Math.max(
+        ...data.map(d =>
+          Object.keys(fuelConsumed).reduce((sum, k) => sum + d[k], 0),
+        ),
+      )
+    : Math.max(
+        ...data.map(d => Math.max(...Object.keys(fuelConsumed).map(k => d[k]))),
+      );
+  const chartMax = max * 1.05;
+  const ticks = getNiceTickValues([0, chartMax], 5, true);
+
+  if (ticks[3] > chartMax) {
+    ticks.pop();
+  }
+  const domain = [0, ticks[ticks.length - 1]];
+
   return (
     <div className="EnergyMixChart">
       <ResponsiveContainer height={280} width="100%">
         <ComposedChart data={data}>
           {fuelConsumed.coal && (
             <LineArea
-              type="monotone"
+              {...lineAreaProps}
               dataKey="coal"
-              dot={false}
-              activeDot={false}
               name="Coal"
               stroke="black"
               fill="black"
-              stackId="1"
-              unit={unit}
             />
           )}
           {fuelConsumed.oil && (
             <LineArea
-              type="monotone"
+              {...lineAreaProps}
               dataKey="oil"
-              dot={false}
-              activeDot={false}
               name="Oil"
               stroke="grey"
               fill="grey"
-              stackId="1"
-              unit={unit}
             />
           )}
           {fuelConsumed.gas && (
             <LineArea
-              type="monotone"
+              {...lineAreaProps}
               dataKey="gas"
-              dot={false}
-              activeDot={false}
               name="Gas"
               stroke="orange"
               fill="orange"
-              stackId="1"
-              unit={unit}
             />
           )}
           {fuelConsumed.nuclear && (
             <LineArea
-              type="monotone"
+              {...lineAreaProps}
               dataKey="nuclear"
-              dot={false}
-              activeDot={false}
               name="Nuclear"
               stroke="purple"
               fill="purple"
-              stackId="1"
-              unit={unit}
             />
           )}
           {fuelConsumed.hydro && (
             <LineArea
-              type="monotone"
+              {...lineAreaProps}
               dataKey="hydro"
-              dot={false}
-              activeDot={false}
               name="Hydroelectricity"
               stroke="blue"
               fill="blue"
-              stackId="1"
-              unit={unit}
             />
           )}
           {fuelConsumed.biofuelsWaste && (
             <LineArea
-              type="monotone"
+              {...lineAreaProps}
               dataKey="biofuelsWaste"
-              dot={false}
-              activeDot={false}
               name="Biofuels & Waste"
               stroke="saddlebrown"
               fill="saddlebrown"
-              stackId="1"
-              unit={unit}
             />
           )}
           {fuelConsumed.solarWindTideGeoth && (
             <LineArea
-              type="monotone"
+              {...lineAreaProps}
               dataKey="solarWindTideGeoth"
-              dot={false}
-              activeDot={false}
               name="Geothermy, Wind, Solar & Tide"
               stroke="green"
               fill="green"
-              stackId="1"
-              unit={unit}
             />
           )}
           {perCapita && (
@@ -140,7 +140,7 @@ function EnergyMixChart(props) {
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={4} />
-          <YAxis tickFormatter={tickFormatter} />
+          <YAxis tickFormatter={tickFormatter} ticks={ticks} domain={domain} />
           <Tooltip
             content={props2 => (
               <CustomTooltip
