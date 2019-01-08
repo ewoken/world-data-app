@@ -78,7 +78,7 @@ const derivedStatistics = [
     description: '',
     unit: CO2_INTENSITY_OF_ENERGY_UNIT,
     source: {
-      co2: 'CO2_EMISSIONS_MT',
+      co2: 'FOSSIL_CO2_EMISSIONS_MT',
       energy: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
     },
     startingYear: 1973,

@@ -148,13 +148,13 @@ const statistics = [
     sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.KD',
   },
   {
-    code: 'CO2_EMISSIONS_MT',
-    name: 'CO2 Emissions',
+    code: 'FOSSIL_CO2_EMISSIONS_MT',
+    name: 'CO2 Emissions from fossil fuels',
     description: '',
     unit: MT,
-    source: worldBankAPI.apiCode,
+    source: ieaAPI.apiCode,
     category: 'Climate change',
-    sourceUrl: 'https://data.worldbank.org/indicator/EN.ATM.CO2E.KT',
+    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/1378539487/0',
   },
   {
     code: 'PRIMARY_ENERGY_PRODUCTION_MTOE',

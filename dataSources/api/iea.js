@@ -35,6 +35,9 @@ const config = {
   FINAL_ENERGY_CONSUMPTION_MTOE: {
     ieaId: '-44311105',
   },
+  FOSSIL_CO2_EMISSIONS_MT: {
+    ieaId: '-573878429',
+  },
 };
 
 async function fetchStatisticFromIEA(statisticCode) {

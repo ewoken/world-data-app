@@ -12,7 +12,7 @@ function ClimateTab(props) {
       <Row gutter={20}>
         <Col md={8} sm={24}>
           <BasicChartContainer
-            statisticCode="CO2_EMISSIONS_MT"
+            statisticCode="FOSSIL_CO2_EMISSIONS_MT"
             perCapita
             countryCode={countryCode}
           />

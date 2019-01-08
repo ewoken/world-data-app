@@ -11,11 +11,11 @@ const config = {
     worldBankCode: 'NY.GDP.MKTP.KD',
     unitConverter: value => value / 10 ** 9,
   },
-  CO2_EMISSIONS_MT: {
-    worldBankCode: 'EN.ATM.CO2E.KT',
-    unitConverter: value => value / 10 ** 3,
-    maxYear: 2014,
-  },
+  // CO2_EMISSIONS_MT: {
+  //   worldBankCode: 'EN.ATM.CO2E.KT',
+  //   unitConverter: value => value / 10 ** 3,
+  //   maxYear: 2014,
+  // },
 };
 
 async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
