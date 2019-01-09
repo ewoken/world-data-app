@@ -1,12 +1,16 @@
 import { feature } from 'topojson-client';
+import L from 'leaflet';
 
 function countryMapValues(country, worldTopo) {
   const a = worldTopo.objects.countries.geometries.find(
     c => c.id === country.numericCode,
   );
+  const geojson = a && feature(worldTopo, a);
+  const bounds = a && L.geoJSON(geojson).getBounds();
   return {
     ...country,
-    geojson: a && feature(worldTopo, a),
+    geojson,
+    bounds,
   };
 }
 

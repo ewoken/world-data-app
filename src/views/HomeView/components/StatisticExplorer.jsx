@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Select, Slider, Radio, Popover, Button, Icon } from 'antd';
 import debounce from 'lodash.debounce';
 
-import { sortBy, groupBy } from 'ramda';
+import { sortBy, groupBy, indexBy } from 'ramda';
 
 import StatisticDetails from '../../../components/StatisticDetails';
 import ShareChartComponent from '../../../components/ShareChartComponent';
@@ -32,14 +32,15 @@ function StatisticExplorer(props) {
     setScale,
   } = props;
 
+  const countryByCode = indexBy(c => c.alpha2Code, countries);
   const formatedData = data
-    .filter(s => s.value !== null)
+    .filter(s => s.value !== null && countryByCode[s.countryCode])
     .map(s => ({
       countryCode: s.countryCode,
       country:
         s.countryCode === 'WORLD'
           ? 'World'
-          : countries.find(c => c.alpha2Code === s.countryCode).commonName,
+          : countryByCode[s.countryCode].commonName,
       value: s.value,
     }));
 

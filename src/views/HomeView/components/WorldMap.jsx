@@ -47,6 +47,7 @@ function computeColorMap(data, scaleString) {
 
 function WorldMap(props) {
   const {
+    selectedCountries,
     countries,
     dependentCountries,
     data,
@@ -54,26 +55,34 @@ function WorldMap(props) {
     currentYear,
     perCapita,
     scale,
+    minZoom,
+    onMapChange,
   } = props;
-  const dataWithourWorld = data.filter(d => d.countryCode !== 'WORLD');
-  const maxValue = Math.max(...dataWithourWorld.map(d => d.value));
+  const selectedCountryByCode = indexBy(c => c.alpha2Code, selectedCountries);
+  const selectedData = data.filter(
+    d => d.countryCode !== 'WORLD' && selectedCountryByCode[d.countryCode],
+  );
+  const maxValue = Math.max(...selectedData.map(d => d.value));
   const colorValueMap = computeColorMap(
-    dataWithourWorld,
+    selectedData,
     currentStatistic.scale || scale,
   );
   return (
     <div className="WorldMap">
       <div className="WorldMap__yearLabel">{currentYear}</div>
       <Map
-        minZoom={1.8}
-        zoom={1.8}
+        minZoom={minZoom}
+        zoom={minZoom}
         zoomSnap={0.1}
+        zoomDelta={0.5}
         center={[20, 30]}
         style={{ height: MAP_HEIGHT, zIndex: 0 }}
         dragging={!isMobileOrTablet()}
+        onZoomend={onMapChange}
+        onMoveend={onMapChange}
       >
         {countries.map(country => {
-          const { value, color } = colorValueMap[country.alpha2Code];
+          const countryData = colorValueMap[country.alpha2Code];
           return (
             <GeoJSON
               key={country.alpha2Code + currentStatistic.code}
@@ -84,13 +93,15 @@ function WorldMap(props) {
                 ref.leafletElement.setStyle({
                   color: BORDER_COLOR,
                   weight: 0.5,
-                  fillColor: color,
+                  fillColor: countryData ? countryData.color : NA_COLOR,
                   fillOpacity: 1,
                 })
               }
             >
               <Tooltip sticky>
-                {`${country.commonName}: ${formatNumber(value)}`}
+                {`${country.commonName}: ${formatNumber(
+                  countryData && countryData.value,
+                )}`}
               </Tooltip>
             </GeoJSON>
           );
@@ -152,6 +163,7 @@ function WorldMap(props) {
 }
 
 WorldMap.propTypes = {
+  selectedCountries: PropTypes.arrayOf(CountryType).isRequired,
   countries: PropTypes.arrayOf(CountryType).isRequired,
   dependentCountries: PropTypes.arrayOf(CountryType).isRequired,
   currentStatistic: StatisticType.isRequired,
@@ -164,10 +176,13 @@ WorldMap.propTypes = {
   ).isRequired,
   perCapita: PropTypes.bool.isRequired,
   scale: PropTypes.string,
+  minZoom: PropTypes.number,
+  onMapChange: PropTypes.func.isRequired,
 };
 
 WorldMap.defaultProps = {
   scale: null,
+  minZoom: 1.8,
 };
 
 export default WorldMap;

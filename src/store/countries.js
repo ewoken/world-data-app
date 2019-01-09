@@ -72,6 +72,16 @@ export function countriesSelector(state) {
   return values(state.countries.data).filter(c => c.isIndependent);
 }
 
+export function countriesInBounds(boundsFilter, state) {
+  const countries = countriesSelector(state);
+
+  return boundsFilter
+    ? countries.filter(
+        country => country.bounds && boundsFilter.intersects(country.bounds),
+      )
+    : countries;
+}
+
 export function dependentCountriesSelector(state) {
   return values(state.countries.data).filter(c => !c.isIndependent);
 }

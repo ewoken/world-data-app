@@ -9,6 +9,7 @@ import StatisticExplorer from './components/StatisticExplorer';
 
 import {
   countriesSelector,
+  countriesInBounds,
   dependentCountriesSelector,
 } from '../../store/countries';
 import {
@@ -26,7 +27,8 @@ function f(statisticCode, perCapita) {
 }
 
 const ConnectedWorldMap = connect(
-  (state, { statisticCode, currentYear, perCapita }) => ({
+  (state, { statisticCode, currentYear, perCapita, boundsFilter }) => ({
+    selectedCountries: countriesInBounds(boundsFilter, state),
     countries: countriesSelector(state),
     dependentCountries: dependentCountriesSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
@@ -42,8 +44,8 @@ const ConnectedWorldMap = connect(
 )(WorldMap);
 
 const ConnectedStatisticExplorer = connect(
-  (state, { statisticCode, currentYear, perCapita }) => ({
-    countries: countriesSelector(state),
+  (state, { statisticCode, currentYear, perCapita, boundsFilter }) => ({
+    countries: countriesInBounds(boundsFilter, state),
     statistics: allStatisticsSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
     statisticSources: statisticSourcesSelector(
@@ -65,6 +67,8 @@ const ConnectedStatisticExplorer = connect(
   }),
 )(StatisticExplorer);
 
+const MIN_ZOOM = 2;
+
 class HomeView extends Component {
   constructor() {
     super();
@@ -73,8 +77,11 @@ class HomeView extends Component {
       currentYear: 2010,
       perCapita: false,
       scale: null,
+      boundsFilter: null,
     };
     this.mapRef = React.createRef();
+    this.onMapChange = e =>
+      this.setFilterBounds(e.target.getBounds(), e.target.getZoom());
   }
 
   componentDidMount() {
@@ -98,6 +105,10 @@ class HomeView extends Component {
     this.setState({ currentYear: year });
   }
 
+  setFilterBounds(bounds, zoom) {
+    this.setState({ boundsFilter: zoom === MIN_ZOOM ? null : bounds });
+  }
+
   setPerCapita(value) {
     const { loadStatistic } = this.props;
     if (value) {
@@ -114,7 +125,13 @@ class HomeView extends Component {
     const {
       history: { push },
     } = this.props;
-    const { currentYear, statisticCode, perCapita, scale } = this.state;
+    const {
+      currentYear,
+      statisticCode,
+      perCapita,
+      scale,
+      boundsFilter,
+    } = this.state;
 
     return (
       <div className="HomeView">
@@ -129,6 +146,9 @@ class HomeView extends Component {
                 currentYear={currentYear}
                 perCapita={perCapita}
                 scale={scale}
+                minZoom={MIN_ZOOM}
+                onMapChange={this.onMapChange}
+                boundsFilter={boundsFilter}
               />
             </div>
           </Col>
@@ -144,6 +164,7 @@ class HomeView extends Component {
               mapRef={this.mapRef}
               scale={scale}
               setScale={value => this.setScale(value)}
+              boundsFilter={boundsFilter}
             />
           </Col>
         </Row>
