@@ -75,16 +75,24 @@ export function addPopCountryStatistics(mapOfCountryStatistics, perCapita) {
 }
 
 export function chartToPngBlob(domElement, scale) {
+  const padding = 10;
+  const height = domElement.offsetHeight + padding * 2;
+  const width = domElement.offsetWidth + padding * 2;
+  const classFiltered = [
+    'ChartWrapper__header__right',
+    'leaflet-control-container',
+  ];
   return domToImage.toBlob(domElement, {
-    filter: element => element.className !== 'ChartWrapper__header__right',
+    filter: element => !classFiltered.includes(element.className),
     bgcolor: 'white',
     style: {
-      transform: `scale(${scale}) translate(${domElement.offsetWidth /
+      padding: `${padding}px`,
+      transform: `scale(${scale}) translate(${width / 2 / scale}px, ${height /
         2 /
-        scale}px, ${domElement.offsetHeight / 2 / scale}px)`,
+        scale}px)`,
     },
-    height: domElement.offsetHeight * scale,
-    width: domElement.offsetWidth * scale,
+    height: height * scale,
+    width: width * scale,
   });
 }
 

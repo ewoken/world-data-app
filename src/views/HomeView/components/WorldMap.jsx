@@ -58,10 +58,10 @@ function WorldMap(props) {
     <div className="WorldMap">
       <div className="WorldMap__yearLabel">{currentYear}</div>
       <Map
-        zoom={1}
-        center={[0, 0]}
+        zoom={2}
+        minZoom={2}
+        center={[20, 10]}
         style={{ height: MAP_HEIGHT, zIndex: 0 }}
-        maxBounds={[[90, -180], [-90, 180]]}
         dragging={!isMobileOrTablet()}
       >
         {countries.map(country => {

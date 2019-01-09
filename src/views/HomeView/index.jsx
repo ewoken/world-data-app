@@ -73,6 +73,7 @@ class HomeView extends Component {
       currentYear: 2010,
       perCapita: false,
     };
+    this.mapRef = React.createRef();
   }
 
   componentDidMount() {
@@ -117,11 +118,13 @@ class HomeView extends Component {
         </Row>
         <Row gutter={{ md: 20 }}>
           <Col md={16}>
-            <ConnectedWorldMap
-              statisticCode={statisticCode}
-              currentYear={currentYear}
-              perCapita={perCapita}
-            />
+            <div ref={this.mapRef}>
+              <ConnectedWorldMap
+                statisticCode={statisticCode}
+                currentYear={currentYear}
+                perCapita={perCapita}
+              />
+            </div>
           </Col>
           <Col md={8}>
             <ConnectedStatisticExplorer
@@ -132,6 +135,7 @@ class HomeView extends Component {
               setYear={year => this.setYear(year)}
               setStatistic={value => this.setStatistic(value)}
               setPerCapita={value => this.setPerCapita(value)}
+              mapRef={this.mapRef}
             />
           </Col>
         </Row>

@@ -6,6 +6,7 @@ import debounce from 'lodash.debounce';
 import { sortBy, groupBy } from 'ramda';
 
 import StatisticDetails from '../../../components/StatisticDetails';
+import ShareChartComponent from '../../../components/ShareChartComponent';
 
 import { CountryType, StatisticType } from '../../../utils/types';
 import { isMobileOrTablet, formatNumber, displayUnit } from '../../../utils';
@@ -24,6 +25,7 @@ function StatisticExplorer(props) {
     setYear,
     setPerCapita,
     isLoaded,
+    mapRef,
   } = props;
 
   const formatedData = data
@@ -105,10 +107,21 @@ function StatisticExplorer(props) {
             Per capita
           </Radio.Button>
         </Radio.Group>
-        <StatisticDetails
-          statisticSources={statisticSources}
-          description={currentStatistic.description}
-        />
+        <div className="StatisticExplorer__options__right">
+          <ShareChartComponent
+            filename={currentStatistic.name.replace(/ /g, '_')}
+            chartRef={mapRef}
+            statistics={{
+              countryCode: { code: 'COUNTRY_CODE' },
+              value: currentStatistic,
+            }}
+            data={data}
+          />
+          <StatisticDetails
+            statisticSources={statisticSources}
+            description={currentStatistic.description}
+          />
+        </div>
       </div>
       <Table
         className="hideOnMobile"
@@ -167,6 +180,8 @@ StatisticExplorer.propTypes = {
   perCapita: PropTypes.bool.isRequired,
   setPerCapita: PropTypes.func.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  mapRef: PropTypes.object.isRequired,
 };
 
 export default StatisticExplorer;

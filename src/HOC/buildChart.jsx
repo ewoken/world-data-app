@@ -1,52 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { values } from 'ramda';
 import { withStateHandlers, compose } from 'recompose';
-import { saveAs } from 'file-saver';
 
-import { Icon, Popover, Switch, Button } from 'antd';
+import { Icon, Popover, Button } from 'antd';
 
-import withCountryStatistics from './withCountryStatistics';
-import { displayUnit, chartToPngBlob } from '../utils';
+import { displayUnit } from '../utils';
 import StatisticDetails from '../components/StatisticDetails';
 
+import ChartSettings from './components/ChartSettings';
+import ShareChartComponent from '../components/ShareChartComponent';
+import withCountryStatistics from './withCountryStatistics';
+
 const defaultHeight = 200;
-
-function ChartSettings(props) {
-  const {
-    perCapitaSwitch,
-    stackedSwitch,
-    perCapita,
-    stacked,
-    setPerCapita,
-    setStacked,
-  } = props;
-
-  return (
-    <div className="ChartSettings">
-      {perCapitaSwitch && (
-        <div>
-          {'Per capita '}
-          <Switch size="small" checked={perCapita} onChange={setPerCapita} />
-        </div>
-      )}
-      {stackedSwitch && (
-        <div>
-          {'Stacked '}
-          <Switch size="small" checked={stacked} onChange={setStacked} />
-        </div>
-      )}
-    </div>
-  );
-}
-ChartSettings.propTypes = {
-  perCapitaSwitch: PropTypes.bool.isRequired,
-  stackedSwitch: PropTypes.bool.isRequired,
-  perCapita: PropTypes.bool.isRequired,
-  stacked: PropTypes.bool.isRequired,
-  setPerCapita: PropTypes.func.isRequired,
-  setStacked: PropTypes.func.isRequired,
-};
 
 function buildChart(options = {}) {
   const {
@@ -93,11 +58,12 @@ function buildChart(options = {}) {
             stacked = false,
             setPerCapita,
             setStacked,
+            data,
           } = this.props;
           const statisticList = values(statistics);
           const statistic = statisticList[0];
           const finalHeight = options.height || height || defaultHeight;
-          const file = title
+          const filename = title
             ? title.replace(/ /g, '_')
             : statistic.name.replace(/ /g, '_');
 
@@ -125,17 +91,12 @@ function buildChart(options = {}) {
                   className="ChartWrapper__header__right"
                   data-html2canvas-ignore
                 >
-                  <div style={{ marginRight: '5px' }}>
-                    <Button
-                      icon="download"
-                      size="small"
-                      onClick={() => {
-                        chartToPngBlob(this.chartRef.current, 2)
-                          .then(blob => saveAs(blob, `${file}.png`))
-                          .catch(err => console.err(err));
-                      }}
-                    />
-                  </div>
+                  <ShareChartComponent
+                    filename={filename}
+                    chartRef={this.chartRef}
+                    statistics={{ year: { code: 'YEAR' }, ...statistics }}
+                    data={data}
+                  />
                   <StatisticDetails
                     statisticSources={statisticSources}
                     description={finalDescription}

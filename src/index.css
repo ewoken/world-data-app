@@ -108,6 +108,10 @@
   justify-content: space-between;
 }
 
+.StatisticExplorer__options__right {
+  display: flex;
+}
+
 #mainCountrySelect {
   width: 20em;
 }
