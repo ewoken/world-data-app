@@ -17,7 +17,7 @@ const CAPITA = {
 
 const BILLION_2010_USD = {
   main: 'billion 2010 USD',
-  base: '2010 $',
+  base: '$ (2010)',
   factor: 10 ** 9,
 };
 

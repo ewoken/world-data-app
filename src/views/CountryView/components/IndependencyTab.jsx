@@ -5,6 +5,7 @@ import { Row, Col } from 'antd';
 
 import buildChart from '../../../HOC/buildChart';
 import ProdConsoChart from './ProdConsoChart';
+import GDPByEnergyChart from './GDPByEnergyChart';
 import BasicChartContainer from '../containers/BasicChartContainer';
 
 const ProdConsoChartContainer = buildChart({
@@ -13,6 +14,13 @@ const ProdConsoChartContainer = buildChart({
     conso: props.consoStatisticCode,
   }),
 })(ProdConsoChart);
+
+const GDPByEnergyChartContainer = buildChart({
+  mapOfCountryStatisticsSelector: {
+    gdp: 'GDP_2010_USD',
+    energy: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
+  },
+})(GDPByEnergyChart);
 
 function IndependencyTab(props) {
   const { countryCode, fuelProducedOrConsumed } = props;
@@ -62,6 +70,15 @@ function IndependencyTab(props) {
             />
           </Col>
         )}
+      </Row>
+      <Row>
+        <h3>Energy/GDP coupling</h3>
+        <Col md={16} sm={24}>
+          <GDPByEnergyChartContainer
+            countryCode={countryCode}
+            title="GDP according to primary energy"
+          />
+        </Col>
       </Row>
     </div>
   );

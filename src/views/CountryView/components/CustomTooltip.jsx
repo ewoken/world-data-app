@@ -7,7 +7,7 @@ function CustomTooltip(props) {
   const { active, separator, payload, withTotal } = props;
 
   if (active && payload && payload.length > 0) {
-    const { label, displayFilter, totalFilter } = props;
+    const { label, displayFilter, totalFilter, units } = props;
     const filteredPayload = payload.filter(displayFilter);
 
     if (filteredPayload.length < 2) {
@@ -27,7 +27,7 @@ function CustomTooltip(props) {
       <div className="CustomTooltip">
         <div>{label}</div>
         <div>
-          {filteredPayload.map(p => {
+          {filteredPayload.map((p, i) => {
             const {
               formatter = formatNumber,
               unit,
@@ -37,8 +37,8 @@ function CustomTooltip(props) {
               value,
             } = p;
             return (
-              <div key={dataKey} style={{ color }}>
-                {`${name}${separator}${formatter(value)} ${unit}`}
+              <div key={dataKey || name} style={{ color }}>
+                {`${name}${separator}${formatter(value)} ${unit || units[i]}`}
               </div>
             );
           })}
@@ -62,7 +62,7 @@ CustomTooltip.propTypes = {
       name: PropTypes.string.isRequired,
       value: PropTypes.number.isRequired,
       unit: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
+      color: PropTypes.string,
       formatter: PropTypes.func,
     }).isRequired,
   ).isRequired,
@@ -70,12 +70,14 @@ CustomTooltip.propTypes = {
   withTotal: PropTypes.bool,
   displayFilter: PropTypes.func,
   totalFilter: PropTypes.func,
+  units: PropTypes.any, // eslint-disable-line react/forbid-prop-types
 };
 CustomTooltip.defaultProps = {
   label: '',
   withTotal: false,
   displayFilter: i => i,
   totalFilter: i => i,
+  units: {},
 };
 
 export default CustomTooltip;

@@ -41,7 +41,7 @@ const tabContent = {
 class CountryView extends Component {
   constructor() {
     super();
-    this.state = { currentTab: 'summary' };
+    this.state = { currentTab: 'independency' };
   }
 
   setTab(tabKey) {
