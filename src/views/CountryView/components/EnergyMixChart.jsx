@@ -30,7 +30,6 @@ function EnergyMixChart(props) {
     activeDot: false,
     unit,
   };
-
   const lineAreaProps = stacked
     ? { stackId: '1', ...defaultLineAreaProps }
     : { strokeWidth: 2, ...defaultLineAreaProps };

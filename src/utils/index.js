@@ -87,3 +87,27 @@ export function chartToPngBlob(domElement, scale) {
     width: domElement.offsetWidth * scale,
   });
 }
+
+export function memoize(
+  fn,
+  hashFunction = args => JSON.stringify(args),
+  cacheSize = 30,
+) {
+  const cache = {};
+  return function memoizedFun(...args) {
+    const hash = hashFunction(args);
+    if (cache[hash]) {
+      return cache[hash];
+    }
+    const res = fn(...args);
+
+    cache[hash] = res;
+
+    const hashes = Object.keys(cache);
+    if (hashes.length > cacheSize) {
+      delete cache[hashes[0]];
+    }
+
+    return res;
+  };
+}

@@ -1,6 +1,10 @@
 import { values, mapObjIndexed, mergeAll, groupBy, map, omit } from 'ramda';
 import { countriesSelector } from '../countries';
-import { parseMapOfStatistics, addPopCountryStatistics } from '../../utils';
+import {
+  parseMapOfStatistics,
+  addPopCountryStatistics,
+  memoize,
+} from '../../utils';
 
 export function statisticsLoadedSelector(state) {
   return state.statistics.loaded;
@@ -118,7 +122,7 @@ function computeValue(value, population, perCapita, factor, populationFactor) {
   return perCapita ? (value * factor) / (populationFactor * population) : value;
 }
 
-export function compiledCountryStatisticsSelector(
+function compiledCountryStatisticsSelectorFn(
   { mapOfCountryStatistics: baseMap, countryCode, perCapita },
   state,
 ) {
@@ -176,6 +180,10 @@ export function compiledCountryStatisticsSelector(
 
   return compiledStatistics;
 }
+export const compiledCountryStatisticsSelector = memoize(
+  compiledCountryStatisticsSelectorFn,
+  args => JSON.stringify(args[0]),
+);
 
 export function compiledStatisticForCountriesAndYear(
   { statisticCode, year, perCapita },

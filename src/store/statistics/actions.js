@@ -104,6 +104,7 @@ export function loadCountryStatistic({ statisticCode, countryCode }) {
         // eslint-disable-next-line no-use-before-define
         loadCountryStatistics(countryStatistics),
       );
+      return;
     }
 
     if (countryStatisticLoadedSelector({ statisticCode, countryCode }, state)) {

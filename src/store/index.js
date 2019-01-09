@@ -3,8 +3,22 @@ import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
 
 import countriesReducer from './countries';
-import statisticsReducer from './statistics';
+import statisticsReducer, {
+  COUNTRY_STATISTIC_RECEIVE_ACTION,
+  STATISTIC_RECEIVE_ALL_COUNTRIES_ACTION,
+} from './statistics';
 import areasReducer from './areas';
+
+function actionSanitizer(action) {
+  if (
+    (action.type === COUNTRY_STATISTIC_RECEIVE_ACTION ||
+      action.type === STATISTIC_RECEIVE_ALL_COUNTRIES_ACTION) &&
+    action.data
+  ) {
+    return { ...action, data: 'DATA' };
+  }
+  return action;
+}
 
 const rootReducer = combineReducers({
   // ...reducers,
@@ -15,7 +29,7 @@ const rootReducer = combineReducers({
 
 const enhancers = [applyMiddleware(thunk)];
 const composeEnhancers = composeWithDevTools({
-  // Specify name here, actionsBlacklist, actionsCreators and other options if needed
+  actionSanitizer,
 });
 const enhancer = composeEnhancers(...enhancers);
 

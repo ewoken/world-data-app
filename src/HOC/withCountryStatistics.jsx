@@ -54,24 +54,30 @@ function mapStateToProps(state, props) {
   const statisticCodes = uniq(
     countryStatisticsToLoad.map(c => c.statisticCode),
   );
+  const isLoaded = countryStatisticsLoadedSelector(
+    countryStatisticsToLoad,
+    state,
+  );
+  const data = isLoaded
+    ? compiledCountryStatisticsSelector(
+        {
+          mapOfCountryStatistics,
+          countryCode: props.countryCode,
+          perCapita: props.perCapita,
+        },
+        state,
+      )
+    : [];
 
   return {
-    data: compiledCountryStatisticsSelector(
-      {
-        mapOfCountryStatistics,
-        countryCode: props.countryCode,
-        perCapita: props.perCapita,
-      },
-      state,
-    ),
+    data,
     statistics: map(
       ({ statisticCode }) => statisticSelector(statisticCode, state),
       parsedMapOfCountryStatistics,
     ),
     statisticSources: statisticSourcesSelector(statisticCodes, state),
-    isLoaded: countryStatisticsLoadedSelector(countryStatisticsToLoad, state),
+    isLoaded,
     countryStatisticsToLoad,
-    perCapita: props.perCapita || false,
   };
 }
 

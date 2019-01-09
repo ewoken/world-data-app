@@ -89,8 +89,8 @@ function buildChart(options = {}) {
             statistics,
             statisticSources,
             height,
-            perCapita,
-            stacked,
+            perCapita = false,
+            stacked = false,
             setPerCapita,
             setStacked,
           } = this.props;
