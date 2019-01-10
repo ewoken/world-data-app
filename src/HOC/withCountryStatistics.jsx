@@ -13,6 +13,7 @@ import {
   statisticSourcesSelector,
 } from '../store/statistics';
 import { parseMapOfStatistics, addPopCountryStatistics } from '../utils';
+import { countrySelector } from '../store/countries';
 
 const StatisticsLoader = buildLoader(({ countryStatistics }) =>
   loadCountryStatistics(countryStatistics),
@@ -28,16 +29,22 @@ function mapStateToProps(state, props) {
   const {
     perCapita,
     worldReference,
+    statisticCode,
     mapOfCountryStatistics: mapOfCountryStatisticsInput,
     countryCode,
   } = props;
+  const isIntensive =
+    statisticCode && statisticSelector(statisticCode, state).isIntensive;
   const mapOfCountryStatistics =
-    perCapita && worldReference
+    (perCapita || isIntensive) && worldReference
       ? {
           ...mapOfCountryStatisticsInput,
           world: {
             countryCode: 'WORLD',
-            statisticCode: worldReference,
+            statisticCode:
+              typeof worldReference === 'boolean'
+                ? statisticCode
+                : worldReference,
           },
         }
       : mapOfCountryStatisticsInput;
@@ -72,12 +79,13 @@ function mapStateToProps(state, props) {
   return {
     data,
     statistics: map(
-      ({ statisticCode }) => statisticSelector(statisticCode, state),
+      ({ statisticCode: code }) => statisticSelector(code, state),
       parsedMapOfCountryStatistics,
     ),
     statisticSources: statisticSourcesSelector(statisticCodes, state),
     isLoaded,
     countryStatisticsToLoad,
+    country: countrySelector(countryCode, state),
   };
 }
 

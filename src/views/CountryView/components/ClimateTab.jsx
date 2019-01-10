@@ -15,6 +15,7 @@ function ClimateTab(props) {
             statisticCode="FOSSIL_CO2_EMISSIONS_MT"
             perCapita
             countryCode={countryCode}
+            worldReference
           />
         </Col>
         <Col md={8} sm={24}>
@@ -22,12 +23,14 @@ function ClimateTab(props) {
             statisticCode="PRIMARY_ENERGY_CONSUMPTION_MTOE"
             perCapita
             countryCode={countryCode}
+            worldReference
           />
         </Col>
         <Col md={8} sm={24}>
           <BasicChartContainer
             statisticCode="CO2_INTENSITY_OF_ENERGY"
             countryCode={countryCode}
+            worldReference
           />
         </Col>
       </Row>
