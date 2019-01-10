@@ -47,7 +47,18 @@ function GeoJSONMap(props) {
 
   return (
     <div className="GeoJSONMap">
-      <Map center={center} zoom={2} style={{ height: '300px', zIndex: 0 }}>
+      <Map
+        center={center}
+        zoom={2}
+        zoomDelta={0}
+        zoomSnap={0}
+        boxZoom={false}
+        doubleClickZoom={false}
+        scrollWheelZoom={false}
+        zoomControl={false}
+        dragging={false}
+        style={{ height: '300px', zIndex: 0 }}
+      >
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
