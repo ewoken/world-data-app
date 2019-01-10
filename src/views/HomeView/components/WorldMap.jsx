@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { indexBy, map } from 'ramda';
-import { interpolateRgb } from 'd3-interpolate';
+import { indexBy, map, range } from 'ramda';
+import { scaleLog, scaleLinear } from 'd3-scale';
+import * as d3Colors from 'd3-scale-chromatic';
 
 import { Map, Tooltip, GeoJSON } from 'react-leaflet';
 
@@ -14,27 +15,32 @@ import {
 } from '../../../utils';
 
 const MAP_HEIGHT = '540px';
-const MIN_COLOR = 'rgb(107, 185, 240)';
-const MAX_COLOR = '#001529';
-const NA_COLOR = '#777';
-const colorGradient = `linear-gradient(to right, ${MIN_COLOR}, ${MAX_COLOR})`;
-const gradiant = interpolateRgb(MIN_COLOR, MAX_COLOR);
-const func = i => Math.log(i);
+const NA_COLOR = '#888';
+const BORDER_COLOR = 'black';
+const MAX_FACTOR = 4;
+const LEGEND_COLORS_COUNT = 4;
+const LEGEND_WIDTH = 300; // px
+const COLORS_SCHEME = 'YlGnBu';
+
+const interpolator = d3Colors[`interpolate${COLORS_SCHEME}`];
 
 function computeColorMap(data) {
   const maxValue = Math.max(...data.map(d => d.value));
   const minValue = Math.min(...data.filter(d => d.value).map(d => d.value));
   const valueMap = map(d => d.value, indexBy(d => d.countryCode, data));
+  const scaleFactor = Math.log(maxValue / minValue);
+  const scaleType = scaleFactor < MAX_FACTOR ? scaleLinear() : scaleLog();
+  const scale = scaleType.domain([minValue, maxValue]);
 
   const colorMap = map(value => {
     if (value === null || value === undefined) {
       return { color: NA_COLOR, value };
     }
     if (value === 0) {
-      return { color: MIN_COLOR, value };
+      return { color: interpolator(0), value };
     }
     return {
-      color: gradiant(func(value / minValue) / func(maxValue / minValue)),
+      color: interpolator(scale(value)),
       value,
     };
   }, valueMap);
@@ -50,10 +56,9 @@ function WorldMap(props) {
     currentYear,
     perCapita,
   } = props;
-  const maxValue = Math.max(
-    ...data.filter(d => d.countryCode !== 'WORLD').map(d => d.value),
-  );
-  const colorValueMap = computeColorMap(data);
+  const dataWithourWorld = data.filter(d => d.countryCode !== 'WORLD');
+  const maxValue = Math.max(...dataWithourWorld.map(d => d.value));
+  const colorValueMap = computeColorMap(dataWithourWorld);
   return (
     <div className="WorldMap">
       <div className="WorldMap__yearLabel">{currentYear}</div>
@@ -74,7 +79,7 @@ function WorldMap(props) {
               ref={ref =>
                 ref &&
                 ref.leafletElement.setStyle({
-                  color: 'white',
+                  color: BORDER_COLOR,
                   weight: 0.5,
                   fillColor: color,
                   fillOpacity: 1,
@@ -110,12 +115,19 @@ function WorldMap(props) {
           </div>
           <div className="WorldMap__legend__colors">
             <div>
-              <div
-                className="WorldMap__legend__gradient"
-                style={{
-                  background: colorGradient,
-                }}
-              />
+              <div className="WorldMap__legend__gradient">
+                {range(0, LEGEND_COLORS_COUNT).map(i => (
+                  <div
+                    className="WorldMap__legend__gradient__item"
+                    style={{
+                      width: LEGEND_WIDTH / LEGEND_COLORS_COUNT,
+                      background: `linear-gradient(to right, ${interpolator(
+                        i / LEGEND_COLORS_COUNT,
+                      )}, ${interpolator((i + 1) / LEGEND_COLORS_COUNT)}`,
+                    }}
+                  />
+                ))}
+              </div>
               <div className="WorldMap__legend__gradientRange">
                 <div>0</div>
                 <div>{formatNumber(maxValue)}</div>

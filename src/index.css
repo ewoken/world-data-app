@@ -87,9 +87,12 @@
 }
 
 .WorldMap__legend__gradient {
-  height: 20px;
-  width: 300px;
+  display: flex;
   margin-right: 10px;
+}
+
+.WorldMap__legend__gradient__item {
+  height: 20px;
 }
 
 .WorldMap__legend__NA__square {
