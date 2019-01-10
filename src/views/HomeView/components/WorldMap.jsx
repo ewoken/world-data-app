@@ -17,19 +17,17 @@ import {
 const MAP_HEIGHT = '540px';
 const NA_COLOR = '#888';
 const BORDER_COLOR = 'black';
-const MAX_FACTOR = 4;
 const LEGEND_COLORS_COUNT = 4;
 const LEGEND_WIDTH = 300; // px
 const COLORS_SCHEME = 'YlGnBu';
 
 const interpolator = d3Colors[`interpolate${COLORS_SCHEME}`];
 
-function computeColorMap(data) {
+function computeColorMap(data, scaleString) {
   const maxValue = Math.max(...data.map(d => d.value));
   const minValue = Math.min(...data.filter(d => d.value).map(d => d.value));
   const valueMap = map(d => d.value, indexBy(d => d.countryCode, data));
-  const scaleFactor = Math.log(maxValue / minValue);
-  const scaleType = scaleFactor < MAX_FACTOR ? scaleLinear() : scaleLog();
+  const scaleType = scaleString === 'linear' ? scaleLinear() : scaleLog();
   const scale = scaleType.domain([minValue, maxValue]);
 
   const colorMap = map(value => {
@@ -55,10 +53,14 @@ function WorldMap(props) {
     currentStatistic,
     currentYear,
     perCapita,
+    scale,
   } = props;
   const dataWithourWorld = data.filter(d => d.countryCode !== 'WORLD');
   const maxValue = Math.max(...dataWithourWorld.map(d => d.value));
-  const colorValueMap = computeColorMap(dataWithourWorld);
+  const colorValueMap = computeColorMap(
+    dataWithourWorld,
+    currentStatistic.scale || scale,
+  );
   return (
     <div className="WorldMap">
       <div className="WorldMap__yearLabel">{currentYear}</div>
@@ -118,6 +120,7 @@ function WorldMap(props) {
               <div className="WorldMap__legend__gradient">
                 {range(0, LEGEND_COLORS_COUNT).map(i => (
                   <div
+                    key={i}
                     className="WorldMap__legend__gradient__item"
                     style={{
                       width: LEGEND_WIDTH / LEGEND_COLORS_COUNT,
@@ -159,6 +162,11 @@ WorldMap.propTypes = {
     }).isRequired,
   ).isRequired,
   perCapita: PropTypes.bool.isRequired,
+  scale: PropTypes.string,
+};
+
+WorldMap.defaultProps = {
+  scale: null,
 };
 
 export default WorldMap;

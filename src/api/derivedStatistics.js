@@ -88,6 +88,7 @@ const derivedStatistics = [
     sourceAttribution: 'IEA, World Bank',
     category: 'Climate change',
     isIntensive: true,
+    scale: 'linear',
     compute({ energy, co2 }) {
       return co2 / energy;
     },

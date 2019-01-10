@@ -72,6 +72,7 @@ class HomeView extends Component {
       statisticCode: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
       currentYear: 2010,
       perCapita: false,
+      scale: null,
     };
     this.mapRef = React.createRef();
   }
@@ -105,11 +106,15 @@ class HomeView extends Component {
     this.setState({ perCapita: value });
   }
 
+  setScale(scale) {
+    this.setState({ scale });
+  }
+
   render() {
     const {
       history: { push },
     } = this.props;
-    const { currentYear, statisticCode, perCapita } = this.state;
+    const { currentYear, statisticCode, perCapita, scale } = this.state;
 
     return (
       <div className="HomeView">
@@ -123,6 +128,7 @@ class HomeView extends Component {
                 statisticCode={statisticCode}
                 currentYear={currentYear}
                 perCapita={perCapita}
+                scale={scale}
               />
             </div>
           </Col>
@@ -136,6 +142,8 @@ class HomeView extends Component {
               setStatistic={value => this.setStatistic(value)}
               setPerCapita={value => this.setPerCapita(value)}
               mapRef={this.mapRef}
+              scale={scale}
+              setScale={value => this.setScale(value)}
             />
           </Col>
         </Row>

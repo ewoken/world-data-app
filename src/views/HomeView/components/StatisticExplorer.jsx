@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Select, Slider, Radio } from 'antd';
+import { Table, Select, Slider, Radio, Popover, Button, Icon } from 'antd';
 import debounce from 'lodash.debounce';
 
 import { sortBy, groupBy } from 'ramda';
@@ -10,6 +10,8 @@ import ShareChartComponent from '../../../components/ShareChartComponent';
 
 import { CountryType, StatisticType } from '../../../utils/types';
 import { isMobileOrTablet, formatNumber, displayUnit } from '../../../utils';
+
+const WITH_SCALE_SETTINGS = false;
 
 function StatisticExplorer(props) {
   const {
@@ -26,6 +28,8 @@ function StatisticExplorer(props) {
     setPerCapita,
     isLoaded,
     mapRef,
+    scale,
+    setScale,
   } = props;
 
   const formatedData = data
@@ -40,6 +44,10 @@ function StatisticExplorer(props) {
     }));
 
   const statisticByCategory = groupBy(s => s.category, statistics);
+
+  if (currentStatistic.isIntensive && perCapita) {
+    setPerCapita(false);
+  }
 
   return (
     <div className="StatisticExplorer">
@@ -121,6 +129,32 @@ function StatisticExplorer(props) {
             statisticSources={statisticSources}
             description={currentStatistic.description}
           />
+          {WITH_SCALE_SETTINGS && (
+            <Popover
+              title="Settings"
+              arrowPointAtCenter
+              content={
+                // eslint-disable-next-line react/jsx-wrap-multilines
+                <div>
+                  {'Scale '}
+                  <Radio.Group
+                    buttonStyle="solid"
+                    size="small"
+                    value={scale}
+                    onChange={e => setScale(e.target.value)}
+                  >
+                    <Radio.Button value="log">Log</Radio.Button>
+                    <Radio.Button value="linear">Linear</Radio.Button>
+                  </Radio.Group>
+                </div>
+              }
+              placement="bottomRight"
+            >
+              <Button size="small">
+                <Icon type="setting" theme="filled" />
+              </Button>
+            </Popover>
+          )}
         </div>
       </div>
       <Table
@@ -182,6 +216,12 @@ StatisticExplorer.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   mapRef: PropTypes.object.isRequired,
+  scale: PropTypes.string,
+  setScale: PropTypes.func.isRequired,
+};
+
+StatisticExplorer.defaultProps = {
+  scale: null,
 };
 
 export default StatisticExplorer;
