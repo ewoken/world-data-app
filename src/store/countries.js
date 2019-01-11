@@ -87,7 +87,7 @@ export function dependentCountriesSelector(state) {
 }
 
 export function countrySelector(countryCode, state) {
-  return state.countries.data[countryCode];
+  return state.countries.data[countryCode] || state.areas.data[countryCode];
 }
 
 export function fuelConsumedCountrySelector(countryCode, state) {

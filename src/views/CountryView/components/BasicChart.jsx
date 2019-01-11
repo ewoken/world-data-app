@@ -78,13 +78,13 @@ BasicChart.propTypes = {
   height: PropTypes.number.isRequired,
   perCapita: PropTypes.bool.isRequired,
   color: PropTypes.string,
-  worldReference: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
-    .isRequired,
+  worldReference: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   country: CountryType.isRequired,
 };
 
 BasicChart.defaultProps = {
   color: '#2c82c9',
+  worldReference: false,
 };
 
 export default BasicChart;

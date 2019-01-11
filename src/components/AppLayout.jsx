@@ -61,11 +61,15 @@ function AppLayout(props) {
               <Switch>
                 <Route path="/home" exact component={HomeView} />
                 <Route
-                  path="/country/:countryCode"
+                  path="/country/:countryCode/:tab?"
                   exact
                   component={CountryView}
                 />
-                <Route path="/area/:areaCode" exact component={AreaView} />
+                <Route
+                  path="/area/:areaCode/:tab?"
+                  exact
+                  component={AreaView}
+                />
                 <Route path="/about" exact component={AboutView} />
                 <Route
                   component={() => <Redirect to={{ pathname: '/home' }} />}

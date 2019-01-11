@@ -21,6 +21,8 @@ export default async function getAreas() {
 
   return data.map(area => ({
     ...area,
+    alpha2Code: area.code,
+    commonName: area.name,
     geojson: area.countryCodes ? computeGeojson(area) : null,
   }));
 }

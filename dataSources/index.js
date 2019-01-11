@@ -50,8 +50,6 @@ async function generateData() {
     const fullStatistic = await fetchStatisticFromSource(statistic);
     const dataByCountry = fullStatistic.data;
 
-    stats.push(fullStatistic);
-
     const statisticPath = assertStatisticPath(statistic.code);
     writeFiles(statisticPath, dataByCountry);
 
@@ -92,6 +90,11 @@ async function generateData() {
     const filename = `${statisticPath}/all.json`;
     console.log(`Write ${filename}`);
     fs.writeFileSync(filename, JSON.stringify(allData));
+
+    stats.push({
+      ...fullStatistic,
+      dataByArea,
+    });
     return stats;
   }, Promise.resolve([]));
 
@@ -106,6 +109,16 @@ async function generateData() {
   }));
 
   fs.writeFileSync('./data/countries.json', JSON.stringify(countriesData));
+
+  const checkArea = countryCode => code =>
+    !!fullStatisticByCode[code].dataByArea[countryCode] &&
+    fullStatisticByCode[code].dataByArea[countryCode].some(d => d.value > 0.01);
+  const areasData = areas.map(area => ({
+    ...area,
+    hasProduced: map(checkArea(area.code), hasProducedMap),
+    hasConsumed: map(checkArea(area.code), hasConsumedMap),
+  }));
+  fs.writeFileSync('./data/areas.json', JSON.stringify(areasData));
 
   console.log('Write statistics.json');
   fs.writeFileSync(

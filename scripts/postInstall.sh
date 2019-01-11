@@ -15,7 +15,6 @@ else
   echo "Build data"
   rm -rf data
   mkdir data
-  cp ./dataSources/areas.json ./data/areas.json
   (node dataSources/index.js || exit 1)
 fi
 
