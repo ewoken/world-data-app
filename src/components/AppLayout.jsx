@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import {
+  Route, // as BaseRoute,
+  Switch,
+  Redirect,
+  withRouter,
+} from 'react-router-dom';
 import { Layout, Spin } from 'antd';
 
 import HomeView from '../views/HomeView';
@@ -41,51 +46,86 @@ const ConnectedHeaderMenu = withRouter(
   }))(HeaderMenu),
 );
 
-function AppLayout(props) {
-  const { isLoaded } = props;
-  return (
-    <div className="AppLayout">
-      <CountriesLoader />
-      <StatisticsLoader />
-      <AreasLoader />
-      <Spin size="large" spinning={!isLoaded}>
-        <Layout>
-          <Layout.Header
-            style={{ position: 'fixed', zIndex: 10, width: '100%' }}
-          >
-            <ConnectedHeaderMenu />
-          </Layout.Header>
-          <Layout.Content>
-            {!isLoaded && <div className="AppLayout__splash" />}
-            {isLoaded && (
-              <Switch>
-                <Route path="/home" exact component={HomeView} />
-                <Route
-                  path="/country/:countryCode/:tab?"
-                  exact
-                  component={CountryView}
-                />
-                <Route
-                  path="/area/:areaCode/:tab?"
-                  exact
-                  component={AreaView}
-                />
-                <Route path="/about" exact component={AboutView} />
-                <Route
-                  component={() => <Redirect to={{ pathname: '/home' }} />}
-                />
-              </Switch>
-            )}
-          </Layout.Content>
-          <Layout.Footer>{' '}</Layout.Footer>
-        </Layout>
-      </Spin>
-    </div>
-  );
+function scrollToAnchor() {
+  const locationHash = window.decodeURIComponent(window.location.hash);
+  const hashParts = locationHash.split('#');
+  if (hashParts.length > 2) {
+    const hash = hashParts.slice(-1)[0];
+    const element = document.getElementById(hash);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      });
+    }
+  }
+}
+
+class AppLayout extends Component {
+  componentDidMount() {
+    window.onhashchange = scrollToAnchor;
+  }
+
+  componentDidUpdate(prevProps) {
+    const { location } = this.props;
+    if (
+      location !== prevProps.location &&
+      !location.pathname.startsWith('/country')
+    ) {
+      window.scrollTo(0, 0);
+    }
+    scrollToAnchor();
+  }
+
+  render() {
+    const { isLoaded } = this.props;
+    return (
+      <div className="AppLayout">
+        <CountriesLoader />
+        <StatisticsLoader />
+        <AreasLoader />
+        <Spin size="large" spinning={!isLoaded}>
+          <Layout>
+            <Layout.Header
+              style={{ position: 'fixed', zIndex: 10, width: '100%' }}
+            >
+              <ConnectedHeaderMenu />
+            </Layout.Header>
+            <Layout.Content>
+              {!isLoaded && <div className="AppLayout__splash" />}
+              {isLoaded && (
+                <Switch>
+                  <Route path="/home" exact component={HomeView} />
+                  <Route
+                    path="/country/:countryCode/:tab?"
+                    exact
+                    component={CountryView}
+                  />
+                  <Route
+                    path="/area/:areaCode/:tab?"
+                    exact
+                    component={AreaView}
+                  />
+                  <Route path="/about" exact component={AboutView} />
+                  <Route
+                    component={() => <Redirect to={{ pathname: '/home' }} />}
+                  />
+                </Switch>
+              )}
+            </Layout.Content>
+            <Layout.Footer>{' '}</Layout.Footer>
+          </Layout>
+        </Spin>
+      </div>
+    );
+  }
 }
 
 AppLayout.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  location: PropTypes.object.isRequired,
 };
 
 // withRouter needed to prevent blocking

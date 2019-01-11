@@ -6,16 +6,18 @@ import { Link, Redirect } from 'react-router-dom';
 import { Row, Col, Card } from 'antd';
 
 import { countryWithAreasSelector } from '../../store/otherSelectors';
+import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
+
 import { CountryType } from '../../utils/types';
+import { isMobileOrTablet } from '../../utils';
+
+import BasicChartContainer from './containers/BasicChartContainer';
 
 import GeoJSONMap from '../../components/GeoJSONMap';
+import ScrollToTop from '../../components/ScrollToTop';
 import SummaryTab from './components/SummaryTab';
 import IndependencyTab from './components/IndependencyTab';
 import ClimateTab from './components/ClimateTab';
-
-import BasicChartContainer from './containers/BasicChartContainer';
-import { isMobileOrTablet } from '../../utils';
-import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
 
 const tabList = [
   { key: 'summary', tab: 'Summary' },
@@ -49,6 +51,7 @@ function CountryView(props) {
   const flag = isMobileOrTablet() ? country.flagIcon : '';
   return (
     <div className="CountryView">
+      <ScrollToTop countryCode={countryCode} />
       <Row gutter={16}>
         <Col xs={24} sm={24} md={18}>
           <Card title={<h2>{`${flag} ${country.commonName}`}</h2>}>

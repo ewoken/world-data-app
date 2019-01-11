@@ -118,7 +118,7 @@ function StatisticExplorer(props) {
         </Radio.Group>
         <div className="StatisticExplorer__options__right">
           <ShareChartComponent
-            filename={currentStatistic.name.replace(/ /g, '_')}
+            id={currentStatistic.name.replace(/ /g, '_')}
             chartRef={mapRef}
             statistics={{
               countryCode: { code: 'COUNTRY_CODE' },

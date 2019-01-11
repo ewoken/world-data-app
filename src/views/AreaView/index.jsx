@@ -6,16 +6,17 @@ import { Link, Redirect } from 'react-router-dom';
 
 import { Row, Col, Card } from 'antd';
 import GeoJSONMap from '../../components/GeoJSONMap';
+import ScrollToTop from '../../components/ScrollToTop';
 
 import { areaWithCountriesSelector } from '../../store/otherSelectors';
+import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
+
 import { AreaType } from '../../utils/types';
 
 import SummaryTab from '../CountryView/components/SummaryTab';
 import IndependencyTab from '../CountryView/components/IndependencyTab';
 import ClimateTab from '../CountryView/components/ClimateTab';
 import BasicChartContainer from '../CountryView/containers/BasicChartContainer';
-
-import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
 
 const tabList = [
   { key: 'summary', tab: 'Summary' },
@@ -49,6 +50,7 @@ function AreaView(props) {
 
   return (
     <div className="AreaView">
+      <ScrollToTop areaCode={area.code} />
       <Row gutter={16}>
         <Col xs={24} sm={24} md={18}>
           <Card title={<h2>{`${area.name}`}</h2>}>

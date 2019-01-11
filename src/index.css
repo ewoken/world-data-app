@@ -19,6 +19,10 @@
   margin-bottom: 0px;
 }
 
+.ChartWrapper {
+  padding: 10px;
+}
+
 .ChartWrapper__title__unit {
   font-size: 80%;
 }

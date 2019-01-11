@@ -63,9 +63,10 @@ function buildChart(options = {}) {
           const statisticList = values(statistics);
           const statistic = statisticList[0];
           const finalHeight = options.height || height || defaultHeight;
-          const filename = title
+          const id = (title
             ? title.replace(/ /g, '_')
-            : statistic.name.replace(/ /g, '_');
+            : statistic.name.replace(/ /g, '_')
+          ).toLowerCase();
 
           const descriptionStatistic = statisticList.find(
             s => s.code === description,
@@ -75,9 +76,21 @@ function buildChart(options = {}) {
               ? description || statistic.description
               : (descriptionStatistic && descriptionStatistic.description) ||
                 description;
+          const hash = window.location.hash.split('#')[2];
+          const style =
+            hash === id
+              ? {
+                  boxShadow: '0px 0px 10px 1px rgba(0,0,0,0.5)',
+                }
+              : {};
 
           return (
-            <div className="ChartWrapper" ref={this.chartRef}>
+            <div
+              id={id}
+              className="ChartWrapper"
+              ref={this.chartRef}
+              style={style}
+            >
               <div className="ChartWrapper__header">
                 <div className="ChartWrapper__header__left">
                   <span className="ChartWrapper__title">
@@ -92,7 +105,7 @@ function buildChart(options = {}) {
                   data-html2canvas-ignore
                 >
                   <ShareChartComponent
-                    filename={filename}
+                    id={id}
                     chartRef={this.chartRef}
                     statistics={{ year: { code: 'YEAR' }, ...statistics }}
                     data={data}
