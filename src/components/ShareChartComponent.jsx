@@ -7,7 +7,7 @@ import { chartToPngBlob } from '../utils';
 import copyToClipboard from '../utils/copyToClipboard';
 
 function ShareChartComponent(props) {
-  const { id, chartRef } = props;
+  const { id, chartRef, query } = props;
   return (
     <div className="ShareChartComponent">
       <Dropdown
@@ -37,10 +37,11 @@ function ShareChartComponent(props) {
               } else if (key === 'link') {
                 const { location } = window;
                 const hashParts = location.hash.split('#');
+                const hash = hashParts[1].split('?')[0];
 
-                const link = `${location.origin + location.pathname}#${
-                  hashParts[1]
-                }#${id}`;
+                const link = `${location.origin + location.pathname}#${hash}${
+                  query ? '' : `#${id}`
+                }${query}`;
                 copyToClipboard(link, chartRef.current)
                   .then(() => message.success('Copied !'))
                   .catch(() => message.error('An error occured !'));
@@ -75,6 +76,11 @@ ShareChartComponent.propTypes = {
   statistics: PropTypes.object.isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   id: PropTypes.string.isRequired,
+  query: PropTypes.string,
+};
+
+ShareChartComponent.defaultProps = {
+  query: '',
 };
 
 export default ShareChartComponent;

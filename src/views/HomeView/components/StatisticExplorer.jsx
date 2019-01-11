@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Select, Slider, Radio, Popover, Button, Icon } from 'antd';
+import { Table, Select, Radio, Popover, Button, Icon } from 'antd';
 import debounce from 'lodash.debounce';
+import qs from 'qs';
 
 import { sortBy, groupBy, indexBy } from 'ramda';
 
+import Slider from './ControlledSlider';
 import StatisticDetails from '../../../components/StatisticDetails';
 import ShareChartComponent from '../../../components/ShareChartComponent';
 
@@ -125,6 +127,11 @@ function StatisticExplorer(props) {
               value: currentStatistic,
             }}
             data={data}
+            query={`?${qs.stringify({
+              statisticCode: currentStatistic.code,
+              perCapita,
+              currentYear,
+            })}`}
           />
           <StatisticDetails
             statisticSources={statisticSources}

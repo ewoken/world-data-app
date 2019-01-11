@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import qs from 'qs';
 
 import { Row, Col } from 'antd';
+import ScrollToTop from '../../components/ScrollToTop';
 
 import WorldMap from './components/WorldMap';
 import StatisticExplorer from './components/StatisticExplorer';
@@ -73,9 +75,6 @@ class HomeView extends Component {
   constructor() {
     super();
     this.state = {
-      statisticCode: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
-      currentYear: 2010,
-      perCapita: false,
       scale: null,
       boundsFilter: null,
     };
@@ -85,36 +84,41 @@ class HomeView extends Component {
   }
 
   componentDidMount() {
-    const { statisticCode } = this.state;
-    const { loadStatistic } = this.props;
+    const { loadStatistic, statisticCode, perCapita } = this.props;
 
     loadStatistic(statisticCode);
+
+    if (perCapita) {
+      loadStatistic('POPULATION');
+    }
   }
 
-  setStatistic(statisticCode) {
-    const { loadStatistic } = this.props;
-    loadStatistic(statisticCode);
-    const newState = {
+  componentDidUpdate(prevProps) {
+    const { loadStatistic, statisticCode, perCapita } = this.props;
+    if (statisticCode !== prevProps.statisticCode) {
+      loadStatistic(statisticCode);
+    }
+    if (perCapita !== prevProps.perCapita && perCapita) {
+      loadStatistic('POPULATION');
+    }
+  }
+
+  setParameters(parameters) {
+    const { statisticCode, perCapita, currentYear, goTo } = this.props;
+    const newPerCapita =
+      parameters.perCapita === undefined ? perCapita : parameters.perCapita;
+
+    const newParameters = {
       statisticCode,
-      ...(statisticCode === 'POPULATION' ? { perCapita: false } : {}),
+      currentYear,
+      ...parameters,
+      perCapita: newPerCapita && parameters.statisticCode !== 'POPULATION',
     };
-    this.setState(newState);
-  }
-
-  setYear(year) {
-    this.setState({ currentYear: year });
+    goTo(`?${qs.stringify(newParameters)}`);
   }
 
   setFilterBounds(bounds, zoom) {
     this.setState({ boundsFilter: zoom === MIN_ZOOM ? null : bounds });
-  }
-
-  setPerCapita(value) {
-    const { loadStatistic } = this.props;
-    if (value) {
-      loadStatistic('POPULATION');
-    }
-    this.setState({ perCapita: value });
   }
 
   setScale(scale) {
@@ -122,19 +126,12 @@ class HomeView extends Component {
   }
 
   render() {
-    const {
-      history: { push },
-    } = this.props;
-    const {
-      currentYear,
-      statisticCode,
-      perCapita,
-      scale,
-      boundsFilter,
-    } = this.state;
+    const { goTo, currentYear, statisticCode, perCapita } = this.props;
+    const { scale, boundsFilter } = this.state;
 
     return (
       <div className="HomeView">
+        <ScrollToTop />
         <Row>
           <h1>Welcome to the World Energy Data Explorer</h1>
         </Row>
@@ -157,10 +154,12 @@ class HomeView extends Component {
               statisticCode={statisticCode}
               currentYear={currentYear}
               perCapita={perCapita}
-              onRowClick={record => push(`country/${record.countryCode}`)}
-              setYear={year => this.setYear(year)}
-              setStatistic={value => this.setStatistic(value)}
-              setPerCapita={value => this.setPerCapita(value)}
+              onRowClick={record => goTo(`country/${record.countryCode}`)}
+              setYear={year => this.setParameters({ currentYear: year })}
+              setStatistic={value =>
+                this.setParameters({ statisticCode: value })
+              }
+              setPerCapita={value => this.setParameters({ perCapita: value })}
               mapRef={this.mapRef}
               scale={scale}
               setScale={value => this.setScale(value)}
@@ -174,13 +173,29 @@ class HomeView extends Component {
 }
 
 HomeView.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
   loadStatistic: PropTypes.func.isRequired,
+  statisticCode: PropTypes.string,
+  perCapita: PropTypes.bool.isRequired,
+  currentYear: PropTypes.number.isRequired,
+  goTo: PropTypes.func.isRequired,
+};
+
+HomeView.defaultProps = {
+  statisticCode: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
 };
 
 export default connect(
-  null,
+  (state, props) => {
+    const { search } = props.location;
+    const queryObject = search ? qs.parse(search.substr(1)) : {};
+    return {
+      goTo(path) {
+        props.history.push(path);
+      },
+      currentYear: Number(queryObject.currentYear) || 2010,
+      perCapita: queryObject.perCapita === 'true',
+      statisticCode: queryObject.statisticCode,
+    };
+  },
   { loadStatistic: loadStatisticOfCountries },
 )(HomeView);

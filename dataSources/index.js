@@ -123,7 +123,7 @@ async function generateData() {
   console.log('Write statistics.json');
   fs.writeFileSync(
     './data/statistics.json',
-    JSON.stringify(fullStatistics.map(omit(['data']))),
+    JSON.stringify(fullStatistics.map(omit(['data', 'dataByArea']))),
   );
 }
 

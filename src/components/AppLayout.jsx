@@ -67,14 +67,7 @@ class AppLayout extends Component {
     window.onhashchange = scrollToAnchor;
   }
 
-  componentDidUpdate(prevProps) {
-    const { location } = this.props;
-    if (
-      location !== prevProps.location &&
-      !location.pathname.startsWith('/country')
-    ) {
-      window.scrollTo(0, 0);
-    }
+  componentDidUpdate() {
     scrollToAnchor();
   }
 
@@ -114,7 +107,7 @@ class AppLayout extends Component {
                 </Switch>
               )}
             </Layout.Content>
-            <Layout.Footer>{' '}</Layout.Footer>
+            <Layout.Footer>Sources: IEA, World Bank</Layout.Footer>
           </Layout>
         </Spin>
       </div>
@@ -124,8 +117,6 @@ class AppLayout extends Component {
 
 AppLayout.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  location: PropTypes.object.isRequired,
 };
 
 // withRouter needed to prevent blocking
