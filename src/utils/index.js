@@ -82,18 +82,24 @@ export function chartToPngBlob(domElement, scale) {
     'ChartWrapper__header__right',
     'leaflet-control-container',
   ];
-  return domToImage.toBlob(domElement, {
-    filter: element => !classFiltered.includes(element.className),
-    bgcolor: 'white',
-    style: {
-      padding: `${padding}px`,
-      transform: `scale(${scale}) translate(${width / 2 / scale}px, ${height /
-        2 /
-        scale}px)`,
-    },
-    height: height * scale,
-    width: width * scale,
-  });
+  domElement.classList.add('transformingToPng');
+  return domToImage
+    .toBlob(domElement, {
+      filter: element => !classFiltered.includes(element.className),
+      bgcolor: 'white',
+      style: {
+        padding: `${padding}px`,
+        transform: `scale(${scale}) translate(${width / 2 / scale}px, ${height /
+          2 /
+          scale}px)`,
+      },
+      height: height * scale,
+      width: width * scale,
+    })
+    .then(blob => {
+      domElement.classList.remove('transformingToPng');
+      return blob;
+    });
 }
 
 export function memoize(

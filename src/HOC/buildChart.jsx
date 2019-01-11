@@ -146,7 +146,9 @@ function buildChart(options = {}) {
                 perCapita={perCapita}
                 stacked={stacked}
               />
-              <div className="ChartWrapper__footer" />
+              <div className="ChartWrapper__footer toPng">
+                From http://worldenergydata.tk - Sources: IEA, World Bank
+              </div>
             </div>
           );
         }
