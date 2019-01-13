@@ -9,33 +9,10 @@ import GeoJSONMap from '../../components/GeoJSONMap';
 import ScrollToTop from '../../components/ScrollToTop';
 
 import { areaWithCountriesSelector } from '../../store/otherSelectors';
-import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
-
 import { AreaType } from '../../utils/types';
 
-import SummaryTab from '../CountryView/components/SummaryTab';
-import IndependencyTab from '../CountryView/components/IndependencyTab';
-import ClimateTab from '../CountryView/components/ClimateTab';
 import BasicChartContainer from '../CountryView/containers/BasicChartContainer';
-
-const tabList = [
-  { key: 'summary', tab: 'Summary' },
-  { key: 'independency', tab: 'Energy (in)dependency' },
-  { key: 'climate', tab: 'Climate change' },
-];
-
-const IndependencyTabContainer = connect((state, props) => ({
-  fuelProducedOrConsumed: fuelProducedOrConsumedCountrySelector(
-    props.countryCode,
-    state,
-  ),
-}))(IndependencyTab);
-
-const tabContent = {
-  summary: areaCode => <SummaryTab countryCode={areaCode} />,
-  independency: areaCode => <IndependencyTabContainer countryCode={areaCode} />,
-  climate: areaCode => <ClimateTab countryCode={areaCode} />,
-};
+import TabsComponent from '../CountryView/components/TabsComponent';
 
 function AreaView(props) {
   const { area, currentTab, goTo } = props;
@@ -91,14 +68,11 @@ function AreaView(props) {
         </Col>
       </Row>
       <Row>
-        <Card
-          key={currentTab}
-          tabList={tabList}
-          activeTabKey={currentTab}
+        <TabsComponent
+          countryCode={area.code}
+          currentTab={currentTab}
           onTabChange={tab => goTo(`/area/${area.code}/${tab}`)}
-        >
-          {tabContent[currentTab](area.code)}
-        </Card>
+        />
       </Row>
     </div>
   );

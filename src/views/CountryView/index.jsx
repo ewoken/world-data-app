@@ -6,7 +6,6 @@ import { Link, Redirect } from 'react-router-dom';
 import { Row, Col, Card } from 'antd';
 
 import { countryWithAreasSelector } from '../../store/otherSelectors';
-import { fuelProducedOrConsumedCountrySelector } from '../../store/countries';
 
 import { CountryType } from '../../utils/types';
 import { isMobileOrTablet } from '../../utils';
@@ -15,30 +14,7 @@ import BasicChartContainer from './containers/BasicChartContainer';
 
 import GeoJSONMap from '../../components/GeoJSONMap';
 import ScrollToTop from '../../components/ScrollToTop';
-import SummaryTab from './components/SummaryTab';
-import IndependencyTab from './components/IndependencyTab';
-import ClimateTab from './components/ClimateTab';
-
-const tabList = [
-  { key: 'summary', tab: 'Summary' },
-  { key: 'independency', tab: 'Energy (in)dependency' },
-  { key: 'climate', tab: 'Climate change' },
-];
-
-const IndependencyTabContainer = connect((state, props) => ({
-  fuelProducedOrConsumed: fuelProducedOrConsumedCountrySelector(
-    props.countryCode,
-    state,
-  ),
-}))(IndependencyTab);
-
-const tabContent = {
-  summary: countryCode => <SummaryTab countryCode={countryCode} />,
-  independency: countryCode => (
-    <IndependencyTabContainer countryCode={countryCode} />
-  ),
-  climate: countryCode => <ClimateTab countryCode={countryCode} />,
-};
+import TabsComponent from './components/TabsComponent';
 
 function CountryView(props) {
   const { country, goTo, currentTab } = props;
@@ -98,14 +74,11 @@ function CountryView(props) {
         </Col>
       </Row>
       <Row>
-        <Card
-          key={currentTab}
-          tabList={tabList}
-          activeTabKey={currentTab}
+        <TabsComponent
+          countryCode={countryCode}
+          currentTab={currentTab}
           onTabChange={tab => goTo(`/country/${countryCode}/${tab}`)}
-        >
-          {tabContent[currentTab](countryCode)}
-        </Card>
+        />
       </Row>
     </div>
   );
