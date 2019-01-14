@@ -23,16 +23,21 @@ const IndependencyTabContainer = connect((state, props) => ({
   ),
 }))(IndependencyTab);
 
-const tabContent = {
-  summary: countryCode => <SummaryTab countryCode={countryCode} />,
-  independency: countryCode => (
-    <IndependencyTabContainer countryCode={countryCode} />
-  ),
-  climate: countryCode => <ClimateTab countryCode={countryCode} />,
+const tabContents = {
+  summary: SummaryTab,
+  independency: IndependencyTabContainer,
+  climate: ClimateTab,
 };
 
 function TabsComponent(props) {
-  const { currentTab, countryCode, onTabChange } = props;
+  const {
+    currentTab,
+    countryCode,
+    onTabChange,
+    setReferenceCountry,
+    referenceCountryCode,
+  } = props;
+  const TabComponent = tabContents[currentTab];
   return (
     <Card
       key={currentTab}
@@ -40,7 +45,11 @@ function TabsComponent(props) {
       activeTabKey={currentTab}
       onTabChange={onTabChange}
     >
-      {tabContent[currentTab](countryCode)}
+      <TabComponent
+        countryCode={countryCode}
+        setReferenceCountry={setReferenceCountry}
+        referenceCountryCode={referenceCountryCode}
+      />
     </Card>
   );
 }
@@ -49,6 +58,8 @@ TabsComponent.propTypes = {
   currentTab: PropTypes.string.isRequired,
   countryCode: PropTypes.string.isRequired,
   onTabChange: PropTypes.func.isRequired,
+  setReferenceCountry: PropTypes.func.isRequired,
+  referenceCountryCode: PropTypes.string.isRequired,
 };
 
 export default TabsComponent;

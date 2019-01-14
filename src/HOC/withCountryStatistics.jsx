@@ -28,23 +28,24 @@ function defaultSelector(state, props) {
 function mapStateToProps(state, props) {
   const {
     perCapita,
-    worldReference,
     statisticCode,
     mapOfCountryStatistics: mapOfCountryStatisticsInput,
     countryCode,
+    withReference,
+    referenceCountryCode = 'WORLD',
   } = props;
   const isIntensive =
     statisticCode && statisticSelector(statisticCode, state).isIntensive;
   const mapOfCountryStatistics =
-    (perCapita || isIntensive) && worldReference
+    (perCapita || isIntensive) && withReference
       ? {
           ...mapOfCountryStatisticsInput,
-          world: {
-            countryCode: 'WORLD',
+          reference: {
+            countryCode: referenceCountryCode,
             statisticCode:
-              typeof worldReference === 'boolean'
+              typeof withReference === 'boolean'
                 ? statisticCode
-                : worldReference,
+                : withReference,
           },
         }
       : mapOfCountryStatisticsInput;
@@ -86,6 +87,7 @@ function mapStateToProps(state, props) {
     isLoaded,
     countryStatisticsToLoad,
     country: countrySelector(countryCode, state),
+    referenceCountry: countrySelector(referenceCountryCode, state),
   };
 }
 

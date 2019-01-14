@@ -23,12 +23,13 @@ function BasicChart(props) {
     color,
     perCapita,
     height,
-    worldReference,
     country,
+    referenceCountry,
+    withReference,
   } = props;
   const statistic = statistics.value;
   const unit = displayUnit(statistic.unit, perCapita);
-  const withComparison = worldReference && (perCapita || statistic.isIntensive);
+  const withComparison = withReference && (perCapita || statistic.isIntensive);
 
   return (
     <div className="BasicChart">
@@ -46,11 +47,11 @@ function BasicChart(props) {
           {withComparison && (
             <Line
               type="monotone"
-              dataKey="world"
+              dataKey="reference"
               stroke="red"
               strokeWidth={3}
               dot={false}
-              name="World"
+              name={referenceCountry.commonName}
               unit={` ${unit}`}
             />
           )}
@@ -78,13 +79,14 @@ BasicChart.propTypes = {
   height: PropTypes.number.isRequired,
   perCapita: PropTypes.bool.isRequired,
   color: PropTypes.string,
-  worldReference: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+  withReference: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   country: CountryType.isRequired,
+  referenceCountry: CountryType.isRequired,
 };
 
 BasicChart.defaultProps = {
   color: '#2c82c9',
-  worldReference: false,
+  withReference: false,
 };
 
 export default BasicChart;

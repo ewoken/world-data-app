@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { withState } from 'recompose';
+import qs from 'qs';
 
 import { Row, Col, Card } from 'antd';
 
@@ -16,8 +18,14 @@ import GeoJSONMap from '../../components/GeoJSONMap';
 import ScrollToTop from '../../components/ScrollToTop';
 import TabsComponent from './components/TabsComponent';
 
+const TabsComponentWithState = withState(
+  'referenceCountryCode',
+  'setReferenceCountry',
+  props => props.referenceCountry,
+)(TabsComponent);
+
 function CountryView(props) {
-  const { country, goTo, currentTab } = props;
+  const { country, goTo, currentTab, referenceCountry } = props;
 
   if (!country || country.disabled) {
     return <Redirect to="/" />;
@@ -74,10 +82,11 @@ function CountryView(props) {
         </Col>
       </Row>
       <Row>
-        <TabsComponent
+        <TabsComponentWithState
           countryCode={countryCode}
           currentTab={currentTab}
           onTabChange={tab => goTo(`/country/${countryCode}/${tab}`)}
+          referenceCountry={referenceCountry}
         />
       </Row>
     </div>
@@ -88,14 +97,17 @@ CountryView.propTypes = {
   currentTab: PropTypes.string,
   country: CountryType,
   goTo: PropTypes.func.isRequired,
+  referenceCountry: PropTypes.string,
 };
 CountryView.defaultProps = {
   currentTab: 'summary',
   country: null,
+  referenceCountry: 'WORLD',
 };
 
 export default connect((state, props) => ({
   currentTab: props.match.params.tab,
   goTo: url => props.history.push(url),
   country: countryWithAreasSelector(props.match.params.countryCode, state),
+  referenceCountry: qs.parse(props.location.search.substr(1)).referenceCountry,
 }))(CountryView);

@@ -33,6 +33,7 @@ import {
   areasLoadedSelector,
   areasSelector,
 } from '../store/areas';
+import { LocationType } from '../utils/types';
 
 const CountriesLoader = buildLoader(loadAllCountries);
 const StatisticsLoader = buildLoader(loadAllStatistics);
@@ -46,12 +47,12 @@ const ConnectedHeaderMenu = withRouter(
   }))(HeaderMenu),
 );
 
-function scrollToAnchor() {
-  const locationHash = window.decodeURIComponent(window.location.hash);
-  const hashParts = locationHash.split('#');
-  if (hashParts.length > 2) {
-    const hash = hashParts.slice(-1)[0];
-    const element = document.getElementById(hash);
+function scrollToAnchor(location) {
+  const { hash } = location;
+
+  if (hash !== '') {
+    const id = hash.substr(1);
+    const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({
         behavior: 'smooth',
@@ -64,11 +65,13 @@ function scrollToAnchor() {
 
 class AppLayout extends Component {
   componentDidMount() {
-    window.onhashchange = scrollToAnchor;
+    const { location } = this.props;
+    window.onhashchange = () => scrollToAnchor(location);
   }
 
   componentDidUpdate() {
-    scrollToAnchor();
+    const { location } = this.props;
+    scrollToAnchor(location);
   }
 
   render() {
@@ -117,6 +120,7 @@ class AppLayout extends Component {
 
 AppLayout.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
+  location: LocationType.isRequired,
 };
 
 // withRouter needed to prevent blocking

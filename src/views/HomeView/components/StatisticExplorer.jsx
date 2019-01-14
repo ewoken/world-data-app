@@ -132,6 +132,7 @@ function StatisticExplorer(props) {
               perCapita,
               currentYear,
             })}`}
+            noHash
           />
           <StatisticDetails
             statisticSources={statisticSources}

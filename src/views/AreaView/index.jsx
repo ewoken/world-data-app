@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { withState } from 'recompose';
+import qs from 'qs';
 
 import { Row, Col, Card } from 'antd';
 import GeoJSONMap from '../../components/GeoJSONMap';
@@ -14,8 +16,14 @@ import { AreaType } from '../../utils/types';
 import BasicChartContainer from '../CountryView/containers/BasicChartContainer';
 import TabsComponent from '../CountryView/components/TabsComponent';
 
+const TabsComponentWithState = withState(
+  'referenceCountryCode',
+  'setReferenceCountry',
+  props => props.referenceCountry,
+)(TabsComponent);
+
 function AreaView(props) {
-  const { area, currentTab, goTo } = props;
+  const { area, currentTab, goTo, referenceCountry } = props;
   const latlng = [
     area.countries.reduce((s, c) => c.latlng[0] + s, 0) / area.countries.length,
     area.countries.reduce((s, c) => c.latlng[1] + s, 0) / area.countries.length,
@@ -68,10 +76,11 @@ function AreaView(props) {
         </Col>
       </Row>
       <Row>
-        <TabsComponent
+        <TabsComponentWithState
           countryCode={area.code}
           currentTab={currentTab}
           onTabChange={tab => goTo(`/area/${area.code}/${tab}`)}
+          referenceCountry={referenceCountry}
         />
       </Row>
     </div>
@@ -82,14 +91,17 @@ AreaView.propTypes = {
   area: AreaType.isRequired,
   currentTab: PropTypes.string,
   goTo: PropTypes.func.isRequired,
+  referenceCountry: PropTypes.string,
 };
 
 AreaView.defaultProps = {
   currentTab: 'summary',
+  referenceCountry: 'WORLD',
 };
 
 export default connect((state, props) => ({
   currentTab: props.match.params.tab,
   goTo: url => props.history.push(url),
   area: areaWithCountriesSelector(props.match.params.areaCode, state),
+  referenceCountry: qs.parse(props.location.search.substr(1)).referenceCountry,
 }))(AreaView);

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { values } from 'ramda';
 import { withStateHandlers, compose } from 'recompose';
+import qs from 'qs';
+import { withRouter } from 'react-router-dom';
 
 import { Icon, Popover, Button } from 'antd';
 
@@ -19,7 +21,7 @@ function buildChart(options = {}) {
     perCapitaSwitch = false,
     stackedSwitch = false,
   } = options;
-  const hocs = [];
+  const hocs = [withRouter];
   const hasSettings = perCapitaSwitch || stackedSwitch;
 
   if (hasSettings) {
@@ -59,6 +61,9 @@ function buildChart(options = {}) {
             setPerCapita,
             setStacked,
             data,
+            withReference,
+            referenceCountryCode,
+            location,
           } = this.props;
           const statisticList = values(statistics);
           const statistic = statisticList[0];
@@ -76,7 +81,7 @@ function buildChart(options = {}) {
               ? description || statistic.description
               : (descriptionStatistic && descriptionStatistic.description) ||
                 description;
-          const hash = window.location.hash.split('#')[2];
+          const hash = location.hash.substr(1);
           const style =
             hash === id
               ? {
@@ -109,6 +114,13 @@ function buildChart(options = {}) {
                     chartRef={this.chartRef}
                     statistics={{ year: { code: 'YEAR' }, ...statistics }}
                     data={data}
+                    {...(withReference
+                      ? {
+                          query: `?${qs.stringify({
+                            referenceCountry: referenceCountryCode,
+                          })}`,
+                        }
+                      : {})}
                   />
                   <StatisticDetails
                     statisticSources={statisticSources}

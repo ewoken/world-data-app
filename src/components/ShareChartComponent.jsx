@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { saveAs } from 'file-saver';
+import { withRouter } from 'react-router-dom';
 
 import { Button, Dropdown, Menu, Icon, message } from 'antd';
 import { chartToPngBlob } from '../utils';
 import copyToClipboard from '../utils/copyToClipboard';
+import { LocationType } from '../utils/types';
 
 function ShareChartComponent(props) {
-  const { id, chartRef, query } = props;
+  const { id, chartRef, query, location, noHash } = props;
   return (
     <div className="ShareChartComponent">
       <Dropdown
@@ -35,13 +37,12 @@ function ShareChartComponent(props) {
                 });
                 saveAs(blob, `${id}.csv`);
               } else if (key === 'link') {
-                const { location } = window;
-                const hashParts = location.hash.split('#');
-                const hash = hashParts[1].split('?')[0];
+                const { origin } = window.location;
+                const { pathname } = location;
 
-                const link = `${location.origin + location.pathname}#${hash}${
-                  query ? '' : `#${id}`
-                }${query}`;
+                const link = `${origin}#${pathname}${query}${
+                  noHash ? '' : `#${id}`
+                }`;
                 copyToClipboard(link, chartRef.current)
                   .then(() => message.success('Copied !'))
                   .catch(() => message.error('An error occured !'));
@@ -77,10 +78,13 @@ ShareChartComponent.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   id: PropTypes.string.isRequired,
   query: PropTypes.string,
+  location: LocationType.isRequired,
+  noHash: PropTypes.bool,
 };
 
 ShareChartComponent.defaultProps = {
   query: '',
+  noHash: false,
 };
 
-export default ShareChartComponent;
+export default withRouter(ShareChartComponent);

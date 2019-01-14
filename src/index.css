@@ -130,6 +130,10 @@
   display: flex;
 }
 
+.SettingComponent {
+  margin-bottom: 20px;
+}
+
 #mainCountrySelect {
   width: 20em;
 }

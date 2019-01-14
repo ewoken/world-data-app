@@ -1,5 +1,5 @@
 import { countrySelector, countriesSelector } from './countries';
-import { areaSelector, areasOfCountrySelector } from './areas';
+import { areaSelector, areasOfCountrySelector, areasSelector } from './areas';
 
 export function countryWithAreasSelector(countryCode, state) {
   const country = countrySelector(countryCode, state);
@@ -22,4 +22,11 @@ export function areaWithCountriesSelector(areaCode, state) {
     ...area,
     countries,
   };
+}
+
+export function countriesAndAreasSelector(state) {
+  return [
+    ...countriesSelector(state).filter(c => !c.disabled),
+    ...areasSelector(state),
+  ];
 }

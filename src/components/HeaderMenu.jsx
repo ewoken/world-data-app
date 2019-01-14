@@ -26,7 +26,7 @@ function HeaderMenu(props) {
       <Menu.Item>
         <Select
           id="mainCountrySelect"
-          placeholder="Countries"
+          placeholder="Select a country"
           optionFilterProp="title"
           showSearch={!isMobileOrTablet()}
           onSelect={value => {

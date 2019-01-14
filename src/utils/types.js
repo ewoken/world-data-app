@@ -40,3 +40,9 @@ export const AreaType = PropTypes.shape({
   countryCodes: PropTypes.arrayOf(PropTypes.string),
   countries: PropTypes.arrayOf(CountryType),
 });
+
+export const LocationType = PropTypes.shape({
+  hash: PropTypes.string.isRequired,
+  pathname: PropTypes.string.isRequired,
+  search: PropTypes.string.isRequired,
+});

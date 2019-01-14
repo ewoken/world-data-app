@@ -16,11 +16,18 @@ import { values } from 'ramda';
 
 import { getNiceTickValues } from 'recharts-scale';
 import { tickFormatter, displayUnit } from '../../../utils';
-import { StatisticType } from '../../../utils/types';
+import { StatisticType, CountryType } from '../../../utils/types';
 import CustomTooltip from './CustomTooltip';
 
 function EnergyMixChart(props) {
-  const { data, stacked, perCapita, fuelConsumed, statistics } = props;
+  const {
+    data,
+    stacked,
+    perCapita,
+    fuelConsumed,
+    statistics,
+    referenceCountry,
+  } = props;
   const { unit: coalUnit } = statistics.coal;
   const unit = displayUnit(coalUnit, perCapita);
   const LineArea = stacked ? Area : Line;
@@ -46,7 +53,7 @@ function EnergyMixChart(props) {
           Object.keys(fuelConsumed).reduce((sum, k) => sum + d[k], 0),
         )
       : data.map(d => Math.max(...Object.keys(fuelConsumed).map(k => d[k])))),
-    ...(perCapita ? data.map(d => d.world) : []),
+    ...(perCapita ? data.map(d => d.reference) : []),
   );
 
   const chartMax = max * 1.05;
@@ -127,11 +134,11 @@ function EnergyMixChart(props) {
           {perCapita && (
             <Line
               type="monotone"
-              dataKey="world"
+              dataKey="reference"
               strokeWidth={2}
               dot={false}
               activeDot={false}
-              name="World"
+              name={referenceCountry.commonName}
               stroke="red"
               unit={unit}
             />
@@ -145,7 +152,7 @@ function EnergyMixChart(props) {
               <CustomTooltip
                 {...props2}
                 withTotal
-                totalFilter={p => p.name !== 'World'}
+                totalFilter={p => p.dataKey !== 'reference'}
               />
             )}
           />
@@ -192,6 +199,7 @@ EnergyMixChart.propTypes = {
   setPerCapita: PropTypes.func.isRequired,
   stacked: PropTypes.bool.isRequired,
   perCapita: PropTypes.bool.isRequired,
+  referenceCountry: CountryType.isRequired,
 };
 
 export default EnergyMixChart;
