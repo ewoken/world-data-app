@@ -62,10 +62,6 @@
   list-style-type: none;
 }
 
-.EnergyMixChart__title {
-  text-align: center
-}
-
 .AppLayout__splash {
   height: 80vh;
 }
@@ -144,6 +140,31 @@
 
 .transformingToPng .toPng {
   display: block;
+}
+
+.EnergyMixChart .recharts-legend-item {
+  cursor: pointer;
+  margin: 1px;
+  padding: 2px 5px;
+  border: solid 1px rgb(182, 182, 182);
+  border-radius: 2px;
+  -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+  -moz-user-select: none; /* mozilla browsers */
+  -khtml-user-select: none; /* webkit (konqueror) browsers */
+  -ms-user-select: none; /* IE10+ */
+}
+
+.recharts-legend-item.inactive {
+  background-color: #ebe8e8;
+  color: #ccc;
+}
+
+.transformingToPng .recharts-legend-item {
+  border: none;
+}
+
+.transformingToPng .recharts-legend-item.inactive {
+  display: none !important;
 }
 
 @media (max-width: 640px) {

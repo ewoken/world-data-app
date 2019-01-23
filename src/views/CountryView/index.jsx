@@ -70,6 +70,7 @@ function CountryView(props) {
         </Col>
         <Col xs={0} sm={0} md={6}>
           <img
+            key={countryCode}
             style={{
               width: '100%',
               marginBottom: '20px',

@@ -125,3 +125,20 @@ export function memoize(
     return res;
   };
 }
+
+export function clickHandlers({ onClick, onDoubleClick }) {
+  let clicks = 0;
+  return function clickHandler(...args) {
+    clicks += 1;
+    if (clicks < 2) {
+      setTimeout(() => {
+        if (clicks < 2) {
+          onClick(...args);
+        } else {
+          onDoubleClick(...args);
+        }
+        clicks = 0;
+      }, 300);
+    }
+  };
+}
