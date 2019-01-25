@@ -26,6 +26,7 @@ function BasicChart(props) {
     country,
     referenceCountry,
     withReference,
+    extra,
   } = props;
   const statistic = statistics.value;
   const unit = displayUnit(statistic.unit, perCapita);
@@ -55,6 +56,7 @@ function BasicChart(props) {
               unit={` ${unit}`}
             />
           )}
+          {extra && extra(props)}
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={9} padding={{ left: 5, right: 5 }} />
           <YAxis tickFormatter={tickFormatter} />
@@ -82,11 +84,13 @@ BasicChart.propTypes = {
   withReference: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   country: CountryType.isRequired,
   referenceCountry: CountryType.isRequired,
+  extra: PropTypes.func,
 };
 
 BasicChart.defaultProps = {
   color: '#2c82c9',
   withReference: false,
+  extra: null,
 };
 
 export default BasicChart;

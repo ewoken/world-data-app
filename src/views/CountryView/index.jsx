@@ -7,9 +7,10 @@ import qs from 'qs';
 
 import { Row, Col, Card } from 'antd';
 
+import { fuelProducedCountrySelector } from '../../store/countries';
 import { countryWithAreasSelector } from '../../store/otherSelectors';
 
-import { CountryType } from '../../utils/types';
+import { CountryType, FuelIndicatorsType } from '../../utils/types';
 import { isMobileOrTablet } from '../../utils';
 
 import BasicChartContainer from './containers/BasicChartContainer';
@@ -25,7 +26,7 @@ const TabsComponentWithState = withState(
 )(TabsComponent);
 
 function CountryView(props) {
-  const { country, goTo, currentTab, referenceCountry } = props;
+  const { country, goTo, currentTab, referenceCountry, fuelProduced } = props;
 
   if (!country || country.disabled) {
     return <Redirect to="/" />;
@@ -88,6 +89,7 @@ function CountryView(props) {
           currentTab={currentTab}
           onTabChange={tab => goTo(`/country/${countryCode}/${tab}`)}
           referenceCountry={referenceCountry}
+          fuelProduced={fuelProduced}
         />
       </Row>
     </div>
@@ -99,6 +101,7 @@ CountryView.propTypes = {
   country: CountryType,
   goTo: PropTypes.func.isRequired,
   referenceCountry: PropTypes.string,
+  fuelProduced: FuelIndicatorsType.isRequired,
 };
 CountryView.defaultProps = {
   currentTab: 'summary',
@@ -111,4 +114,8 @@ export default connect((state, props) => ({
   goTo: url => props.history.push(url),
   country: countryWithAreasSelector(props.match.params.countryCode, state),
   referenceCountry: qs.parse(props.location.search.substr(1)).referenceCountry,
+  fuelProduced: fuelProducedCountrySelector(
+    props.match.params.countryCode,
+    state,
+  ),
 }))(CountryView);

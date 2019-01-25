@@ -4,6 +4,7 @@ import {
   parseMapOfStatistics,
   addPopCountryStatistics,
   memoize,
+  maxAndIndex,
 } from '../../utils';
 
 export function statisticsLoadedSelector(state) {
@@ -223,4 +224,50 @@ export function statisticSourcesSelector(statisticCodes, state) {
 
     return statisticSources.concat([statistic]);
   }, []);
+}
+
+const PEAK_THRESHOLD = 0.8;
+const MAY_PEAK_THRESHOLD = 0.9;
+const YEAR_AROUND_PEAK = 5;
+export function statisticPeakYearSelector(countryStatistic, state) {
+  const data = countryStatisticValuesSelector(countryStatistic, state);
+  const dataLength = data.length;
+
+  if (data.length < 1) {
+    return null;
+  }
+
+  const { max, maxIndex } = maxAndIndex(data.map(v => v.value));
+  const maxData = data[maxIndex];
+  const lastValue = data[dataLength - 1].value;
+  const firstValue = data[0].value;
+  const mayPeakValue = MAY_PEAK_THRESHOLD * max;
+  const hasPeakValue = PEAK_THRESHOLD * max;
+
+  if (lastValue > mayPeakValue) {
+    // no simple peak
+    return null;
+  }
+
+  if (lastValue < hasPeakValue) {
+    // has a peak
+    if (maxIndex < 1) {
+      // peak at first value
+      return { ...maxData, sure: true, before: true };
+    }
+    if (firstValue > hasPeakValue) {
+      // may have peaked before
+      return { ...maxData, sure: false, before: true };
+    }
+    if (maxAndIndex < dataLength - YEAR_AROUND_PEAK) {
+      return { ...maxData, sure: false, before: false }; // may be a brief decrease
+    }
+    return { ...maxData, sure: true, before: false };
+  }
+
+  if (firstValue < hasPeakValue) {
+    return { ...maxData, sure: false, before: false };
+  }
+
+  return null;
 }

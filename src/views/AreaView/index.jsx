@@ -10,6 +10,7 @@ import { Row, Col, Card } from 'antd';
 import GeoJSONMap from '../../components/GeoJSONMap';
 import ScrollToTop from '../../components/ScrollToTop';
 
+import { fuelProducedCountrySelector } from '../../store/countries';
 import { areaWithCountriesSelector } from '../../store/otherSelectors';
 import { AreaType } from '../../utils/types';
 
@@ -23,7 +24,7 @@ const TabsComponentWithState = withState(
 )(TabsComponent);
 
 function AreaView(props) {
-  const { area, currentTab, goTo, referenceCountry } = props;
+  const { area, currentTab, goTo, referenceCountry, fuelProduced } = props;
   const latlng = [
     area.countries.reduce((s, c) => c.latlng[0] + s, 0) / area.countries.length,
     area.countries.reduce((s, c) => c.latlng[1] + s, 0) / area.countries.length,
@@ -81,6 +82,7 @@ function AreaView(props) {
           currentTab={currentTab}
           onTabChange={tab => goTo(`/area/${area.code}/${tab}`)}
           referenceCountry={referenceCountry}
+          fuelProduced={fuelProduced}
         />
       </Row>
     </div>
@@ -104,4 +106,5 @@ export default connect((state, props) => ({
   goTo: url => props.history.push(url),
   area: areaWithCountriesSelector(props.match.params.areaCode, state),
   referenceCountry: qs.parse(props.location.search.substr(1)).referenceCountry,
+  fuelProduced: fuelProducedCountrySelector(props.match.params.areaCode, state),
 }))(AreaView);

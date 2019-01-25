@@ -8,6 +8,9 @@ import {
   fuelProducedOrConsumedCountrySelector,
   fuelProducedCountrySelector,
 } from '../../../store/countries';
+import { statisticPeakYearSelector } from '../../../store/statistics';
+
+import { FuelIndicatorsType } from '../../../utils/types';
 
 import IndependencyTab from './IndependencyTab';
 import SummaryTab from './SummaryTab';
@@ -28,8 +31,31 @@ const IndependencyTabContainer = connect((state, props) => ({
   ),
 }))(IndependencyTab);
 
-const ReservesAndPeaksTabContainer = connect((state, props) => ({
-  fuelProduced: fuelProducedCountrySelector(props.countryCode, state),
+const ReservesAndPeaksTabContainer = connect((state, { countryCode }) => ({
+  fuelProduced: fuelProducedCountrySelector(countryCode, state),
+  peaks: {
+    coal: statisticPeakYearSelector(
+      {
+        countryCode,
+        statisticCode: 'COAL_PRODUCTION_MTOE',
+      },
+      state,
+    ),
+    oil: statisticPeakYearSelector(
+      {
+        countryCode,
+        statisticCode: 'OIL_PRODUCTION_MTOE',
+      },
+      state,
+    ),
+    gas: statisticPeakYearSelector(
+      {
+        countryCode,
+        statisticCode: 'GAS_PRODUCTION_MTOE',
+      },
+      state,
+    ),
+  },
 }))(ReservesAndPeaksTab);
 
 const tabContents = {
@@ -46,12 +72,19 @@ function TabsComponent(props) {
     onTabChange,
     setReferenceCountry,
     referenceCountryCode,
+    fuelProduced,
   } = props;
   const TabComponent = tabContents[currentTab];
+  const hasProducedFossils =
+    fuelProduced.coal || fuelProduced.oil || fuelProduced.gas;
+  const tabs = hasProducedFossils
+    ? tabList
+    : tabList.filter(d => d.key !== 'reserves');
+
   return (
     <Card
       key={currentTab}
-      tabList={tabList}
+      tabList={tabs}
       activeTabKey={currentTab}
       onTabChange={onTabChange}
     >
@@ -70,6 +103,7 @@ TabsComponent.propTypes = {
   onTabChange: PropTypes.func.isRequired,
   setReferenceCountry: PropTypes.func.isRequired,
   referenceCountryCode: PropTypes.string.isRequired,
+  fuelProduced: FuelIndicatorsType.isRequired,
 };
 
 export default TabsComponent;

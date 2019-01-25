@@ -142,3 +142,18 @@ export function clickHandlers({ onClick, onDoubleClick }) {
     }
   };
 }
+
+export function maxAndIndex(array) {
+  return array.reduce(
+    (res, value, i) => {
+      if (value > res.max) {
+        return { max: value, maxIndex: i };
+      }
+      return res;
+    },
+    {
+      max: 0,
+      maxIndex: 0,
+    },
+  );
+}

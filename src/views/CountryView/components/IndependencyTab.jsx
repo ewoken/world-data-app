@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Row, Col } from 'antd';
 
+import { FuelIndicatorsType } from '../../../utils/types';
+
 import buildChart from '../../../HOC/buildChart';
 import ProdConsoChart from './ProdConsoChart';
 import GDPByEnergyChart from './GDPByEnergyChart';
@@ -86,11 +88,7 @@ function IndependencyTab(props) {
 
 IndependencyTab.propTypes = {
   countryCode: PropTypes.string.isRequired,
-  fuelProducedOrConsumed: PropTypes.shape({
-    coal: PropTypes.bool,
-    oil: PropTypes.bool,
-    gas: PropTypes.bool,
-  }).isRequired,
+  fuelProducedOrConsumed: FuelIndicatorsType.isRequired,
 };
 
 export default IndependencyTab;

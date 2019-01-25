@@ -46,3 +46,9 @@ export const LocationType = PropTypes.shape({
   pathname: PropTypes.string.isRequired,
   search: PropTypes.string.isRequired,
 });
+
+export const FuelIndicatorsType = PropTypes.shape({
+  coal: PropTypes.bool,
+  oil: PropTypes.bool,
+  gas: PropTypes.bool,
+});
