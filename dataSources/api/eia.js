@@ -1,42 +1,20 @@
 const { retryFetch } = require('./helpers');
-const {
-  TWH_TO_MTOE,
-  GENERATION_TO_CONSUMPTION_FACTOR,
-} = require('./converters');
+const { SHORT_TON_TO_TON, CUBIC_FOOT_TO_CUBIC_METER } = require('./converters');
 
 const EIA_API_KEY = '20cf4469dcd5b4da5fc7cb448d9d934e'; // TODO
 const EIA_API = 'EIA_API';
 
-const BKWHConverter = value =>
-  Number(value * TWH_TO_MTOE * GENERATION_TO_CONSUMPTION_FACTOR).toFixed(2);
-
 const config = {
-  COAL_PRODUCTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.7-1-${alpha3Code}-MTOE.A`,
+  COAL_RESERVES_GT: {
+    seriesOfCountry: alpha3Code => `INTL.7-6-${alpha3Code}-MST.A`,
+    unitConverter: value => (value * SHORT_TON_TO_TON) / 1000,
   },
-  COAL_CONSUMPTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.7-2-${alpha3Code}-MTOE.A`,
+  OIL_RESERVES_BB: {
+    seriesOfCountry: alpha3Code => `INTL.57-6-${alpha3Code}-BB.A`,
   },
-  GAS_PRODUCTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.26-1-${alpha3Code}-MTOE.A`,
-  },
-  GAS_CONSUMPTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.26-2-${alpha3Code}-MTOE.A`,
-  },
-  HYDRO_PRODUCTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.33-12-${alpha3Code}-BKWH.A`,
-    unitConverter: BKWHConverter,
-  },
-  NUCLEAR_PRODUCTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.27-12-${alpha3Code}-BKWH.A`,
-    unitConverter: BKWHConverter,
-  },
-  OTHER_RENEWABLES_CONSUMPTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.34-12-${alpha3Code}-BKWH.A`,
-    unitConverter: BKWHConverter,
-  },
-  PRIMARY_ENERGY_CONSUMPTION_MTOE: {
-    seriesOfCountry: alpha3Code => `INTL.44-2-${alpha3Code}-MTOE.A`,
+  GAS_RESERVES_BCM: {
+    seriesOfCountry: alpha3Code => `INTL.3-6-${alpha3Code}-TCF.A`,
+    unitConverter: value => value * CUBIC_FOOT_TO_CUBIC_METER * 1000,
   },
 };
 

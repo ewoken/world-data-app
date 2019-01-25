@@ -1,4 +1,4 @@
-// const eiaAPI = require('./api/eia');
+const eiaAPI = require('./api/eia');
 const ieaAPI = require('./api/iea');
 const worldBankAPI = require('./api/worldBank');
 const ieaSankey = require('./api/ieaSankey');
@@ -27,9 +27,27 @@ const MT = {
   factor: 10 ** 6,
 };
 
+const GT = {
+  main: 'Gt',
+  base: 'kt',
+  factor: 10 ** 6,
+};
+
 const TWH = {
   main: 'TWh',
   base: 'kWh',
+  factor: 10 ** 9,
+};
+
+const BILLION_BARRELS = {
+  main: 'billion barrels',
+  base: 'barrels',
+  factor: 10 ** 6,
+};
+
+const BILLION_CUBIC_METERS = {
+  main: 'billion m3',
+  base: 'm3',
   factor: 10 ** 9,
 };
 
@@ -267,6 +285,30 @@ It is the energy which reaches the final consumer's door and excludes that which
     unit: MTOE_UNIT,
     source: ieaAPI.apiCode,
     category: 'Consumptions',
+  },
+  {
+    code: 'COAL_RESERVES_GT',
+    name: 'Coal Reserves',
+    description: '',
+    unit: GT,
+    source: eiaAPI.apiCode,
+    category: 'Reserves',
+  },
+  {
+    code: 'OIL_RESERVES_BB',
+    name: 'Oil Reserves',
+    description: '',
+    unit: BILLION_BARRELS,
+    source: eiaAPI.apiCode,
+    category: 'Reserves',
+  },
+  {
+    code: 'GAS_RESERVES_BCM',
+    name: 'Gas Reserves',
+    description: '',
+    unit: BILLION_CUBIC_METERS,
+    source: eiaAPI.apiCode,
+    category: 'Reserves',
   },
 ];
 

@@ -4,16 +4,21 @@ import { connect } from 'react-redux';
 
 import { Card } from 'antd';
 
-import { fuelProducedOrConsumedCountrySelector } from '../../../store/countries';
+import {
+  fuelProducedOrConsumedCountrySelector,
+  fuelProducedCountrySelector,
+} from '../../../store/countries';
 
 import IndependencyTab from './IndependencyTab';
 import SummaryTab from './SummaryTab';
 import ClimateTab from './ClimateTab';
+import ReservesAndPeaksTab from './ReservesAndPeaksTab';
 
 const tabList = [
   { key: 'summary', tab: 'Summary' },
   { key: 'independency', tab: 'Energy (in)dependency' },
   { key: 'climate', tab: 'Climate change' },
+  { key: 'reserves', tab: 'Reserves and peaks' },
 ];
 
 const IndependencyTabContainer = connect((state, props) => ({
@@ -23,10 +28,15 @@ const IndependencyTabContainer = connect((state, props) => ({
   ),
 }))(IndependencyTab);
 
+const ReservesAndPeaksTabContainer = connect((state, props) => ({
+  fuelProduced: fuelProducedCountrySelector(props.countryCode, state),
+}))(ReservesAndPeaksTab);
+
 const tabContents = {
   summary: SummaryTab,
   independency: IndependencyTabContainer,
   climate: ClimateTab,
+  reserves: ReservesAndPeaksTabContainer,
 };
 
 function TabsComponent(props) {

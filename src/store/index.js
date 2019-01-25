@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
+import { map } from 'ramda';
 
 import countriesReducer from './countries';
 import statisticsReducer, {
@@ -20,6 +21,33 @@ function actionSanitizer(action) {
   return action;
 }
 
+function stateSanitizer(state) {
+  return {
+    ...state,
+    countries: map(
+      country => ({ ...country, geojson: country.geojson && 'GEOJSON' }),
+      state.countries.data,
+    ),
+    areas: map(
+      area => ({ ...area, geojson: area.geojson && 'GEOJSON' }),
+      state.areas.data,
+    ),
+    statistics: map(
+      statistic => ({
+        ...statistic,
+        values: map(
+          country => ({
+            ...country,
+            values: country.values && `[${country.values.length}]`,
+          }),
+          statistic.values,
+        ),
+      }),
+      state.statistics.data,
+    ),
+  };
+}
+
 const rootReducer = combineReducers({
   // ...reducers,
   countries: countriesReducer,
@@ -30,6 +58,7 @@ const rootReducer = combineReducers({
 const enhancers = [applyMiddleware(thunk)];
 const composeEnhancers = composeWithDevTools({
   actionSanitizer,
+  stateSanitizer,
 });
 const enhancer = composeEnhancers(...enhancers);
 
