@@ -5,13 +5,16 @@ import { HashRouter as Router } from 'react-router-dom';
 import store from './store';
 
 import AppLayout from './components/AppLayout';
+import AnalyticsComponent from './components/AnalyticsComponent';
 
 function App() {
   return (
     <div className="App">
       <Provider store={store}>
         <Router>
-          <AppLayout />
+          <AnalyticsComponent>
+            <AppLayout />
+          </AnalyticsComponent>
         </Router>
       </Provider>
     </div>
