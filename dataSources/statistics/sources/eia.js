@@ -2,7 +2,6 @@ const { retryFetch } = require('./helpers');
 const { SHORT_TON_TO_TON, CUBIC_FOOT_TO_CUBIC_METER } = require('./converters');
 
 const EIA_API_KEY = '20cf4469dcd5b4da5fc7cb448d9d934e'; // TODO
-const EIA_API = 'EIA_API';
 
 const config = {
   COAL_RESERVES_GT: {
@@ -61,7 +60,7 @@ async function fetchCountryStatisticFromEIA(statisticCode, country) {
 }
 
 module.exports = {
-  apiCode: EIA_API,
+  id: 'eia',
   fetchCountryStatistic: fetchCountryStatisticFromEIA,
-  sourceAttribution: 'EIA',
+  attribution: 'EIA',
 };

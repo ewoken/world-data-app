@@ -1,7 +1,5 @@
 const { retryFetch } = require('./helpers');
 
-const WORLD_BANK_API = 'WORLD_BANK_API';
-
 const config = {
   POPULATION: {
     worldBankCode: 'SP.POP.TOTL',
@@ -12,11 +10,6 @@ const config = {
     worldBankCode: 'NY.GDP.MKTP.KD',
     unitConverter: value => value / 10 ** 9,
   },
-  // CO2_EMISSIONS_MT: {
-  //   worldBankCode: 'EN.ATM.CO2E.KT',
-  //   unitConverter: value => value / 10 ** 3,
-  //   maxYear: 2014,
-  // },
 };
 
 async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
@@ -50,7 +43,7 @@ async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
 }
 
 module.exports = {
-  apiCode: WORLD_BANK_API,
+  id: 'worldBank',
   fetchCountryStatistic: fetchCountryStatisticFromWorldBank,
-  sourceAttribution: 'World Bank',
+  attribution: 'World Bank',
 };

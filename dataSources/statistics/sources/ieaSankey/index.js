@@ -4,8 +4,6 @@ const { retryFetch } = require('../helpers');
 const { parseBalanceFile, getSourceByCountry } = require('./helpers');
 const computeStatistic = require('./computeStatistic');
 
-const IEA_SANKEY_API = 'IEA_SANKEY_API';
-
 const memoizedGetSourceByCountry = memoizeWith(i => i, getSourceByCountry);
 
 async function getCountryBalanceData(countryCode) {
@@ -34,8 +32,8 @@ async function fetchCountryStatisticFromIEASankey(statisticCode, country) {
 }
 
 module.exports = {
-  apiCode: IEA_SANKEY_API,
+  id: 'ieaSankey',
   fetchCountryStatistic: fetchCountryStatisticFromIEASankey,
-  sourceAttribution: 'IEA',
-  sourceUrl: 'https://www.iea.org/sankey/',
+  attribution: 'IEA',
+  url: 'https://www.iea.org/sankey/',
 };

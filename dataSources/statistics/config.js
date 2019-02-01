@@ -1,7 +1,4 @@
-const eiaAPI = require('./api/eia');
-const ieaAPI = require('./api/iea');
-const worldBankAPI = require('./api/worldBank');
-const ieaSankey = require('./api/ieaSankey');
+const sources = require('./sources');
 
 const MTOE_UNIT = {
   main: 'Mtoe',
@@ -57,9 +54,8 @@ const statistics = [
     name: 'Coal production',
     description: '',
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Productions',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/2020991907/0',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#coalandpeat',
   },
@@ -68,9 +64,8 @@ const statistics = [
     name: 'Coal consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Consumptions',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/2020991907/2',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#coalandpeat',
   },
@@ -81,9 +76,8 @@ const statistics = [
 Includes gas consumed by gas processing plants and gas transported by pipeline.
 Excludes quantities of gas that are re-injected, vented or flared.`,
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Productions',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1165808390/0',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#naturalgas',
   },
@@ -92,9 +86,8 @@ Excludes quantities of gas that are re-injected, vented or flared.`,
     name: 'Gas consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Consumptions',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1165808390/1',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#naturalgas',
   },
@@ -103,9 +96,8 @@ Excludes quantities of gas that are re-injected, vented or flared.`,
     name: 'Oil production',
     description: '',
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Productions',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/2020991907/2',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#crudeoil',
   },
@@ -114,9 +106,8 @@ Excludes quantities of gas that are re-injected, vented or flared.`,
     name: 'Oil consumption',
     description: '',
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Consumptions',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1920537974/1',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#crudeoil',
   },
@@ -126,7 +117,7 @@ Excludes quantities of gas that are re-injected, vented or flared.`,
     description: `Hydro shows the energy content of the electricity produced in hydro power plants.
 Excludes output from pumped storage plants.`,
     unit: MTOE_UNIT,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Productions',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#hydro',
@@ -137,10 +128,21 @@ Excludes output from pumped storage plants.`,
     description:
       'Nuclear shows the primary heat equivalent of the electricity produced by a nuclear power plant with an average thermal efficiency of 33 per cent.',
     unit: MTOE_UNIT,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Productions',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#nuclear',
+  },
+  {
+    code: 'BIOFUELS_WASTE_PRODUCTION_MTOE',
+    name: 'Biofuels & waste production',
+    description:
+      'Biofuels & waste is comprised of solid biofuels, liquid biofuels, biogases, industrial waste and municipal waste.',
+    unit: MTOE_UNIT,
+    source: sources.ieaSankey.id,
+    category: 'Productions',
+    sourceDescriptionUrl:
+      'https://www.iea.org/statistics/resources/balancedefinitions/#biofuelsandwaste',
   },
   {
     code: 'BIOFUELS_WASTE_CONSUMPTION_MTOE',
@@ -148,7 +150,7 @@ Excludes output from pumped storage plants.`,
     description:
       'Biofuels & waste is comprised of solid biofuels, liquid biofuels, biogases, industrial waste and municipal waste.',
     unit: MTOE_UNIT,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Consumptions',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#biofuelsandwaste',
@@ -160,7 +162,7 @@ Excludes output from pumped storage plants.`,
 The quantity of geothermal energy entering electricity generation is inferred from the electricity production at geothermal plants assuming an average thermal efficiency of 10%.
 For others, the quantities entering electricity generation are equal to the electrical energy generated.`,
     unit: MTOE_UNIT,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Productions',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#geothermalsolaretc',
@@ -171,7 +173,7 @@ For others, the quantities entering electricity generation are equal to the elec
     description: `Total consumption of energy sources contained in the environment, such as raw fuels or renewables sources of energy.
 Also known as 'total primary energy supply', is made up of: primary energy production + imports - exports - international marine/aviation bunkers +/- stock changes`,
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.iea.id,
     category: 'Consumptions',
     sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1002896040/0',
     sourceDescriptionUrl:
@@ -182,7 +184,7 @@ Also known as 'total primary energy supply', is made up of: primary energy produ
     name: 'Population',
     description: '',
     unit: CAPITA,
-    source: worldBankAPI.apiCode,
+    source: sources.worldBank.id,
     category: 'Others',
     sourceUrl: 'https://data.worldbank.org/indicator/SP.POP.TOTL',
     sourceDescriptionUrl:
@@ -195,7 +197,7 @@ Also known as 'total primary energy supply', is made up of: primary energy produ
 Data are in constant 2010 U.S. dollars.
 Dollar figures for GDP are converted from domestic currencies using 2010 official exchange rates.`,
     unit: BILLION_2010_USD,
-    source: worldBankAPI.apiCode,
+    source: sources.worldBank.id,
     category: 'Others',
     sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.KD',
     sourceDescriptionUrl:
@@ -206,7 +208,7 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     name: 'CO2 Emissions from fossil fuels',
     description: `Carbon dioxide emissions are those stemming from the burning of fossil fuels.`,
     unit: MT,
-    source: ieaAPI.apiCode,
+    source: sources.iea.id,
     category: 'Climate change',
     sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/1378539487/0',
     sourceDescriptionUrl: 'http://energyatlas.iea.org/#!/tellmap/1378539487/0',
@@ -216,20 +218,19 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     name: 'Primary energy production',
     description: `Total production of energy sources contained in the environment, such as raw fuels or renewables sources of energy.`,
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Productions',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1002896040/0',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#iproduction',
   },
   {
     code: 'ELECTRICITY_GENERATION_TWH',
     name: 'Electricity generation',
-    description: 'Total electricity generation',
+    description:
+      'Total electricity generation. Gap between this data and aggregation of generation by fuels is due to approximation in power plants efficiencies.',
     unit: TWH,
-    source: ieaAPI.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Electricity',
-    sourceUrl: 'http://energyatlas.iea.org/#!/tellmap/-1118783123/0',
     sourceDescriptionUrl:
       'https://www.iea.org/statistics/resources/balancedefinitions/#electricity',
   },
@@ -239,7 +240,7 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     description:
       'Inferred from inputs to plant stations assuming an efficiency of 35%.',
     unit: TWH,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Electricity',
   },
   {
@@ -248,7 +249,7 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     description:
       'Inferred from inputs to plant stations assuming an efficiency of 45%.',
     unit: TWH,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Electricity',
   },
   {
@@ -257,7 +258,7 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     description:
       'Inferred from inputs to plant stations assuming an efficiency of 33%.',
     unit: TWH,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Electricity',
   },
   {
@@ -266,7 +267,7 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     description:
       'Inferred from inputs to plant stations assuming an efficiency of 33%.',
     unit: TWH,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Electricity',
   },
   {
@@ -274,7 +275,7 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     name: 'Electricity generation from wind, solar, geothermal and tide',
     description: '',
     unit: TWH,
-    source: ieaSankey.apiCode,
+    source: sources.ieaSankey.id,
     category: 'Electricity',
   },
   {
@@ -283,7 +284,7 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     description: `Final energy consumption is the total energy consumed by end users, such as households, industry and agriculture.
 It is the energy which reaches the final consumer's door and excludes that which is used by the energy sector itself.`,
     unit: MTOE_UNIT,
-    source: ieaAPI.apiCode,
+    source: sources.iea.id,
     category: 'Consumptions',
   },
   {
@@ -291,7 +292,7 @@ It is the energy which reaches the final consumer's door and excludes that which
     name: 'Coal Reserves',
     description: '',
     unit: GT,
-    source: eiaAPI.apiCode,
+    source: sources.eia.id,
     category: 'Reserves',
   },
   {
@@ -299,7 +300,7 @@ It is the energy which reaches the final consumer's door and excludes that which
     name: 'Oil Reserves',
     description: '',
     unit: BILLION_BARRELS,
-    source: eiaAPI.apiCode,
+    source: sources.eia.id,
     category: 'Reserves',
   },
   {
@@ -307,7 +308,7 @@ It is the energy which reaches the final consumer's door and excludes that which
     name: 'Gas Reserves',
     description: '',
     unit: BILLION_CUBIC_METERS,
-    source: eiaAPI.apiCode,
+    source: sources.eia.id,
     category: 'Reserves',
   },
 ];

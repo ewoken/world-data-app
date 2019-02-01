@@ -47,10 +47,12 @@ function parseBalanceFile(string) {
       ),
   );
 
-  const statistics = statisticHeaders.map((header, i) => ({
-    ...header,
-    values: statisticValues[i],
-  }));
+  const statistics = statisticHeaders
+    .map((header, i) => ({
+      ...header,
+      values: statisticValues[i],
+    }))
+    .filter(s => !s.name.startsWith('Heat')); // TODO
 
   return indexBy(s => s.code, statistics);
 }

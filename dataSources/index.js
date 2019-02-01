@@ -1,9 +1,19 @@
 const fs = require('fs');
-const { forEachObjIndexed, groupBy, indexBy, map, omit } = require('ramda');
-const { countries } = require('./countries');
-const statistics = require('./statistics');
-const { fetchStatisticFromSource } = require('./api');
+const { forEachObjIndexed, map, omit, values } = require('ramda');
+const winston = require('winston');
+
+const { independentCountries: countries } = require('./countries');
+const fetchAllStatistics = require('./statistics');
 const areas = require('./areas.json');
+
+const logger = winston.createLogger({
+  format: winston.format.combine(
+    winston.format.splat(),
+    winston.format.simple(),
+  ),
+  transports: [new winston.transports.Console()],
+  exitOnError: false,
+});
 
 function assertStatisticPath(statisticCode) {
   const statisticPath = `./data/${statisticCode}`;
@@ -42,88 +52,73 @@ const hasProducedMap = {
   solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
 };
 
+function checkStat(statisticsByCode, code) {
+  return statisticCode =>
+    statisticsByCode[statisticCode].indexedData[code].some(d => d.value > 0.01);
+}
+
 async function generateData() {
-  const fullStatistics = await statistics.reduce(async (p, statistic) => {
-    const stats = await p;
+  const context = { countries, areas, logger };
+  const statisticsByCode = await fetchAllStatistics(context);
+  const statistics = values(statisticsByCode);
 
-    console.log(`Fetching ${statistic.code}`);
-    const fullStatistic = await fetchStatisticFromSource(statistic);
-    const dataByCountry = fullStatistic.data;
+  const finalCountries = countries.map(country => {
+    const disabled = !statisticsByCode.COAL_PRODUCTION_MTOE.indexedData[
+      country.alpha2Code
+    ].some(d => d.value !== null);
+    return {
+      ...country,
+      disabled,
+      hasProduced: map(
+        checkStat(statisticsByCode, country.alpha2Code),
+        hasProducedMap,
+      ),
+      hasConsumed: map(
+        checkStat(statisticsByCode, country.alpha2Code),
+        hasConsumedMap,
+      ),
+    };
+  });
+  const disabledCountryCodes = finalCountries
+    .filter(c => c.disabled)
+    .map(c => c.alpha2Code);
 
+  const finalAreas = areas.map(area => ({
+    ...area,
+    hasProduced: map(checkStat(statisticsByCode, area.code), hasProducedMap),
+    hasConsumed: map(checkStat(statisticsByCode, area.code), hasConsumedMap),
+  }));
+
+  logger.info('Write statistic files...');
+  statistics.forEach(statistic => {
     const statisticPath = assertStatisticPath(statistic.code);
-    writeFiles(statisticPath, dataByCountry);
+    const enableIndexedData = omit(disabledCountryCodes, statistic.indexedData);
 
-    const countriesData = Object.keys(dataByCountry).reduce(
-      (acc, countryCode) => {
-        const countryData = dataByCountry[countryCode].map(d => ({
-          ...d,
-          countryCode,
-        }));
-        return acc.concat(countryData);
-      },
+    writeFiles(statisticPath, enableIndexedData);
+    const allStatisticData = Object.keys(enableIndexedData).reduce(
+      (acc, key) =>
+        acc.concat(
+          enableIndexedData[key].map(d => ({ ...d, countryCode: key })),
+        ),
       [],
     );
 
-    const dataByYear = groupBy(d => d.year, countriesData);
-    const areasData = areas.map(area => {
-      const areaData = Object.keys(dataByYear).reduce((acc, year) => {
-        const countryValues = dataByYear[year].filter(
-          data =>
-            // !area.countryCode is for WOLRD
-            !area.countryCodes || area.countryCodes.includes(data.countryCode),
-        );
-        const value = countryValues.reduce((sum, d) => sum + d.value, 0);
-
-        return [...acc, { year: Number(year), value }];
-      }, []);
-
-      return { areaCode: area.code, data: areaData };
-    });
-    const dataByArea = map(d => d.data, indexBy(d => d.areaCode, areasData));
-    const worldData = dataByArea.WORLD;
-
-    writeFiles(statisticPath, dataByArea);
-
-    const allData = countriesData.concat(
-      worldData.map(d => ({ ...d, countryCode: 'WORLD' })),
+    fs.writeFileSync(
+      `${statisticPath}/all.json`,
+      JSON.stringify(allStatisticData),
     );
-    const filename = `${statisticPath}/all.json`;
-    console.log(`Write ${filename}`);
-    fs.writeFileSync(filename, JSON.stringify(allData));
+  });
 
-    stats.push({
-      ...fullStatistic,
-      dataByArea,
-    });
-    return stats;
-  }, Promise.resolve([]));
+  logger.info('Write countries.json');
+  fs.writeFileSync('./data/countries.json', JSON.stringify(finalCountries));
 
-  const fullStatisticByCode = indexBy(s => s.code, fullStatistics);
-  const check = countryCode => code =>
-    !!fullStatisticByCode[code].data[countryCode] &&
-    fullStatisticByCode[code].data[countryCode].some(d => d.value > 0.01);
-  const countriesData = countries.map(country => ({
-    ...country,
-    hasProduced: map(check(country.alpha2Code), hasProducedMap),
-    hasConsumed: map(check(country.alpha2Code), hasConsumedMap),
-  }));
+  logger.info('Write areas.json');
+  fs.writeFileSync('./data/areas.json', JSON.stringify(finalAreas));
 
-  fs.writeFileSync('./data/countries.json', JSON.stringify(countriesData));
-
-  const checkArea = countryCode => code =>
-    !!fullStatisticByCode[code].dataByArea[countryCode] &&
-    fullStatisticByCode[code].dataByArea[countryCode].some(d => d.value > 0.01);
-  const areasData = areas.map(area => ({
-    ...area,
-    hasProduced: map(checkArea(area.code), hasProducedMap),
-    hasConsumed: map(checkArea(area.code), hasConsumedMap),
-  }));
-  fs.writeFileSync('./data/areas.json', JSON.stringify(areasData));
-
-  console.log('Write statistics.json');
+  logger.info('Write statistics.json');
   fs.writeFileSync(
     './data/statistics.json',
-    JSON.stringify(fullStatistics.map(omit(['data', 'dataByArea']))),
+    JSON.stringify(statistics.map(omit(['indexedData']))),
   );
 }
 
