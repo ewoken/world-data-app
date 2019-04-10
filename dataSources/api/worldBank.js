@@ -6,6 +6,7 @@ const config = {
   POPULATION: {
     worldBankCode: 'SP.POP.TOTL',
     unitConverter: value => value / 10 ** 6,
+    maxYear: 2017,
   },
   GDP_2010_USD: {
     worldBankCode: 'NY.GDP.MKTP.KD',
