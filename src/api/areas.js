@@ -1,9 +1,12 @@
-import worldTopo from 'world-atlas/world/110m.json';
-import countriesData from 'world-countries/countries';
+import worldTopo from 'world-atlas/world/110m.json'; // TODO
+import countriesData from 'world-countries/countries'; // TODO
 import { merge } from 'topojson-client';
 import { indexBy } from 'ramda';
 
-const indexedCountries = indexBy(c => c.cca2, countriesData);
+const indexedCountries = {
+  ...indexBy(c => c.cca2, countriesData),
+  SU: { ccn3: 810 },
+};
 
 function computeGeojson(area) {
   const countryAlpha3Codes = area.countryCodes.map(

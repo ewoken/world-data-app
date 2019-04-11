@@ -1,5 +1,6 @@
 const { memoizeWith } = require('ramda');
 const { retryFetch } = require('./helpers');
+const OTHERS = require('./others');
 
 const config = {
   OIL_PRODUCTION_MTOE: {
@@ -74,6 +75,13 @@ const memoizedFetchStatisticFromIEA = memoizeWith(
 );
 
 async function fetchCountryStatisticFromIEA(statisticCode, country) {
+  if (
+    statisticCode === 'PRIMARY_ENERGY_CONSUMPTION_MTOE' &&
+    country.alpha2Code === 'SU'
+  ) {
+    return OTHERS.PRIMARY_ENERGY_CONSUMPTION_MTOE.SU;
+  }
+
   const dataByCountry = await memoizedFetchStatisticFromIEA(statisticCode);
 
   return dataByCountry[country.alpha3Code] || [];

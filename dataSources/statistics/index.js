@@ -6,13 +6,14 @@ const statisticConfigs = require('./config');
 const DEFAULT_STARTING_YEAR = 1973;
 const DEFAULT_ENDING_YEAR = 2016;
 
-function formatDataArray({ startingYear, endingYear, data }) {
+function formatDataArray({ startingYear, endingYear, data, countryLastYear }) {
   const dataByYear = indexBy(d => d.year, data);
   const years = range(startingYear, endingYear + 1);
+  const lastYear = countryLastYear || endingYear;
 
   return years.map(year => ({
     year,
-    value: dataByYear[year] ? dataByYear[year].value : null,
+    value: dataByYear[year] && year <= lastYear ? dataByYear[year].value : null,
   }));
 }
 
@@ -52,6 +53,7 @@ async function fetchStatistic(statisticConfig, context) {
         [country.alpha2Code]: formatDataArray({
           startingYear,
           endingYear,
+          countryLastYear: country.lastYear,
           data,
         }),
       })),
@@ -63,6 +65,11 @@ async function fetchStatistic(statisticConfig, context) {
       [area.code]: aggregate(dataByCountry, area.countryCodes),
     })),
   );
+
+  if (statistic.code === 'POPULATION') {
+    dataByCountry.SU = dataByArea.FORMER_USSR;
+  }
+
   const indexedData = {
     ...dataByCountry,
     ...dataByArea,

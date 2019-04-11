@@ -1,0 +1,35 @@
+[
+  {
+    "id": 810,
+    "alpha2Code": "SU",
+    "commonName": "Former Soviet Union",
+    "alpha3Code": "SUN",
+    "numericCode": 810,
+    "region": "Europe",
+    "subregion": "Eastern Europe",
+    "isIndependent": true,
+    "area": 22402200,
+    "capital": "Moscow",
+    "latlng": [60, 100],
+    "disabled": false,
+    "flagIcon": "",
+    "lastYear": 1989,
+    "countries": [
+      "AZ",
+      "BY",
+      "KZ",
+      "KG",
+      "AM",
+      "MD",
+      "RU",
+      "TJ",
+      "UZ",
+      "TM",
+      "UA",
+      "GE",
+      "LV",
+      "EE",
+      "LT"
+    ]
+  }
+]

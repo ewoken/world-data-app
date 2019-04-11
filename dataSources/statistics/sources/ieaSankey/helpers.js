@@ -98,7 +98,9 @@ async function getSourceByCountry() {
         [country.cca2]: sourceFile._attributes.src,
       };
     },
-    {},
+    {
+      SU: 'data/Former Soviet Union.SBBSBSBSBSBSBSSS_YY.txt',
+    },
   );
   return sourcefileByCountry;
 }

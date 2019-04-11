@@ -24,7 +24,10 @@ export function loadAllAreas() {
           }),
         ),
       )
-      .catch(errors => dispatch(receiveAreasAction({ errors })));
+      .catch(
+        errors =>
+          console.log(errors) && dispatch(receiveAreasAction({ errors })),
+      );
   };
 }
 

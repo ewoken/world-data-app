@@ -275,6 +275,7 @@
     "code": "FORMER_USSR",
     "name": "Commonwealth of Independent States (Former USSR)",
     "countryCodes": [
+      "SU",
       "AZ",
       "BY",
       "KZ",
@@ -286,7 +287,10 @@
       "UZ",
       "TM",
       "UA",
-      "GE"
+      "GE",
+      "LV",
+      "EE",
+      "LT"
     ]
   }
 ]

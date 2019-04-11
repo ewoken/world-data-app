@@ -1,5 +1,7 @@
 const countriesData = require('world-countries/countries');
 
+const formerCountries = require('./formerCountries');
+
 function countryMapValues(country) {
   return {
     id: Number(country.ccn3),
@@ -11,12 +13,15 @@ function countryMapValues(country) {
     subregion: country.subregion,
     isIndependent: country.independent,
     area: country.area,
-    capital: country.capital[0], // TODO
+    capital: country.capital[0] || 'No official capital',
     latlng: country.latlng,
     flagIcon: country.flag,
+    former: false,
   };
 }
-const countries = countriesData.map(countryMapValues);
+const countries = countriesData
+  .map(countryMapValues)
+  .concat(formerCountries.map(c => ({ ...c, former: true })));
 
 module.exports = {
   countries,
