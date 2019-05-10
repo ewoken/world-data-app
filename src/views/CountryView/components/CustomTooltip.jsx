@@ -7,7 +7,7 @@ function CustomTooltip(props) {
   const { active, separator, payload, withTotal } = props;
 
   if (active && payload && payload.length > 0) {
-    const { label, displayFilter, totalFilter, units } = props;
+    const { label, labelColor, displayFilter, totalFilter, units } = props;
     const filteredPayload = payload.filter(displayFilter);
 
     if (filteredPayload.length < 2) {
@@ -25,7 +25,7 @@ function CustomTooltip(props) {
 
     return (
       <div className="CustomTooltip">
-        <div>{label}</div>
+        <div style={{ color: labelColor, fontWeight: 'bold' }}>{label}</div>
         <div>
           {filteredPayload.map((p, i) => {
             const {
@@ -67,6 +67,7 @@ CustomTooltip.propTypes = {
     }).isRequired,
   ).isRequired,
   label: PropTypes.any, // eslint-disable-line react/forbid-prop-types
+  labelColor: PropTypes.string,
   withTotal: PropTypes.bool,
   displayFilter: PropTypes.func,
   totalFilter: PropTypes.func,
@@ -74,6 +75,7 @@ CustomTooltip.propTypes = {
 };
 CustomTooltip.defaultProps = {
   label: '',
+  labelColor: 'black',
   withTotal: false,
   displayFilter: i => i,
   totalFilter: i => i,

@@ -24,14 +24,14 @@ const COLORS_SCHEME = 'YlGnBu';
 const interpolator = d3Colors[`interpolate${COLORS_SCHEME}`];
 
 function computeColorMap(data, scaleString) {
-  const maxValue = Math.max(...data.map(d => d.value));
+  const maxValue = Math.max(...data.filter(d => d.value).map(d => d.value));
   const minValue = Math.min(...data.filter(d => d.value).map(d => d.value));
   const valueMap = map(d => d.value, indexBy(d => d.countryCode, data));
   const scaleType = scaleString === 'linear' ? scaleLinear() : scaleLog();
   const scale = scaleType.domain([minValue, maxValue]);
 
   const colorMap = map(value => {
-    if (value === null || value === undefined) {
+    if (value === null) {
       return { color: NA_COLOR, value };
     }
     if (value === 0) {

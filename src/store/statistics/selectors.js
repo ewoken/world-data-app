@@ -1,4 +1,4 @@
-import { values, mapObjIndexed, mergeAll, groupBy, map, omit } from 'ramda';
+import { values, mapObjIndexed, mergeAll, groupBy, map, range } from 'ramda';
 import { countriesSelector } from '../countries';
 import {
   parseMapOfStatistics,
@@ -61,7 +61,7 @@ function computeDerivedValueFromCompiled(statistic) {
 }
 
 export function countryStatisticValuesSelector(
-  { statisticCode, countryCode },
+  { statisticCode, countryCode, yearInterval },
   state,
 ) {
   const statistic = statisticSelector(statisticCode, state);
@@ -72,6 +72,7 @@ export function countryStatisticValuesSelector(
       {
         mapOfCountryStatistics: statistic.source,
         countryCode,
+        yearInterval,
       },
       state,
     ).map(computeDerivedValueFromCompiled(statistic));
@@ -84,7 +85,15 @@ export function countryStatisticValuesSelector(
     },
     state,
   );
-  return countryStatistic ? countryStatistic.values : [];
+  const interval = yearInterval || [
+    statistic.startingYear,
+    statistic.endingYear,
+  ];
+  return countryStatistic
+    ? countryStatistic.values.filter(
+        d => interval[0] <= d.year && d.year <= interval[1],
+      )
+    : [];
 }
 
 export function countryStatisticsLoadedSelector(countryStatitics, state) {
@@ -102,16 +111,12 @@ export function statisticOfAllCountriesLoadedSelector(statisticCode, state) {
   );
 }
 
-function computeYearInterval(mapOfStatisticValues) {
-  const arrayOfStatisticValues = values(mapOfStatisticValues);
-  const startingYears = arrayOfStatisticValues.map(statisticValues =>
-    Math.min(...statisticValues.map(v => v.year)),
-  );
-  const endingYears = arrayOfStatisticValues.map(statisticValues =>
-    Math.max(...statisticValues.map(v => v.year)),
-  );
-  const startingYear = Math.max(...startingYears);
-  const endingYear = Math.min(...endingYears);
+function computeYearInterval(mapOfStatistic, yearInterval = [0, 3000]) {
+  const statistics = values(mapOfStatistic);
+  const startingYears = statistics.map(statistic => statistic.startingYear);
+  const endingYears = statistics.map(statistic => statistic.endingYear);
+  const startingYear = Math.max(...startingYears, yearInterval[0]);
+  const endingYear = Math.min(...endingYears, yearInterval[1]);
   return [startingYear, endingYear];
 }
 
@@ -124,7 +129,12 @@ function computeValue(value, population, perCapita, factor, populationFactor) {
 }
 
 function compiledCountryStatisticsSelectorFn(
-  { mapOfCountryStatistics: baseMap, countryCode, perCapita },
+  {
+    mapOfCountryStatistics: baseMap,
+    countryCode,
+    perCapita,
+    yearInterval: inputYearInterval,
+  },
   state,
 ) {
   const parsedMapOfCountryStatistics = parseMapOfStatistics(
@@ -139,11 +149,16 @@ function compiledCountryStatisticsSelectorFn(
     ({ statisticCode }) => statisticSelector(statisticCode, state),
     mapOfCountryStatistics,
   );
+  const nullValues = map(() => null, mapOfStatistic);
+  const yearInterval = computeYearInterval(mapOfStatistic, inputYearInterval);
   const mapOfStatisticValues = map(
-    countryStatistic => countryStatisticValuesSelector(countryStatistic, state),
+    countryStatistic =>
+      countryStatisticValuesSelector(
+        { ...countryStatistic, yearInterval },
+        state,
+      ),
     mapOfCountryStatistics,
   );
-  const [startingYear, endingYear] = computeYearInterval(mapOfStatisticValues);
 
   const mapOfNamedStatisticValues = mapObjIndexed(
     (statisticValues, compileName) =>
@@ -156,27 +171,28 @@ function compiledCountryStatisticsSelectorFn(
   const allValues = [].concat(...values(mapOfNamedStatisticValues));
   const allValuesByYear = groupBy(value => value.year, allValues);
 
-  const compiledStatistics = Object.keys(allValuesByYear)
-    .map(year => Number(year))
-    .filter(year => startingYear <= year && year <= endingYear)
+  const compiledStatistics = range(yearInterval[0], yearInterval[1] + 1)
     .sort()
-    .map(year => mergeAll(allValuesByYear[year]))
+    .map(year => ({
+      year,
+      ...nullValues,
+      ...mergeAll(allValuesByYear[year]),
+    }))
     .map(compiledValue => ({
       ...compiledValue,
-      ...mapObjIndexed((value, compileName) => {
-        const popCompileName = `pop/${
-          mapOfCountryStatistics[compileName].countryCode
-        }`;
+      ...mapObjIndexed(({ countryCode: cc }, compileName) => {
+        const value = compiledValue[compileName];
+        const popCompileName = `pop/${cc}`;
         return computeValue(
           value,
           compiledValue[popCompileName],
-          perCapita,
+          perCapita && !mapOfStatistic[compileName].isIntensive,
           mapOfStatistic[compileName].unit.factor,
           mapOfStatistic[popCompileName]
             ? mapOfStatistic[popCompileName].unit.factor
             : null,
         );
-      }, omit(['year'], compiledValue)),
+      }, parsedMapOfCountryStatistics),
     }));
 
   return compiledStatistics;
@@ -187,25 +203,40 @@ export const compiledCountryStatisticsSelector = memoize(
 );
 
 export function compiledStatisticForCountriesAndYear(
-  { statisticCode, year, perCapita },
+  {
+    mapOfCountryStatistics: input,
+    statisticCode,
+    year,
+    perCapita = false,
+    withWorld = true,
+  },
   state,
 ) {
   const countryCodes = countriesSelector(state).map(c => c.alpha2Code);
-  const mapOfCountryStatistics = {
+  const mapOfCountryStatistics = input || {
     value: statisticCode,
   };
-  countryCodes.push('WORLD');
+  const yearInterval = [year, year];
+
+  if (withWorld) {
+    countryCodes.push('WORLD');
+  }
 
   const countryValues = countryCodes.map(countryCode => {
     const countryStatisticValues = compiledCountryStatisticsSelector(
-      { mapOfCountryStatistics, countryCode, perCapita },
+      {
+        mapOfCountryStatistics,
+        countryCode,
+        perCapita,
+        yearInterval,
+      },
       state,
     );
-    const yearValue = countryStatisticValues.find(v => v.year === year);
+    const yearValue = countryStatisticValues[0];
 
     return {
       countryCode,
-      value: yearValue ? yearValue.value : null,
+      ...yearValue,
     };
   });
   return countryValues;

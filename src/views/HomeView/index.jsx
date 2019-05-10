@@ -8,6 +8,7 @@ import ScrollToTop from '../../components/ScrollToTop';
 
 import WorldMap from './components/WorldMap';
 import StatisticExplorer from './components/StatisticExplorer';
+import HDIByEnergyChartContainer from './containers/HDIByEnergyChartContainer';
 
 import {
   countriesSelector,
@@ -126,7 +127,13 @@ class HomeView extends Component {
   }
 
   render() {
-    const { goTo, currentYear, statisticCode, perCapita } = this.props;
+    const {
+      goTo,
+      currentYear,
+      statisticCode,
+      perCapita,
+      location,
+    } = this.props;
     const { scale, boundsFilter } = this.state;
 
     return (
@@ -166,6 +173,15 @@ class HomeView extends Component {
               boundsFilter={boundsFilter}
             />
           </Col>
+          {location.search.includes('beta') && (
+            <Col md={24} style={{ marginTop: 20, backgroundColor: 'white' }}>
+              <HDIByEnergyChartContainer
+                title="Human development index according to energy in 2016"
+                description="size of circle depends on population"
+                height={600}
+              />
+            </Col>
+          )}
         </Row>
       </div>
     );
@@ -178,6 +194,7 @@ HomeView.propTypes = {
   perCapita: PropTypes.bool.isRequired,
   currentYear: PropTypes.number.isRequired,
   goTo: PropTypes.func.isRequired,
+  location: PropTypes.shape({ search: PropTypes.string.isRequired }).isRequired,
 };
 
 HomeView.defaultProps = {

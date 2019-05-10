@@ -17,7 +17,7 @@ function formatDataArray({ startingYear, endingYear, data, countryLastYear }) {
   }));
 }
 
-function aggregate(dataById, ids) {
+function aggregate(dataById, ids, isIntensive = false) {
   const allData = ids
     ? [].concat(...ids.map(id => dataById[id] || []))
     : [].concat(...values(dataById));
@@ -25,10 +25,12 @@ function aggregate(dataById, ids) {
   const dataNotNull = allData.filter(d => d.value !== null);
   const dataByYear = groupBy(d => d.year, dataNotNull);
 
-  return Object.keys(dataByYear).map(year => ({
+  const res = Object.keys(dataByYear).map(year => ({
     year: Number(year),
     value: dataByYear[year].reduce((sum, d) => sum + d.value, 0),
   }));
+
+  return isIntensive ? res.map(r => ({ ...r, value: null })) : res;
 }
 
 async function fetchStatistic(statisticConfig, context) {
@@ -62,7 +64,11 @@ async function fetchStatistic(statisticConfig, context) {
   const dataByCountry = mergeAll(countryDataObjects);
   const dataByArea = mergeAll(
     areas.map(area => ({
-      [area.code]: aggregate(dataByCountry, area.countryCodes),
+      [area.code]: aggregate(
+        dataByCountry,
+        area.countryCodes,
+        statistic.isIntensive,
+      ),
     })),
   );
 
@@ -100,4 +106,13 @@ function fetchAllStatistics(context) {
   }, Promise.resolve({}));
 }
 
-module.exports = fetchAllStatistics;
+function fetchStatisticByCode(code, context) {
+  const statisticConfig = statisticConfigs.find(s => s.code === code);
+
+  return fetchStatistic(statisticConfig, context);
+}
+
+module.exports = {
+  fetchAllStatistics,
+  fetchStatisticByCode,
+};

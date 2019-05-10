@@ -51,19 +51,26 @@ function CountryView(props) {
               ))}
             </div>
             <Row style={{ marginTop: '20px' }} gutter={20}>
-              <Col xs={24} sm={24} md={24} lg={12}>
+              <Col xs={24} sm={24} md={24} lg={8}>
                 <BasicChartContainer
                   statisticCode="POPULATION"
                   countryCode={countryCode}
                   color="#2c82c9"
                 />
               </Col>
-              <Col xs={24} sm={24} md={24} lg={12}>
+              <Col xs={24} sm={24} md={24} lg={8}>
                 <BasicChartContainer
                   statisticCode="GDP_2010_USD"
                   countryCode={countryCode}
                   color="#f22613"
                   perCapita
+                />
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={8}>
+                <BasicChartContainer
+                  statisticCode="HUMAN_DEVELOPMENT_INDEX"
+                  countryCode={countryCode}
+                  color="green"
                 />
               </Col>
             </Row>

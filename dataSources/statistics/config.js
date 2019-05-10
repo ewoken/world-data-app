@@ -311,6 +311,42 @@ It is the energy which reaches the final consumer's door and excludes that which
     source: sources.eia.id,
     category: 'Reserves',
   },
+  {
+    code: 'HUMAN_DEVELOPMENT_INDEX',
+    name: 'Human development index',
+    description:
+      'The HDI was created to emphasize that people and their capabilities should be the ultimate criteria for assessing the development of a country, not economic growth alone.',
+    unit: {
+      main: '',
+      base: '',
+      factor: 1,
+    },
+    source: sources.hdro.id,
+    startingYear: 1990,
+    isIntensive: true,
+    category: 'Others',
+    sourceUrl: 'http://hdr.undp.org/en/data',
+    sourceDescriptionUrl:
+      'http://hdr.undp.org/en/content/human-development-index-hdi',
+  },
+  {
+    code: 'INEQUALITY_ADJUSTED_HDI',
+    name: 'Inequality-adjusted Human Development Index',
+    description:
+      'The IHDI combines a country’s average achievements in health, education and income with how those achievements are distributed among country’s population by “discounting” each dimension’s average value according to its level of inequality.',
+    unit: {
+      main: '',
+      base: '',
+      factor: 1,
+    },
+    source: sources.hdro.id,
+    startingYear: 1990,
+    isIntensive: true,
+    category: 'Others',
+    sourceUrl: 'http://hdr.undp.org/en/composite/IHDI',
+    sourceDescriptionUrl:
+      'http://hdr.undp.org/en/content/inequality-adjusted-human-development-index-ihdi',
+  },
 ];
 
 module.exports = statistics;

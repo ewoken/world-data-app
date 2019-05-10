@@ -37,6 +37,7 @@
     "redux": "^4.0.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "regression": "^2.0.1",
     "topojson-client": "^3.0.0",
     "winston": "^3.2.1",
     "world-atlas": "^1.1.4",

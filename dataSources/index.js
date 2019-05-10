@@ -3,7 +3,7 @@ const { forEachObjIndexed, map, omit, values } = require('ramda');
 const winston = require('winston');
 
 const { independentCountries: countries } = require('./countries');
-const fetchAllStatistics = require('./statistics');
+const { fetchAllStatistics, fetchStatisticByCode } = require('./statistics');
 const areas = require('./areas.json');
 
 const logger = winston.createLogger({
@@ -57,8 +57,32 @@ function checkStat(statisticsByCode, code) {
     statisticsByCode[statisticCode].indexedData[code].some(d => d.value > 0.01);
 }
 
+function writeStatistic(statistic, disabledCountryCodes = []) {
+  const statisticPath = assertStatisticPath(statistic.code);
+  const enableIndexedData = omit(disabledCountryCodes, statistic.indexedData);
+
+  writeFiles(statisticPath, enableIndexedData);
+  const allStatisticData = Object.keys(enableIndexedData).reduce(
+    (acc, key) =>
+      acc.concat(enableIndexedData[key].map(d => ({ ...d, countryCode: key }))),
+    [],
+  );
+
+  fs.writeFileSync(
+    `${statisticPath}/all.json`,
+    JSON.stringify(allStatisticData),
+  );
+}
+
+const context = { countries, areas, logger };
+
+async function generateStatistic(code) {
+  const statistic = await fetchStatisticByCode(code, context);
+
+  writeStatistic(statistic);
+}
+
 async function generateData() {
-  const context = { countries, areas, logger };
   const statisticsByCode = await fetchAllStatistics(context);
   const statistics = values(statisticsByCode);
 
@@ -91,22 +115,7 @@ async function generateData() {
 
   logger.info('Write statistic files...');
   statistics.forEach(statistic => {
-    const statisticPath = assertStatisticPath(statistic.code);
-    const enableIndexedData = omit(disabledCountryCodes, statistic.indexedData);
-
-    writeFiles(statisticPath, enableIndexedData);
-    const allStatisticData = Object.keys(enableIndexedData).reduce(
-      (acc, key) =>
-        acc.concat(
-          enableIndexedData[key].map(d => ({ ...d, countryCode: key })),
-        ),
-      [],
-    );
-
-    fs.writeFileSync(
-      `${statisticPath}/all.json`,
-      JSON.stringify(allStatisticData),
-    );
+    writeStatistic(statistic, disabledCountryCodes);
   });
 
   logger.info('Write countries.json');
@@ -122,7 +131,14 @@ async function generateData() {
   );
 }
 
-generateData().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[2]) {
+  generateStatistic(process.argv[2]).catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
+} else {
+  generateData().catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
+}
