@@ -24,7 +24,9 @@ export function countryStatisticSelector(
   state,
 ) {
   const statistic = statisticSelector(statisticCode, state);
-  return statistic && statistic.values[countryCode];
+  return (
+    statistic && statistic.values[statistic.isGlobal ? 'WORLD' : countryCode]
+  );
 }
 
 export function countryStatisticLoadedSelector(

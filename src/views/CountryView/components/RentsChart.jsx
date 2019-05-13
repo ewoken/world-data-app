@@ -4,6 +4,7 @@ import {
   ResponsiveContainer,
   ComposedChart,
   Area,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -21,6 +22,8 @@ const DEFAULT_AREA_PROPS = {
   strokeOpacity: 0,
   fillOpacity: 0.8,
   stackId: '1',
+  yAxisId: 'left',
+  legendType: 'circle',
 };
 
 const AREA_PROPS = {
@@ -46,24 +49,47 @@ const AREA_PROPS = {
 const FUELS = Object.keys(AREA_PROPS);
 
 function RentsChart(props) {
-  const { data, height } = props;
+  const { data, height, statistics } = props;
   const displayedFuel = FUELS.filter(fuel => data.some(d => d[fuel] > 0.1));
 
   return (
     <div className="RentsChart">
       <ResponsiveContainer height={height}>
-        <ComposedChart data={data}>
+        <ComposedChart data={data} margin={{ top: 5 }}>
           {displayedFuel.map(fuel => (
-            <Area {...DEFAULT_AREA_PROPS} {...AREA_PROPS[fuel]} />
+            <Area key={fuel} {...DEFAULT_AREA_PROPS} {...AREA_PROPS[fuel]} />
           ))}
+          <Line
+            name="Oil price"
+            dataKey="price"
+            stroke="red"
+            yAxisId="right"
+            dot={false}
+            unit={statistics.price.unit.base}
+            legendType="line"
+          />
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis dataKey="year" interval={9} />
-          <YAxis />
-          <Tooltip
-            content={props2 => <CustomTooltip {...props2} withTotal />}
-            displayFilter={({ dataKey }) => displayedFuel.includes(dataKey)}
+          <YAxis yAxisId="left" />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            // eslint-disable-next-line no-irregular-whitespace
+            label={`   ${statistics.price.unit.base}`}
           />
-          <Legend iconType="circle" />
+          <Tooltip
+            content={props2 => (
+              <CustomTooltip
+                {...props2}
+                withTotal
+                totalFilter={({ dataKey }) => dataKey !== 'price'}
+              />
+            )}
+            displayFilter={({ dataKey }) =>
+              displayedFuel.includes(dataKey) || dataKey === 'price'
+            }
+          />
+          <Legend />
         </ComposedChart>
       </ResponsiveContainer>
     </div>
@@ -75,6 +101,7 @@ RentsChart.propTypes = {
     coal: StatisticType.isRequired,
     oil: StatisticType.isRequired,
     gas: StatisticType.isRequired,
+    price: StatisticType.isRequired,
   }).isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
@@ -82,6 +109,7 @@ RentsChart.propTypes = {
       coal: PropTypes.number,
       oil: PropTypes.number,
       gas: PropTypes.number,
+      price: PropTypes.number,
     }),
   ).isRequired,
   height: PropTypes.number.isRequired,

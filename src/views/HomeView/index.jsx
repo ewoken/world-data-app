@@ -49,7 +49,7 @@ const ConnectedWorldMap = connect(
 const ConnectedStatisticExplorer = connect(
   (state, { statisticCode, currentYear, perCapita, boundsFilter }) => ({
     countries: countriesInBounds(boundsFilter, state),
-    statistics: allStatisticsSelector(state),
+    statistics: allStatisticsSelector(state).filter(s => !s.isGlobal),
     currentStatistic: statisticSelector(statisticCode, state),
     statisticSources: statisticSourcesSelector(
       f(statisticCode, perCapita),

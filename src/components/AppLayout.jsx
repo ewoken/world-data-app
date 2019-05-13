@@ -110,7 +110,9 @@ class AppLayout extends Component {
                 </Switch>
               )}
             </Layout.Content>
-            <Layout.Footer>Sources: IEA, World Bank, HDRO</Layout.Footer>
+            <Layout.Footer>
+              Sources: IEA, EIA, BP, World Bank, HDRO
+            </Layout.Footer>
           </Layout>
         </Spin>
       </div>

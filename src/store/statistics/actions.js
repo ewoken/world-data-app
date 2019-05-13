@@ -94,6 +94,11 @@ export function loadCountryStatistic({ statisticCode, countryCode }) {
     const state = getState();
     const statistic = statisticSelector(statisticCode, state);
 
+    if (statistic.isGlobal && countryCode !== 'WORLD') {
+      dispatch(loadCountryStatistic({ statisticCode, countryCode: 'WORLD' }));
+      return;
+    }
+
     if (statistic.compute) {
       const sourceCodes = values(statistic.source);
       const countryStatistics = sourceCodes.map(sourceCode => ({

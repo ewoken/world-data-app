@@ -180,6 +180,28 @@ const derivedStatistics = [
       return coal * gas * oil;
     },
   },
+  {
+    code: 'OIL_RELATIVE_PRICE',
+    name: 'Oil relative price',
+    description: `Average time (in days) that an inhabitant need to work to buy a barrel of crude oil.
+TIME = OIL_PRICE / (GDP / POP)`,
+    unit: {
+      main: 'days',
+      base: 'days',
+    },
+    source: {
+      oilPrice: 'OIL_PRICE_USD',
+      gdp: 'GDP_USD',
+      pop: 'POPULATION',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    isIntensive: true,
+    category: 'Others',
+    compute({ oilPrice, gdp, pop }) {
+      return (oilPrice / ((gdp * 10 ** 9) / (pop * 10 ** 6))) * 365.25;
+    },
+  },
 ];
 
 export default derivedStatistics;

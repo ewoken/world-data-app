@@ -49,6 +49,23 @@ async function fetchStatistic(statisticConfig, context) {
     throw new Error(`Unknown source : ${sourceId}`);
   }
 
+  const finalStatistic = {
+    ...statistic,
+    startingYear,
+    endingYear,
+    sourceAttribution: source.attribution,
+    sourceUrl: statistic.sourceUrl || source.url,
+  };
+
+  if (statistic.code === 'OIL_PRICE_USD') {
+    return {
+      ...finalStatistic,
+      indexedData: {
+        WORLD: source.fetchCountryStatistic(statistic.code),
+      },
+    };
+  }
+
   const countryDataObjects = await Promise.all(
     countries.map(country =>
       source.fetchCountryStatistic(statistic.code, country).then(data => ({
@@ -82,11 +99,7 @@ async function fetchStatistic(statisticConfig, context) {
   };
 
   return {
-    ...statistic,
-    startingYear,
-    endingYear,
-    sourceAttribution: source.attribution,
-    sourceUrl: statistic.sourceUrl || source.url,
+    ...finalStatistic,
     indexedData,
   };
 }

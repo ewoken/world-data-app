@@ -18,6 +18,18 @@ const BILLION_2010_USD = {
   factor: 10 ** 9,
 };
 
+const BILLION_USD = {
+  main: 'billion USD',
+  base: '$',
+  factor: 10 ** 9,
+};
+
+const USD = {
+  main: '$',
+  base: '$',
+  factor: 1,
+};
+
 const MT = {
   main: 'Mt',
   base: 't',
@@ -39,7 +51,7 @@ const TWH = {
 const BILLION_BARRELS = {
   main: 'billion barrels',
   base: 'barrels',
-  factor: 10 ** 6,
+  factor: 10 ** 9,
 };
 
 const BILLION_CUBIC_METERS = {
@@ -208,6 +220,19 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.KD',
     sourceDescriptionUrl:
       'https://databank.worldbank.org/data/reports.aspx?source=2&type=metadata&series=NY.GDP.MKTP.KD',
+  },
+  {
+    code: 'GDP_USD',
+    name: 'Gross Domestic Product (current US$)',
+    description: `GDP at purchaser's prices is the sum of gross value added by all resident producers in the economy plus any product taxes and minus any subsidies not included in the value of the products.
+Data are in current U.S. dollars.
+Dollar figures for GDP are converted from domestic currencies using signle year official exchange rates.`,
+    unit: BILLION_USD,
+    source: sources.worldBank.id,
+    category: 'Others',
+    sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.CD',
+    sourceDescriptionUrl:
+      'https://databank.worldbank.org/data/reports.aspx?source=2&type=metadata&series=NY.GDP.MKTP.CD',
   },
   {
     code: 'COAL_RENTS_IN_GDP',
@@ -388,6 +413,16 @@ It is the energy which reaches the final consumer's door and excludes that which
     sourceUrl: 'http://hdr.undp.org/en/composite/IHDI',
     sourceDescriptionUrl:
       'http://hdr.undp.org/en/content/inequality-adjusted-human-development-index-ihdi',
+  },
+  {
+    code: 'OIL_PRICE_USD',
+    name: 'Oil price',
+    description: '',
+    unit: USD,
+    source: sources.bp.id,
+    category: 'Others',
+    isIntensive: true,
+    isGlobal: true,
   },
 ];
 

@@ -10,6 +10,10 @@ const config = {
     worldBankCode: 'NY.GDP.MKTP.KD',
     unitConverter: value => value / 10 ** 9,
   },
+  GDP_USD: {
+    worldBankCode: 'NY.GDP.MKTP.CD',
+    unitConverter: value => value / 10 ** 9,
+  },
   COAL_RENTS_IN_GDP: {
     worldBankCode: 'NY.GDP.COAL.RT.ZS',
   },

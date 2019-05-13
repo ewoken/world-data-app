@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Row, Col } from 'antd';
+import { ReferenceLine } from 'recharts';
 
 import { FuelIndicatorsType } from '../../../utils/types';
 
@@ -16,6 +17,7 @@ const RentsChartContainer = buildChart({
     coal: 'COAL_RENTS_IN_GDP',
     oil: 'OIL_RENTS_IN_GDP',
     gas: 'GAS_RENTS_IN_GDP',
+    price: 'OIL_PRICE_USD',
   },
 })(RentsChart);
 
@@ -54,6 +56,21 @@ function IndependencyTab(props) {
             />
           </Col>
         )}
+        <Col md={8} sm={24}>
+          <BasicChartContainer
+            statisticCode="OIL_RELATIVE_PRICE"
+            countryCode={countryCode}
+            color="grey"
+            extra={props2 => (
+              <ReferenceLine
+                y={Math.max(...props2.data.map(d => d.value))}
+                stroke="red"
+                strokeDasharray="3 3"
+                isFront
+              />
+            )}
+          />
+        </Col>
       </Row>
       <Row gutter={20}>
         <h3>Imports/Exports</h3>
