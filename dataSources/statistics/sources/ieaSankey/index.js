@@ -2,7 +2,7 @@ const { memoizeWith } = require('ramda');
 
 const { retryFetch } = require('../helpers');
 const { parseBalanceFile, getSourceByCountry } = require('./helpers');
-const computeStatistic = require('./computeStatistic');
+const { computeStatistic } = require('./computeStatistic');
 
 const memoizedGetSourceByCountry = memoizeWith(i => i, getSourceByCountry);
 

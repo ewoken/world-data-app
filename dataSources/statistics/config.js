@@ -48,6 +48,12 @@ const BILLION_CUBIC_METERS = {
   factor: 10 ** 9,
 };
 
+const PERCENTAGE = {
+  main: '%',
+  base: '%',
+  factor: 1,
+};
+
 const statistics = [
   {
     code: 'COAL_PRODUCTION_MTOE',
@@ -202,6 +208,42 @@ Dollar figures for GDP are converted from domestic currencies using 2010 officia
     sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.MKTP.KD',
     sourceDescriptionUrl:
       'https://databank.worldbank.org/data/reports.aspx?source=2&type=metadata&series=NY.GDP.MKTP.KD',
+  },
+  {
+    code: 'COAL_RENTS_IN_GDP',
+    name: 'Coal rents',
+    description: `Coal rents are the difference between the value of crude oil production at world prices and total costs of production.`,
+    unit: PERCENTAGE,
+    source: sources.worldBank.id,
+    isIntensive: true,
+    category: 'Others',
+    sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.COAL.RT.ZS',
+    sourceDescriptionUrl:
+      'https://databank.worldbank.org/data/reports.aspx?source=2&type=metadata&series=NY.GDP.COAL.RT.ZS',
+  },
+  {
+    code: 'OIL_RENTS_IN_GDP',
+    name: 'Oil rents',
+    description: `Oil rents are the difference between the value of crude oil production at world prices and total costs of production.`,
+    unit: PERCENTAGE,
+    source: sources.worldBank.id,
+    isIntensive: true,
+    category: 'Others',
+    sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.PETR.RT.ZS',
+    sourceDescriptionUrl:
+      'https://databank.worldbank.org/data/reports.aspx?source=2&type=metadata&series=NY.GDP.PETR.RT.ZS',
+  },
+  {
+    code: 'GAS_RENTS_IN_GDP',
+    name: 'Natural gas rents',
+    description: `Natural gas rents are the difference between the value of crude oil production at world prices and total costs of production.`,
+    unit: PERCENTAGE,
+    source: sources.worldBank.id,
+    isIntensive: true,
+    category: 'Others',
+    sourceUrl: 'https://data.worldbank.org/indicator/NY.GDP.NGAS.RT.ZS',
+    sourceDescriptionUrl:
+      'https://databank.worldbank.org/data/reports.aspx?source=2&type=metadata&series=NY.GDP.NGAS.RT.ZS',
   },
   {
     code: 'FOSSIL_CO2_EMISSIONS_MT',

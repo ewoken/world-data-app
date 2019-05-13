@@ -6,6 +6,10 @@ const { independentCountries: countries } = require('./countries');
 const { fetchAllStatistics, fetchStatisticByCode } = require('./statistics');
 const areas = require('./areas.json');
 
+const {
+  computeValues,
+} = require('./statistics/sources/ieaSankey/computeStatistic');
+
 const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.splat(),
@@ -52,9 +56,30 @@ const hasProducedMap = {
   solarWindTideGeoth: 'GEOTH_SOLAR_WIND_TIDE_PRODUCTION_MTOE',
 };
 
+const rentsMap = {
+  coal: 'COAL_RENTS_IN_GDP',
+  oil: 'OIL_RENTS_IN_GDP',
+  gas: 'GAS_RENTS_IN_GDP',
+};
+
 function checkStat(statisticsByCode, code) {
   return statisticCode =>
     statisticsByCode[statisticCode].indexedData[code].some(d => d.value > 0.01);
+}
+
+function hasRents(statisticsByCode, countryCode) {
+  const countryRents = map(
+    statisticCode => ({
+      values: statisticsByCode[statisticCode].indexedData[countryCode],
+    }),
+    rentsMap,
+  );
+  const sources = { coal: 'coal', oil: 'oil', gas: 'gas' };
+  const totalRents = computeValues(countryRents, {
+    sources,
+    computeStatistic: ({ gas, oil, coal }) => gas + oil + coal,
+  });
+  return totalRents.some(({ value }) => value > 1);
 }
 
 function writeStatistic(statistic, disabledCountryCodes = []) {
@@ -101,6 +126,7 @@ async function generateData() {
         checkStat(statisticsByCode, country.alpha2Code),
         hasConsumedMap,
       ),
+      hasRents: hasRents(statisticsByCode, country.alpha2Code),
     };
   });
   const disabledCountryCodes = finalCountries
@@ -111,6 +137,7 @@ async function generateData() {
     ...area,
     hasProduced: map(checkStat(statisticsByCode, area.code), hasProducedMap),
     hasConsumed: map(checkStat(statisticsByCode, area.code), hasConsumedMap),
+    hasRents: false,
   }));
 
   logger.info('Write statistic files...');

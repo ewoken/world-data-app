@@ -211,4 +211,4 @@ function computeStatistic(statisticCode, balanceData) {
   return computeValues(balanceData, config);
 }
 
-module.exports = computeStatistic;
+module.exports = { computeStatistic, computeValues };

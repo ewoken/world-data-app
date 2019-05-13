@@ -97,6 +97,7 @@ function CountryView(props) {
           onTabChange={tab => goTo(`/country/${countryCode}/${tab}`)}
           referenceCountry={referenceCountry}
           fuelProduced={fuelProduced}
+          hasRents={country.hasRents}
         />
       </Row>
     </div>
@@ -111,7 +112,7 @@ CountryView.propTypes = {
   fuelProduced: FuelIndicatorsType.isRequired,
 };
 CountryView.defaultProps = {
-  currentTab: 'summary',
+  currentTab: 'independency',
   country: null,
   referenceCountry: 'WORLD',
 };

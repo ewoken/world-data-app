@@ -12,7 +12,7 @@ import ScrollToTop from '../../components/ScrollToTop';
 
 import { fuelProducedCountrySelector } from '../../store/countries';
 import { areaWithCountriesSelector } from '../../store/otherSelectors';
-import { AreaType } from '../../utils/types';
+import { AreaType, FuelIndicatorsType } from '../../utils/types';
 
 import BasicChartContainer from '../CountryView/containers/BasicChartContainer';
 import TabsComponent from '../CountryView/components/TabsComponent';
@@ -94,6 +94,7 @@ AreaView.propTypes = {
   currentTab: PropTypes.string,
   goTo: PropTypes.func.isRequired,
   referenceCountry: PropTypes.string,
+  fuelProduced: FuelIndicatorsType.isRequired,
 };
 
 AreaView.defaultProps = {

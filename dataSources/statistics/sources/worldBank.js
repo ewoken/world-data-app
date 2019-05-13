@@ -10,6 +10,15 @@ const config = {
     worldBankCode: 'NY.GDP.MKTP.KD',
     unitConverter: value => value / 10 ** 9,
   },
+  COAL_RENTS_IN_GDP: {
+    worldBankCode: 'NY.GDP.COAL.RT.ZS',
+  },
+  OIL_RENTS_IN_GDP: {
+    worldBankCode: 'NY.GDP.PETR.RT.ZS',
+  },
+  GAS_RENTS_IN_GDP: {
+    worldBankCode: 'NY.GDP.NGAS.RT.ZS',
+  },
 };
 
 async function fetchCountryStatisticFromWorldBank(statisticCode, country) {

@@ -161,6 +161,25 @@ const derivedStatistics = [
       return hydro * POWER_PLANT_EFFICIENCIES.HYDRO * MTOE_TO_TWH;
     },
   },
+  {
+    code: 'FOSSIL_RENTS_IN_GDP',
+    name: 'Fossil rents',
+    description: 'Share of all fossil rents (coal, oil & gas) in GDP',
+    unit: PERCENTAGE_UNIT,
+    source: {
+      coal: 'COAL_RENTS_IN_GDP',
+      oil: 'OIL_RENTS_IN_GDP',
+      gas: 'GAS_RENTS_IN_GDP',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    isIntensive: true,
+    sourceAttribution: 'World Bank',
+    category: 'Others',
+    compute({ coal, gas, oil }) {
+      return coal * gas * oil;
+    },
+  },
 ];
 
 export default derivedStatistics;

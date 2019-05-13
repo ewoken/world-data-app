@@ -73,6 +73,7 @@ function TabsComponent(props) {
     setReferenceCountry,
     referenceCountryCode,
     fuelProduced,
+    hasRents,
   } = props;
   const TabComponent = tabContents[currentTab];
   const hasProducedFossils =
@@ -92,6 +93,7 @@ function TabsComponent(props) {
         countryCode={countryCode}
         setReferenceCountry={setReferenceCountry}
         referenceCountryCode={referenceCountryCode}
+        hasRents={hasRents}
       />
     </Card>
   );
@@ -104,6 +106,7 @@ TabsComponent.propTypes = {
   setReferenceCountry: PropTypes.func.isRequired,
   referenceCountryCode: PropTypes.string.isRequired,
   fuelProduced: FuelIndicatorsType.isRequired,
+  hasRents: PropTypes.bool.isRequired,
 };
 
 export default TabsComponent;

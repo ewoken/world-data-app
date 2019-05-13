@@ -9,6 +9,15 @@ import buildChart from '../../../HOC/buildChart';
 import ProdConsoChart from './ProdConsoChart';
 import GDPByEnergyChart from './GDPByEnergyChart';
 import BasicChartContainer from '../containers/BasicChartContainer';
+import RentsChart from './RentsChart';
+
+const RentsChartContainer = buildChart({
+  mapOfCountryStatisticsSelector: {
+    coal: 'COAL_RENTS_IN_GDP',
+    oil: 'OIL_RENTS_IN_GDP',
+    gas: 'GAS_RENTS_IN_GDP',
+  },
+})(RentsChart);
 
 const ProdConsoChartContainer = buildChart({
   mapOfCountryStatisticsSelector: (state, props) => ({
@@ -25,7 +34,7 @@ const GDPByEnergyChartContainer = buildChart({
 })(GDPByEnergyChart);
 
 function IndependencyTab(props) {
-  const { countryCode, fuelProducedOrConsumed } = props;
+  const { countryCode, fuelProducedOrConsumed, hasRents } = props;
   return (
     <div className="IndependencyTab">
       <Row>
@@ -36,6 +45,15 @@ function IndependencyTab(props) {
             color="#f15a22"
           />
         </Col>
+        {hasRents && (
+          <Col md={8} sm={24}>
+            <RentsChartContainer
+              countryCode={countryCode}
+              title="Share of fossil rents in GDP"
+              description="Sum of coal, oil and gas rents in GDP"
+            />
+          </Col>
+        )}
       </Row>
       <Row gutter={20}>
         <h3>Imports/Exports</h3>
@@ -89,6 +107,7 @@ function IndependencyTab(props) {
 IndependencyTab.propTypes = {
   countryCode: PropTypes.string.isRequired,
   fuelProducedOrConsumed: FuelIndicatorsType.isRequired,
+  hasRents: PropTypes.bool.isRequired,
 };
 
 export default IndependencyTab;
