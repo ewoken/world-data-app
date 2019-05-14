@@ -116,10 +116,6 @@ function HDIByEnergyChart(props) {
             domain={[0.2, 1]}
           />
           <Tooltip
-            active
-            wrapperStyle={{
-              visibility: 'visible',
-            }}
             content={props2 => (
               <CustomTooltip
                 {...props2}

@@ -15,6 +15,18 @@ const config = {
     seriesOfCountry: alpha3Code => `INTL.3-6-${alpha3Code}-TCF.A`,
     unitConverter: value => value * CUBIC_FOOT_TO_CUBIC_METER * 1000,
   },
+  WIND_CAPACITY_GW: {
+    seriesOfCountry: alpha3Code => `INTL.37-7-${alpha3Code}-MK.A`,
+  },
+  SOLAR_CAPACITY_GW: {
+    seriesOfCountry: alpha3Code => `INTL.116-7-${alpha3Code}-MK.A`,
+  },
+  WIND_GENERATION_TWH: {
+    seriesOfCountry: alpha3Code => `INTL.37-12-${alpha3Code}-BKWH.A`,
+  },
+  SOLAR_GENERATION_TWH: {
+    seriesOfCountry: alpha3Code => `INTL.116-12-${alpha3Code}-BKWH.A`,
+  },
 };
 
 function parseValue(value) {

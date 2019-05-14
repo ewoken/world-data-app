@@ -54,11 +54,11 @@ export function countryStatisticLoadedSelector(
 }
 
 function computeDerivedValueFromCompiled(statistic) {
-  return function compute({ year, ...sources }) {
-    const value = statistic.compute(sources);
+  return function compute(dataItem, _, data) {
+    const value = statistic.compute(dataItem, data);
     return Number.isNaN(value) || !Number.isFinite(value)
-      ? { year, value: null }
-      : { year, value };
+      ? { year: dataItem.year, value: null }
+      : { year: dataItem.year, value };
   };
 }
 
@@ -74,7 +74,7 @@ export function countryStatisticValuesSelector(
       {
         mapOfCountryStatistics: statistic.source,
         countryCode,
-        yearInterval,
+        yearInterval: statistic.isCompilation ? undefined : yearInterval,
       },
       state,
     ).map(computeDerivedValueFromCompiled(statistic));

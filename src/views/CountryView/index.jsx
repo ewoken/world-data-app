@@ -112,7 +112,7 @@ CountryView.propTypes = {
   fuelProduced: FuelIndicatorsType.isRequired,
 };
 CountryView.defaultProps = {
-  currentTab: 'independency',
+  currentTab: 'summary',
   country: null,
   referenceCountry: 'WORLD',
 };

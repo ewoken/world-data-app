@@ -112,7 +112,7 @@ function WorldMap(props) {
             data={country.geojson}
             style={{
               fillOpacity: 1,
-              color: 'white',
+              color: BORDER_COLOR,
               weight: 0.5,
               fillColor: NA_COLOR,
             }}

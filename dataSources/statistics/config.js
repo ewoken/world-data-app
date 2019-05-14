@@ -66,6 +66,12 @@ const PERCENTAGE = {
   factor: 1,
 };
 
+const GIGA_WATTS = {
+  main: 'GW',
+  base: 'W',
+  factor: 10 ** 9,
+};
+
 const statistics = [
   {
     code: 'COAL_PRODUCTION_MTOE',
@@ -377,6 +383,38 @@ It is the energy which reaches the final consumer's door and excludes that which
     unit: BILLION_CUBIC_METERS,
     source: sources.eia.id,
     category: 'Reserves',
+  },
+  {
+    code: 'WIND_CAPACITY_GW',
+    name: 'Wind capacity',
+    description: '',
+    unit: GIGA_WATTS,
+    source: sources.eia.id,
+    category: 'Electricity',
+  },
+  {
+    code: 'SOLAR_CAPACITY_GW',
+    name: 'Solar capacity',
+    description: '',
+    unit: GIGA_WATTS,
+    source: sources.eia.id,
+    category: 'Electricity',
+  },
+  {
+    code: 'WIND_GENERATION_TWH',
+    name: 'Wind generation',
+    description: '',
+    unit: TWH,
+    source: sources.eia.id,
+    category: 'Electricity',
+  },
+  {
+    code: 'SOLAR_GENERATION_TWH',
+    name: 'Solar generation',
+    description: '',
+    unit: TWH,
+    source: sources.eia.id,
+    category: 'Electricity',
   },
   {
     code: 'HUMAN_DEVELOPMENT_INDEX',

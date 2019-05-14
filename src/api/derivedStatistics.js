@@ -1,3 +1,5 @@
+import regression from 'regression';
+
 const PERCENTAGE_UNIT = {
   main: '%',
   base: '%',
@@ -200,6 +202,69 @@ TIME = OIL_PRICE / (GDP / POP)`,
     category: 'Others',
     compute({ oilPrice, gdp, pop }) {
       return (oilPrice / ((gdp * 10 ** 9) / (pop * 10 ** 6))) * 365.25;
+    },
+  },
+  {
+    code: 'WIND_CAPACITY_POWER_LOAD',
+    name: 'Wind capacity power load',
+    description: `Average power load of wind capacity on a year (estimate)`,
+    unit: PERCENTAGE_UNIT,
+    source: {
+      capacity: 'WIND_CAPACITY_GW',
+      generation: 'WIND_GENERATION_TWH',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    isIntensive: true,
+    isCompilation: true,
+    category: 'Electricity',
+    scale: 'linear',
+    compute(_, data) {
+      const notNullData = data.filter(d => d.generation && d.capacity);
+      if (notNullData.length < 4) {
+        return null;
+      }
+
+      const array = notNullData.map(({ capacity, generation }) => [
+        capacity,
+        generation,
+      ]);
+      const result = regression.linear(array);
+      const res = ((result.equation[0] * 10 ** 3) / (365.25 * 24)) * 100;
+      const res2 = res > 100 || result.r2 < 0.9 ? null : res;
+
+      return res2;
+    },
+  },
+  {
+    code: 'SOLAR_CAPACITY_POWER_LOAD',
+    name: 'Solar capacity power load',
+    description: `Average power load of solar capacity on a year (estimate)`,
+    unit: PERCENTAGE_UNIT,
+    source: {
+      capacity: 'SOLAR_CAPACITY_GW',
+      generation: 'SOLAR_GENERATION_TWH',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    isIntensive: true,
+    isCompilation: true,
+    category: 'Electricity',
+    compute(_, data) {
+      const notNullData = data.filter(d => d.generation && d.capacity);
+      if (notNullData.length < 4) {
+        return null;
+      }
+
+      const array = notNullData.map(({ capacity, generation }) => [
+        capacity,
+        generation,
+      ]);
+      const result = regression.linear(array);
+      const res = ((result.equation[0] * 10 ** 3) / (365.25 * 24)) * 100;
+      const res2 = res > 50 || result.r2 < 0.9 ? null : res;
+
+      return res2;
     },
   },
 ];

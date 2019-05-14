@@ -53,6 +53,17 @@ function ClimateTab(props) {
           />
         </Col>
       </Row>
+      <Row>
+        <Col md={8} sm={24}>
+          <BasicChartContainer
+            statisticCode="LOW_CARBON_ENERGY_PRODUCTION_MTOE"
+            countryCode={countryCode}
+            referenceCountryCode={referenceCountryCode}
+            perCapita
+            withReference
+          />
+        </Col>
+      </Row>
     </div>
   );
 }

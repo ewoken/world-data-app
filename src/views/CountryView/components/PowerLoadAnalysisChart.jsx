@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import regression from 'regression';
+import { range } from 'ramda';
 
 import {
   Scatter,
@@ -13,17 +15,36 @@ import {
 import CustomTooltip from './CustomTooltip';
 
 import { StatisticType } from '../../../utils/types';
-import { tickFormatter } from '../../../utils';
+import { tickFormatter, formatNumber } from '../../../utils';
 
-function GDPByEnergyChart(props) {
+const RESOLUTION = 20;
+
+function PowerLoadAnalysisChart(props) {
   const { data, color, statistics } = props;
-  // const statistic = statistics.value;
-  // const unit = displayUnit(statistic.unit, perCapita);
+
+  const finalData = data.filter(d => d.generation && d.capacity);
+  const array = finalData.map(({ capacity, generation }) => [
+    capacity,
+    generation,
+  ]);
+  const { equation, r2 } = regression.linear(array);
+  const powerLoad = ((equation[0] * 10 ** 3) / (365.25 * 24)) * 100;
+
+  const min = Math.min(...finalData.map(d => d.capacity));
+  const max = Math.max(...finalData.map(d => d.capacity));
+  const data2 = range(0, RESOLUTION + 1).map(i => {
+    const capacity = min + (i / RESOLUTION) * (max - min);
+    return {
+      capacity,
+      generation: equation[0] * capacity + equation[1],
+    };
+  });
 
   return (
-    <div className="GDPByEnergyChart">
+    <div className="PowerLoadAnalysisChart">
       <ResponsiveContainer height={300}>
-        <ScatterChart data={data} margin={{ bottom: 50 }}>
+        <ScatterChart data={finalData} margin={{ bottom: 50 }}>
+          <Scatter data={data2} line={{ stroke: 'grey' }} shape={() => null} />
           <Scatter
             fill={color}
             shape={props2 => (
@@ -33,13 +54,13 @@ function GDPByEnergyChart(props) {
           />
           <CartesianGrid stroke="#ccc" opacity={0.2} />
           <XAxis
-            dataKey="energy"
-            name={statistics.energy.name}
+            dataKey="capacity"
+            name={statistics.capacity.name}
             type="number"
             tickFormatter={tickFormatter}
             label={{
-              value: `${statistics.energy.name} (${
-                statistics.energy.unit.main
+              value: `${statistics.capacity.name} (${
+                statistics.capacity.unit.main
               })`,
               position: 'bottom',
               style: { fill: '#666' },
@@ -47,8 +68,8 @@ function GDPByEnergyChart(props) {
             padding={{ left: 5, right: 5 }}
           />
           <YAxis
-            dataKey="gdp"
-            name={statistics.gdp.name}
+            dataKey="generation"
+            name={statistics.generation.name}
             tickFormatter={tickFormatter}
             padding={{ top: 5 }}
           />
@@ -62,36 +83,37 @@ function GDPByEnergyChart(props) {
                   props2.payload[0].payload.year
                 }
                 units={{
-                  '0': statistics.energy.unit.main,
-                  '1': statistics.gdp.unit.main,
+                  '0': statistics.capacity.unit.main,
+                  '1': statistics.generation.unit.main,
                 }}
               />
             )}
           />
         </ScatterChart>
       </ResponsiveContainer>
+      <p>{`Average power load: ${formatNumber(powerLoad)} % (R²=${r2})`}</p>
     </div>
   );
 }
 
-GDPByEnergyChart.propTypes = {
+PowerLoadAnalysisChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       year: PropTypes.number.isRequired,
-      gdp: PropTypes.number,
-      energy: PropTypes.number,
+      capacity: PropTypes.number,
+      generation: PropTypes.number,
     }),
   ).isRequired,
   statistics: PropTypes.shape({
-    gdp: StatisticType,
-    energy: StatisticType,
+    capacity: StatisticType,
+    generation: StatisticType,
   }).isRequired,
   height: PropTypes.number.isRequired,
   color: PropTypes.string,
 };
 
-GDPByEnergyChart.defaultProps = {
+PowerLoadAnalysisChart.defaultProps = {
   color: '#2c82c9',
 };
 
-export default GDPByEnergyChart;
+export default PowerLoadAnalysisChart;

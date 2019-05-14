@@ -2,7 +2,10 @@ const fs = require('fs');
 const { forEachObjIndexed, map, omit, values } = require('ramda');
 const winston = require('winston');
 
-const { independentCountries: countries } = require('./countries');
+const {
+  independentCountries: countries,
+  dependentCountries,
+} = require('./countries');
 const { fetchAllStatistics, fetchStatisticByCode } = require('./statistics');
 const areas = require('./areas.json');
 
@@ -111,24 +114,26 @@ async function generateData() {
   const statisticsByCode = await fetchAllStatistics(context);
   const statistics = values(statisticsByCode);
 
-  const finalCountries = countries.map(country => {
-    const disabled = !statisticsByCode.COAL_PRODUCTION_MTOE.indexedData[
-      country.alpha2Code
-    ].some(d => d.value !== null);
-    return {
-      ...country,
-      disabled,
-      hasProduced: map(
-        checkStat(statisticsByCode, country.alpha2Code),
-        hasProducedMap,
-      ),
-      hasConsumed: map(
-        checkStat(statisticsByCode, country.alpha2Code),
-        hasConsumedMap,
-      ),
-      hasRents: hasRents(statisticsByCode, country.alpha2Code),
-    };
-  });
+  const finalCountries = countries
+    .map(country => {
+      const disabled = !statisticsByCode.COAL_PRODUCTION_MTOE.indexedData[
+        country.alpha2Code
+      ].some(d => d.value !== null);
+      return {
+        ...country,
+        disabled,
+        hasProduced: map(
+          checkStat(statisticsByCode, country.alpha2Code),
+          hasProducedMap,
+        ),
+        hasConsumed: map(
+          checkStat(statisticsByCode, country.alpha2Code),
+          hasConsumedMap,
+        ),
+        hasRents: hasRents(statisticsByCode, country.alpha2Code),
+      };
+    })
+    .concat(dependentCountries);
   const disabledCountryCodes = finalCountries
     .filter(c => c.disabled)
     .map(c => c.alpha2Code);
