@@ -42,15 +42,20 @@ function AreaView(props) {
           <Card title={<h2>{`${area.name}`}</h2>}>
             {area.code !== 'WORLD' && (
               <div>
-                {`Members : `}
-                {area.countries.map((country, i) => (
-                  <Link
-                    key={country.alpha2Code}
-                    to={`/country/${country.alpha2Code}`}
-                  >
-                    {`${i > 0 ? ', ' : ''}${country.commonName}`}
-                  </Link>
-                ))}
+                <strong>Members : </strong>
+                {area.countries.map((country, i) => {
+                  const string = `${i > 0 ? ', ' : ''}${country.commonName}`;
+                  return !country.disabled && country.isIndependent ? (
+                    <Link
+                      key={country.alpha2Code}
+                      to={`/country/${country.alpha2Code}`}
+                    >
+                      {string}
+                    </Link>
+                  ) : (
+                    string
+                  );
+                })}
               </div>
             )}
             <Row style={{ marginTop: '20px' }} gutter={10}>
