@@ -35,6 +35,10 @@ const ConnectedWorldMap = connect(
     countries: countriesSelector(state),
     dependentCountries: dependentCountriesSelector(state),
     currentStatistic: statisticSelector(statisticCode, state),
+    isLoaded:
+      statisticOfAllCountriesLoadedSelector(statisticCode, state) &&
+      (!perCapita ||
+        statisticOfAllCountriesLoadedSelector('POPULATION', state)),
     data: compiledStatisticForCountriesAndYear(
       {
         statisticCode,

@@ -37,6 +37,18 @@ const POWER_PLANT_EFFICIENCIES = {
   HYDRO: 1, // definition of statistics
 };
 
+const CO2_INTENSITY_BY_SOURCE = {
+  coal: 820,
+  oil: 650,
+  gas: 490,
+  biomass: 230,
+  solar: 45,
+  geoth: 38,
+  hydro: 24,
+  nuclear: 12,
+  wind: 11,
+};
+
 const derivedStatistics = [
   {
     code: 'ENERGY_SELF_SUFFICIENCY',
@@ -265,6 +277,58 @@ TIME = OIL_PRICE / (GDP / POP)`,
       const res2 = res > 50 || result.r2 < 0.9 ? null : res;
 
       return res2;
+    },
+  },
+  {
+    code: 'GHG_EMISSIONS_GKWH',
+    name: 'Carbon intensity of electricity',
+    description: `Average GHG emissions of electricity production.
+Coal: 820 gCO₂eq/kWh
+Oil: 650 gCO₂eq/kWh
+Gas: 490 gCO₂eq/kWh
+Biomass: 230 gCO₂eq/kWh
+Solar: 45 gCO₂eq/kWh
+Geoth: 38 gCO₂eq/kWh
+Hydro: 24 gCO₂eq/kWh
+Nuclear: 12 gCO₂eq/kWh
+Wind: 11 gCO₂eq/kWh
+`,
+    unit: {
+      main: 'gCO₂eq/kWh',
+      base: 'gCO₂eq/kWh',
+      factor: 1,
+    },
+    source: {
+      coal: 'COAL_ELECTRICITY_GENERATION_TWH',
+      oil: 'OIL_ELECTRICITY_GENERATION_TWH',
+      gas: 'GAS_ELECTRICITY_GENERATION_TWH',
+      biomass: 'BIOFUELS_WASTE_ELECTRICITY_GENERATION_TWH',
+      solar: 'SOLAR_GENERATION_TWH',
+      renew: 'GEOTH_SOLAR_WIND_TIDE_ELECTRICITY_GENERATION_TWH',
+      hydro: 'HYDRO_GENERATION_TWH',
+      nuclear: 'NUCLEAR_GENERATION_TWH',
+      wind: 'WIND_GENERATION_TWH',
+    },
+    startingYear: 1973,
+    endingYear: 2016,
+    isIntensive: true,
+    category: 'Climate change',
+    scale: 'linear',
+    colorScheme: 'CO2',
+    compute(sources) {
+      const { year, wind, solar, renew, ...rest } = sources;
+      const geoth = renew - wind - solar;
+      const source2 = { ...rest, wind, solar, geoth };
+      const total = Object.keys(source2).reduce(
+        (sum, key) => sum + (source2[key] || 0),
+        0,
+      );
+      const intensity = Object.keys(source2).reduce(
+        (sum, key) => sum + (source2[key] || 0) * CO2_INTENSITY_BY_SOURCE[key],
+        0,
+      );
+
+      return intensity / total;
     },
   },
 ];

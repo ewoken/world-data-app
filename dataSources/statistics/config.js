@@ -278,7 +278,7 @@ Dollar figures for GDP are converted from domestic currencies using signle year 
   },
   {
     code: 'FOSSIL_CO2_EMISSIONS_MT',
-    name: 'CO2 Emissions from fossil fuels',
+    name: 'CO₂ Emissions from fossil fuels',
     description: `Carbon dioxide emissions are those stemming from the burning of fossil fuels.`,
     unit: MT,
     source: sources.iea.id,

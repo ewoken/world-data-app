@@ -19,26 +19,44 @@ const NA_COLOR = '#888';
 const BORDER_COLOR = 'black';
 const LEGEND_COLORS_COUNT = 4;
 const LEGEND_WIDTH = 300; // px
-const COLORS_SCHEME = 'YlGnBu';
+const DEFAULT_COLORS_SCHEME = 'YlGnBu';
 
-const interpolator = d3Colors[`interpolate${COLORS_SCHEME}`];
+function getInterpolators(scaleString, scheme, min, max) {
+  const scaleType = scaleString === 'linear' ? scaleLinear : scaleLog;
 
-function computeColorMap(data, scaleString) {
-  const maxValue = Math.max(...data.filter(d => d.value).map(d => d.value));
-  const minValue = Math.min(...data.filter(d => d.value).map(d => d.value));
+  if (scheme === 'CO2') {
+    const colors = ['#2AA364', '#F5EB4D', '#9E4229', '#381d02'];
+    return {
+      name: 'CO2',
+      map: scaleType()
+        .domain([0, 150, 600, 750])
+        .range(colors)
+        .clamp(true),
+      legend: scaleType()
+        .domain([0, 1 / 5, 4 / 5, 1])
+        .range(colors)
+        .clamp(true),
+    };
+  }
+
+  const colorInterpolator = d3Colors[`interpolate${DEFAULT_COLORS_SCHEME}`];
+  const scale = scaleType().domain([min, max]);
+  return {
+    map: value =>
+      value === 0 ? colorInterpolator(0) : colorInterpolator(scale(value)),
+    legend: colorInterpolator,
+  };
+}
+
+function computeColorMap(data, isLoaded, interpolator) {
   const valueMap = map(d => d.value, indexBy(d => d.countryCode, data));
-  const scaleType = scaleString === 'linear' ? scaleLinear() : scaleLog();
-  const scale = scaleType.domain([minValue, maxValue]);
 
   const colorMap = map(value => {
-    if (value === null) {
+    if (!isLoaded || value === null) {
       return { color: NA_COLOR, value };
     }
-    if (value === 0) {
-      return { color: interpolator(0), value };
-    }
     return {
-      color: interpolator(scale(value)),
+      color: interpolator(value),
       value,
     };
   }, valueMap);
@@ -57,15 +75,27 @@ function WorldMap(props) {
     scale,
     minZoom,
     onMapChange,
+    isLoaded,
   } = props;
   const selectedCountryByCode = indexBy(c => c.alpha2Code, selectedCountries);
   const selectedData = data.filter(
     d => d.countryCode !== 'WORLD' && selectedCountryByCode[d.countryCode],
   );
   const maxValue = Math.max(...selectedData.map(d => d.value));
+  const minValue = Math.min(
+    ...selectedData.filter(d => d.value).map(d => d.value),
+  );
+
+  const interpolators = getInterpolators(
+    currentStatistic.scale || scale,
+    currentStatistic.colorScheme,
+    minValue,
+    maxValue,
+  );
   const colorValueMap = computeColorMap(
     selectedData,
-    currentStatistic.scale || scale,
+    isLoaded,
+    interpolators.map,
   );
   return (
     <div className="WorldMap">
@@ -136,9 +166,11 @@ function WorldMap(props) {
                     className="WorldMap__legend__gradient__item"
                     style={{
                       width: LEGEND_WIDTH / LEGEND_COLORS_COUNT,
-                      background: `linear-gradient(to right, ${interpolator(
+                      background: `linear-gradient(to right, ${interpolators.legend(
                         i / LEGEND_COLORS_COUNT,
-                      )}, ${interpolator((i + 1) / LEGEND_COLORS_COUNT)}`,
+                      )}, ${interpolators.legend(
+                        (i + 1) / LEGEND_COLORS_COUNT,
+                      )}`,
                     }}
                   />
                 ))}
@@ -181,6 +213,7 @@ WorldMap.propTypes = {
   scale: PropTypes.string,
   minZoom: PropTypes.number,
   onMapChange: PropTypes.func.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
 };
 
 WorldMap.defaultProps = {

@@ -63,6 +63,14 @@ function ClimateTab(props) {
             withReference
           />
         </Col>
+        <Col md={8} sm={24}>
+          <BasicChartContainer
+            statisticCode="GHG_EMISSIONS_GKWH"
+            countryCode={countryCode}
+            referenceCountryCode={referenceCountryCode}
+            withReference
+          />
+        </Col>
       </Row>
     </div>
   );
