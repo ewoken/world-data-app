@@ -100,7 +100,7 @@ function ProdConsoChart(props) {
           />
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
-          <XAxis dataKey="year" interval={9} />
+          <XAxis dataKey="year" />
           <YAxis />
           <Tooltip
             tickFormatter={tickFormatter}

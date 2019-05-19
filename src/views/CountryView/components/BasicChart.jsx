@@ -58,7 +58,7 @@ function BasicChart(props) {
           )}
           {extra && extra(props)}
           <CartesianGrid stroke="#ccc" opacity={0.2} />
-          <XAxis dataKey="year" interval={9} padding={{ left: 5, right: 5 }} />
+          <XAxis dataKey="year" padding={{ left: 5, right: 5 }} />
           <YAxis tickFormatter={tickFormatter} />
           <Tooltip content={props2 => <CustomTooltip {...props2} />} />
           {withComparison && <Legend iconType="circle" />}

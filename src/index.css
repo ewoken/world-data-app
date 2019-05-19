@@ -1,6 +1,17 @@
 .ant-layout-content {
-  margin-top: 64px;
-  padding: 0px 50px;
+  /* margin-top: 64px; */
+}
+
+.AppLayout .ant-layout-header {
+  padding: 0px 4.166666%;
+}
+
+.AppLayout .ant-layout-footer {
+  padding: 20px 0 20px 0;
+}
+
+.ant-layout > .ant-row {
+  margin-top: 0px;
 }
 
 .ant-row {
@@ -71,9 +82,17 @@
   background-color: white;
 }
 
+.WorldMap {
+  position: relative;
+}
+
+.WorldMap__map {
+  height: 540px;
+}
+
 .WorldMap__yearLabel {
   position: absolute;
-  right: 10px;
+  right: 0px;
   background-color: white;
   z-index: 1;
   padding: 5px;
@@ -131,7 +150,7 @@
 }
 
 #mainCountrySelect {
-  width: 20em;
+  min-width: 20em;
 }
 
 .toPng {
@@ -167,13 +186,17 @@
   display: none !important;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .ant-layout-content {
+    margin-top: 0px;
+  }
+
   .AppLayout .ant-layout-header {
     padding: 0px 0px;
   }
 
-  .ant-layout-content {
-    padding: 0px 10px;
+  .AppLayout .ant-layout-footer {
+    padding: 20px 0 20px 10px;
   }
 
   .hideOnMobile {
@@ -182,5 +205,23 @@
 
   #mainCountrySelect {
     width: 10em;
+  }
+
+  .HomeView .ant-row {
+    margin-top: 5px;
+  }
+
+  .WorldMap__map {
+    height: 50vh;
+  }
+
+  .WorldMap__legend {
+    margin: 10px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .AppLayout .ant-layout-header {
+    padding-left: 12.5%;
   }
 }

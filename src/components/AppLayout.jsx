@@ -8,7 +8,7 @@ import {
   Redirect,
   withRouter,
 } from 'react-router-dom';
-import { Layout, Spin } from 'antd';
+import { Layout, Spin, Row, Col } from 'antd';
 
 import HomeView from '../views/HomeView';
 import CountryView from '../views/CountryView';
@@ -83,36 +83,44 @@ class AppLayout extends Component {
         <AreasLoader />
         <Spin size="large" spinning={!isLoaded}>
           <Layout>
-            <Layout.Header
-              style={{ position: 'fixed', zIndex: 10, width: '100%' }}
-            >
+            <Layout.Header className="AppLayout__header">
               <ConnectedHeaderMenu />
             </Layout.Header>
-            <Layout.Content>
-              {!isLoaded && <div className="AppLayout__splash" />}
-              {isLoaded && (
-                <Switch>
-                  <Route path="/home" exact component={HomeView} />
-                  <Route
-                    path="/country/:countryCode/:tab?"
-                    exact
-                    component={CountryView}
-                  />
-                  <Route
-                    path="/area/:areaCode/:tab?"
-                    exact
-                    component={AreaView}
-                  />
-                  <Route path="/about" exact component={AboutView} />
-                  <Route
-                    component={() => <Redirect to={{ pathname: '/home' }} />}
-                  />
-                </Switch>
-              )}
-            </Layout.Content>
-            <Layout.Footer>
-              Sources: IEA, EIA, BP, World Bank, HDRO
-            </Layout.Footer>
+            <Row>
+              <Col
+                span={24}
+                md={{ offset: 1, span: 22 }}
+                xxl={{ offset: 3, span: 18 }}
+              >
+                <Layout.Content className="AppLayout__content">
+                  {!isLoaded && <div className="AppLayout__splash" />}
+                  {isLoaded && (
+                    <Switch>
+                      <Route path="/home" exact component={HomeView} />
+                      <Route
+                        path="/country/:countryCode/:tab?"
+                        exact
+                        component={CountryView}
+                      />
+                      <Route
+                        path="/area/:areaCode/:tab?"
+                        exact
+                        component={AreaView}
+                      />
+                      <Route path="/about" exact component={AboutView} />
+                      <Route
+                        component={() => (
+                          <Redirect to={{ pathname: '/home' }} />
+                        )}
+                      />
+                    </Switch>
+                  )}
+                </Layout.Content>
+                <Layout.Footer>
+                  Sources: IEA, EIA, BP, World Bank, HDRO
+                </Layout.Footer>
+              </Col>
+            </Row>
           </Layout>
         </Spin>
       </div>

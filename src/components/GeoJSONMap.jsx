@@ -57,7 +57,7 @@ function GeoJSONMap(props) {
         scrollWheelZoom={false}
         zoomControl={false}
         dragging={false}
-        style={{ height: '300px', zIndex: 0 }}
+        style={{ height: '250px', zIndex: 0 }}
       >
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

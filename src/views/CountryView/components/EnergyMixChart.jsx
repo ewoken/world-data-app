@@ -158,7 +158,7 @@ function EnergyMixChart(props) {
           )}
 
           <CartesianGrid stroke="#ccc" opacity={0.2} />
-          <XAxis dataKey="year" interval={4} />
+          <XAxis dataKey="year" />
           <YAxis
             tickFormatter={tickFormatter}
             {...getTicksAndDomain({

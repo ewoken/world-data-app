@@ -76,7 +76,6 @@ function StatisticExplorer(props) {
         })}
       </Select>
       <Slider
-        className="hideOnMobile"
         defaultValue={currentYear}
         min={currentStatistic.startingYear}
         max={currentStatistic.endingYear}
@@ -167,7 +166,6 @@ function StatisticExplorer(props) {
         </div>
       </div>
       <Table
-        className="hideOnMobile"
         rowKey="countryCode"
         size="small"
         pagination={false}
@@ -179,8 +177,7 @@ function StatisticExplorer(props) {
             title: 'Country',
             dataIndex: 'country',
             sorter: (a, b) => a.country.localeCompare(b.country),
-            width: 'auto',
-            // TODO
+            width: '50%',
             render: text =>
               text === 'World' ? (
                 <strong>World</strong>

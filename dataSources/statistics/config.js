@@ -14,12 +14,12 @@ const CAPITA = {
 
 const BILLION_2010_USD = {
   main: 'billion 2010 USD',
-  base: '$ (2010)',
+  base: '$ (2010)',
   factor: 10 ** 9,
 };
 
 const BILLION_USD = {
-  main: 'billion USD',
+  main: 'billion USD',
   base: '$',
   factor: 10 ** 9,
 };
@@ -49,7 +49,7 @@ const TWH = {
 };
 
 const BILLION_BARRELS = {
-  main: 'billion barrels',
+  main: 'billion barrels',
   base: 'barrels',
   factor: 10 ** 9,
 };

@@ -4,17 +4,20 @@ import { indexBy, map, range } from 'ramda';
 import { scaleLog, scaleLinear } from 'd3-scale';
 import * as d3Colors from 'd3-scale-chromatic';
 
+import { Button } from 'antd';
 import { Map, Tooltip, GeoJSON } from 'react-leaflet';
+import Control from 'react-leaflet-control';
 
 import { CountryType, StatisticType } from '../../../utils/types';
 import {
   coordsToLatLng,
   isMobileOrTablet,
+  testScreenType,
   formatNumber,
   displayUnit,
 } from '../../../utils';
 
-const MAP_HEIGHT = '540px';
+const MAP_HEIGHT = '100%';
 const NA_COLOR = '#888';
 const BORDER_COLOR = 'black';
 const LEGEND_COLORS_COUNT = 4;
@@ -76,6 +79,8 @@ function WorldMap(props) {
     minZoom,
     onMapChange,
     isLoaded,
+    onCountryDblClick,
+    onControlButtonClick,
   } = props;
   const selectedCountryByCode = indexBy(c => c.alpha2Code, selectedCountries);
   const selectedData = data.filter(
@@ -100,55 +105,67 @@ function WorldMap(props) {
   return (
     <div className="WorldMap">
       <div className="WorldMap__yearLabel">{currentYear}</div>
-      <Map
-        minZoom={minZoom}
-        zoom={minZoom}
-        zoomSnap={0.1}
-        zoomDelta={0.5}
-        center={[20, 30]}
-        style={{ height: MAP_HEIGHT, zIndex: 0 }}
-        dragging={!isMobileOrTablet()}
-        onZoomend={onMapChange}
-        onMoveend={onMapChange}
-      >
-        {countries.map(country => {
-          const countryData = colorValueMap[country.alpha2Code];
-          return (
+      <div className="WorldMap__map">
+        <Map
+          minZoom={minZoom}
+          zoom={minZoom}
+          zoomSnap={0.1}
+          zoomDelta={0.5}
+          center={[20, 30]}
+          style={{ height: MAP_HEIGHT, zIndex: 0 }}
+          dragging={!isMobileOrTablet()}
+          onZoomend={onMapChange}
+          onMoveend={onMapChange}
+        >
+          {countries.map(country => {
+            const countryData = colorValueMap[country.alpha2Code];
+            return (
+              <GeoJSON
+                key={country.alpha2Code + currentStatistic.code}
+                data={country.geojson}
+                coordsToLatLng={coordsToLatLng}
+                onEachFeature={(feature, layer) =>
+                  layer.on('dblclick', () => {
+                    onCountryDblClick(country);
+                  })
+                }
+                ref={ref =>
+                  ref &&
+                  ref.leafletElement.setStyle({
+                    color: BORDER_COLOR,
+                    weight: 0.5,
+                    fillColor: countryData ? countryData.color : NA_COLOR,
+                    fillOpacity: 1,
+                  })
+                }
+              >
+                <Tooltip sticky>
+                  {`${country.commonName}: ${formatNumber(
+                    countryData && countryData.value,
+                  )}`}
+                </Tooltip>
+              </GeoJSON>
+            );
+          })}
+          {dependentCountries.map(country => (
             <GeoJSON
-              key={country.alpha2Code + currentStatistic.code}
+              key={country.alpha2Code}
               data={country.geojson}
-              coordsToLatLng={coordsToLatLng}
-              ref={ref =>
-                ref &&
-                ref.leafletElement.setStyle({
-                  color: BORDER_COLOR,
-                  weight: 0.5,
-                  fillColor: countryData ? countryData.color : NA_COLOR,
-                  fillOpacity: 1,
-                })
-              }
-            >
-              <Tooltip sticky>
-                {`${country.commonName}: ${formatNumber(
-                  countryData && countryData.value,
-                )}`}
-              </Tooltip>
-            </GeoJSON>
-          );
-        })}
-        {dependentCountries.map(country => (
-          <GeoJSON
-            key={country.alpha2Code}
-            data={country.geojson}
-            style={{
-              fillOpacity: 1,
-              color: BORDER_COLOR,
-              weight: 0.5,
-              fillColor: NA_COLOR,
-            }}
-          />
-        ))}
-      </Map>
+              style={{
+                fillOpacity: 1,
+                color: BORDER_COLOR,
+                weight: 0.5,
+                fillColor: NA_COLOR,
+              }}
+            />
+          ))}
+          {!testScreenType('md') && (
+            <Control position="topleft">
+              <Button icon="control" onClick={onControlButtonClick} />
+            </Control>
+          )}
+        </Map>
+      </div>
       <div className="WorldMap__legend">
         <div>
           <div>
@@ -214,6 +231,8 @@ WorldMap.propTypes = {
   minZoom: PropTypes.number,
   onMapChange: PropTypes.func.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  onCountryDblClick: PropTypes.func.isRequired,
+  onControlButtonClick: PropTypes.func.isRequired,
 };
 
 WorldMap.defaultProps = {

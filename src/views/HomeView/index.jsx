@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import qs from 'qs';
 
-import { Row, Col } from 'antd';
+import { Row, Col, Drawer } from 'antd';
 import ScrollToTop from '../../components/ScrollToTop';
 
 import WorldMap from './components/WorldMap';
@@ -23,6 +23,7 @@ import {
   statisticOfAllCountriesLoadedSelector,
   statisticSourcesSelector,
 } from '../../store/statistics';
+import { testScreenType } from '../../utils';
 
 function f(statisticCode, perCapita) {
   // TODO
@@ -82,10 +83,30 @@ class HomeView extends Component {
     this.state = {
       scale: null,
       boundsFilter: null,
+      drawerIsOpen: false,
     };
     this.mapRef = React.createRef();
     this.onMapChange = e =>
       this.setFilterBounds(e.target.getBounds(), e.target.getZoom());
+    this.StatisticDiv = ({ children }) => {
+      const { drawerIsOpen } = this.state;
+      return !testScreenType('md') ? (
+        <Drawer
+          title="Map Control"
+          placement="right"
+          closable
+          onClose={() => this.setDrawerState(false)}
+          visible={drawerIsOpen}
+          width="300px"
+        >
+          {children}
+        </Drawer>
+      ) : (
+        <Col className="hideOnMobile" md={8}>
+          {children}
+        </Col>
+      );
+    };
   }
 
   componentDidMount() {
@@ -130,6 +151,10 @@ class HomeView extends Component {
     this.setState({ scale });
   }
 
+  setDrawerState(isOpen) {
+    this.setState({ drawerIsOpen: isOpen });
+  }
+
   render() {
     const {
       goTo,
@@ -138,14 +163,16 @@ class HomeView extends Component {
       perCapita,
       location,
     } = this.props;
-    const { scale, boundsFilter } = this.state;
+    const { scale, boundsFilter, drawerIsOpen } = this.state;
 
     return (
       <div className="HomeView">
         <ScrollToTop />
-        <Row>
-          <h1>Welcome to the World Energy Data Explorer</h1>
-        </Row>
+        <div className="hideOnMobile">
+          <Row>
+            <h1>Welcome to the World Energy Data Explorer</h1>
+          </Row>
+        </div>
         <Row gutter={{ md: 20 }}>
           <Col md={16}>
             <div ref={this.mapRef}>
@@ -157,10 +184,14 @@ class HomeView extends Component {
                 minZoom={MIN_ZOOM}
                 onMapChange={this.onMapChange}
                 boundsFilter={boundsFilter}
+                onCountryDblClick={country =>
+                  goTo(`country/${country.alpha2Code}`)
+                }
+                onControlButtonClick={() => this.setDrawerState(!drawerIsOpen)}
               />
             </div>
           </Col>
-          <Col md={8}>
+          <this.StatisticDiv>
             <ConnectedStatisticExplorer
               statisticCode={statisticCode}
               currentYear={currentYear}
@@ -176,7 +207,7 @@ class HomeView extends Component {
               setScale={value => this.setScale(value)}
               boundsFilter={boundsFilter}
             />
-          </Col>
+          </this.StatisticDiv>
           {location.search.includes('beta') && (
             <Col md={24} style={{ marginTop: 20, backgroundColor: 'white' }}>
               <HDIByEnergyChartContainer

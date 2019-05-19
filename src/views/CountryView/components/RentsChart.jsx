@@ -69,7 +69,7 @@ function RentsChart(props) {
             legendType="line"
           />
           <CartesianGrid stroke="#ccc" opacity={0.2} />
-          <XAxis dataKey="year" interval={9} />
+          <XAxis dataKey="year" />
           <YAxis yAxisId="left" />
           <YAxis
             yAxisId="right"
