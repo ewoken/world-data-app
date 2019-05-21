@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
-import { map } from 'ramda';
+import { map, omit } from 'ramda';
 
 import countriesReducer from './countries';
 import statisticsReducer, {
@@ -24,14 +24,7 @@ function actionSanitizer(action) {
 function stateSanitizer(state) {
   return {
     ...state,
-    countries: map(
-      country => ({ ...country, geojson: country.geojson && 'GEOJSON' }),
-      state.countries.data,
-    ),
-    areas: map(
-      area => ({ ...area, geojson: area.geojson && 'GEOJSON' }),
-      state.areas.data,
-    ),
+    countries: omit(['worldTopo'], state.countries),
     statistics: map(
       statistic => ({
         ...statistic,

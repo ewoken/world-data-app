@@ -3,6 +3,10 @@ const countriesData = require('world-countries/countries');
 const formerCountries = require('./formerCountries');
 
 function countryMapValues(country) {
+  const formerCountry = formerCountries.find(c =>
+    c.countries.includes(country.cca2),
+  );
+
   return {
     id: Number(country.ccn3),
     alpha2Code: country.cca2,
@@ -17,6 +21,8 @@ function countryMapValues(country) {
     latlng: country.latlng,
     flagIcon: country.flag,
     former: false,
+    firstYear: formerCountry ? formerCountry.lastYear + 1 : 0,
+    lastYear: country.lastYear || 3000,
   };
 }
 const countries = countriesData

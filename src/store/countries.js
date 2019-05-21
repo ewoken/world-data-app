@@ -1,4 +1,6 @@
 import { values, indexBy, prop, mapObjIndexed } from 'ramda';
+import { feature, merge } from 'topojson-client';
+import L from 'leaflet';
 
 import getAllCountries from '../api/countries';
 
@@ -20,8 +22,8 @@ function loadCountriesAction() {
   return { type: COUNTRIES_LOAD_ACTION };
 }
 
-function receiveCountriesAction({ data, errors }) {
-  return { type: COUNTRIES_RECEIVE_ACTION, data, errors };
+function receiveCountriesAction({ data, worldTopo, errors }) {
+  return { type: COUNTRIES_RECEIVE_ACTION, data, worldTopo, errors };
 }
 
 export function loadAllCountries() {
@@ -31,7 +33,8 @@ export function loadAllCountries() {
       .then(data =>
         dispatch(
           receiveCountriesAction({
-            data: indexBy(prop('alpha2Code'), data),
+            data: indexBy(prop('alpha2Code'), data.countries),
+            worldTopo: data.worldTopo,
           }),
         ),
       )
@@ -44,6 +47,7 @@ const initialState = {
   loaded: false,
   errors: null,
   data: {},
+  worldTopo: null,
 };
 
 function countriesReducer(state = initialState, action) {
@@ -58,6 +62,7 @@ function countriesReducer(state = initialState, action) {
         loaded: !action.errors,
         errors: action.errors || null,
         data: action.data || {},
+        worldTopo: action.worldTopo,
       };
     default:
       return state;
@@ -68,8 +73,53 @@ export function countriesLoadedSelector(state) {
   return state.countries.loaded;
 }
 
+export function worldTopoSelector(state) {
+  return state.countries.worldTopo;
+}
+
+function addGeoJSONandBounds(country, worldTopo) {
+  let geojson;
+  if (country.countries) {
+    const countryAlpha3Codes = country.countries.map(c => c.numericCode);
+    const geometries = worldTopo.objects.countries.geometries.filter(c =>
+      countryAlpha3Codes.includes(c.id),
+    );
+    geojson = merge(worldTopo, geometries);
+  } else {
+    const a = worldTopo.objects.countries.geometries.find(
+      c => c.id === country.numericCode,
+    );
+    geojson = a && feature(worldTopo, a);
+  }
+
+  const bounds = geojson && L.geoJSON(geojson).getBounds();
+  return {
+    ...country,
+    geojson,
+    bounds,
+  };
+}
+
+export function countrySelector(countryCode, state) {
+  const initialCountry =
+    state.countries.data[countryCode] || state.areas.data[countryCode];
+  const memberCountryCodes =
+    initialCountry.countries || initialCountry.countryCodes;
+
+  const countryWithCountries = memberCountryCodes
+    ? {
+        ...initialCountry,
+        countries: memberCountryCodes.map(code => countrySelector(code, state)),
+      }
+    : initialCountry;
+
+  return addGeoJSONandBounds(countryWithCountries, worldTopoSelector(state));
+}
+
 export function countriesSelector(state) {
-  return values(state.countries.data).filter(c => c.isIndependent);
+  return Object.keys(state.countries.data).map(code =>
+    countrySelector(code, state),
+  );
 }
 
 export function countriesInBounds(boundsFilter, state) {
@@ -84,10 +134,6 @@ export function countriesInBounds(boundsFilter, state) {
 
 export function dependentCountriesSelector(state) {
   return values(state.countries.data).filter(c => !c.isIndependent);
-}
-
-export function countrySelector(countryCode, state) {
-  return state.countries.data[countryCode] || state.areas.data[countryCode];
 }
 
 export function fuelConsumedCountrySelector(countryCode, state) {

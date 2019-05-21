@@ -13,6 +13,7 @@
     "latlng": [60, 100],
     "disabled": false,
     "flagIcon": "",
+    "firstYear": 1917,
     "lastYear": 1989,
     "countries": [
       "AZ",

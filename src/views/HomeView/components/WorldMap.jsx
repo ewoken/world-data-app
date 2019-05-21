@@ -117,36 +117,42 @@ function WorldMap(props) {
           onZoomend={onMapChange}
           onMoveend={onMapChange}
         >
-          {countries.map(country => {
-            const countryData = colorValueMap[country.alpha2Code];
-            return (
-              <GeoJSON
-                key={country.alpha2Code + currentStatistic.code}
-                data={country.geojson}
-                coordsToLatLng={coordsToLatLng}
-                onEachFeature={(feature, layer) =>
-                  layer.on('dblclick', () => {
-                    onCountryDblClick(country);
-                  })
-                }
-                ref={ref =>
-                  ref &&
-                  ref.leafletElement.setStyle({
-                    color: BORDER_COLOR,
-                    weight: 0.5,
-                    fillColor: countryData ? countryData.color : NA_COLOR,
-                    fillOpacity: 1,
-                  })
-                }
-              >
-                <Tooltip sticky>
-                  {`${country.commonName}: ${formatNumber(
-                    countryData && countryData.value,
-                  )}`}
-                </Tooltip>
-              </GeoJSON>
-            );
-          })}
+          {countries
+            .filter(
+              country =>
+                country.firstYear <= currentYear &&
+                currentYear <= country.lastYear,
+            )
+            .map(country => {
+              const countryData = colorValueMap[country.alpha2Code];
+              return (
+                <GeoJSON
+                  key={country.alpha2Code + currentStatistic.code}
+                  data={country.geojson}
+                  coordsToLatLng={coordsToLatLng}
+                  onEachFeature={(feature, layer) =>
+                    layer.on('dblclick', () => {
+                      onCountryDblClick(country);
+                    })
+                  }
+                  ref={ref =>
+                    ref &&
+                    ref.leafletElement.setStyle({
+                      color: BORDER_COLOR,
+                      weight: 0.5,
+                      fillColor: countryData ? countryData.color : NA_COLOR,
+                      fillOpacity: 1,
+                    })
+                  }
+                >
+                  <Tooltip sticky>
+                    {`${country.commonName}: ${formatNumber(
+                      countryData && countryData.value,
+                    )}`}
+                  </Tooltip>
+                </GeoJSON>
+              );
+            })}
           {dependentCountries.map(country => (
             <GeoJSON
               key={country.alpha2Code}

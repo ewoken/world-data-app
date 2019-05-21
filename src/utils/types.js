@@ -8,6 +8,8 @@ export const CountryType = PropTypes.shape({
   area: PropTypes.number.isRequired,
   latlng: PropTypes.arrayOf(PropTypes.number).isRequired,
   geojson: PropTypes.object,
+  firstYear: PropTypes.number.isRequired,
+  lastYear: PropTypes.number.isRequired,
 });
 
 export const StatisticType = PropTypes.shape({
