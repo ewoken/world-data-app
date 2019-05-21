@@ -28,7 +28,7 @@ const TabsComponentWithState = withState(
 function CountryView(props) {
   const { country, goTo, currentTab, referenceCountry, fuelProduced } = props;
 
-  if (!country || country.disabled) {
+  if (!country || country.disabled || !country.isIndependent) {
     return <Redirect to="/" />;
   }
 

@@ -117,9 +117,9 @@ export function countrySelector(countryCode, state) {
 }
 
 export function countriesSelector(state) {
-  return Object.keys(state.countries.data).map(code =>
-    countrySelector(code, state),
-  );
+  return Object.keys(state.countries.data)
+    .map(code => countrySelector(code, state))
+    .filter(country => country.isIndependent);
 }
 
 export function countriesInBounds(boundsFilter, state) {
