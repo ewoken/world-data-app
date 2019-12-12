@@ -1,15 +1,15 @@
 {
-  "main.css": "https://ewoken.github.io/world-data-app/static/css/main.a23b464b.chunk.css",
-  "main.js": "https://ewoken.github.io/world-data-app/static/js/main.3431c59e.chunk.js",
-  "main.js.map": "https://ewoken.github.io/world-data-app/static/js/main.3431c59e.chunk.js.map",
+  "main.css": "https://ewoken.github.io/world-data-app/static/css/main.bb9d6a9e.chunk.css",
+  "main.js": "https://ewoken.github.io/world-data-app/static/js/main.60d457c3.chunk.js",
+  "main.js.map": "https://ewoken.github.io/world-data-app/static/js/main.60d457c3.chunk.js.map",
   "runtime~main.js": "https://ewoken.github.io/world-data-app/static/js/runtime~main.a3a86af5.js",
   "runtime~main.js.map": "https://ewoken.github.io/world-data-app/static/js/runtime~main.a3a86af5.js.map",
-  "static/css/2.782a28ce.chunk.css": "https://ewoken.github.io/world-data-app/static/css/2.782a28ce.chunk.css",
-  "static/js/2.e016aac4.chunk.js": "https://ewoken.github.io/world-data-app/static/js/2.e016aac4.chunk.js",
-  "static/js/2.e016aac4.chunk.js.map": "https://ewoken.github.io/world-data-app/static/js/2.e016aac4.chunk.js.map",
+  "static/css/2.a1206ab7.chunk.css": "https://ewoken.github.io/world-data-app/static/css/2.a1206ab7.chunk.css",
+  "static/js/2.ad44340a.chunk.js": "https://ewoken.github.io/world-data-app/static/js/2.ad44340a.chunk.js",
+  "static/js/2.ad44340a.chunk.js.map": "https://ewoken.github.io/world-data-app/static/js/2.ad44340a.chunk.js.map",
   "index.html": "https://ewoken.github.io/world-data-app/index.html",
-  "precache-manifest.ab5883805d12bbd85bc45253254b59c6.js": "https://ewoken.github.io/world-data-app/precache-manifest.ab5883805d12bbd85bc45253254b59c6.js",
+  "precache-manifest.405e050a2137040cf5cc0ea026d722c2.js": "https://ewoken.github.io/world-data-app/precache-manifest.405e050a2137040cf5cc0ea026d722c2.js",
   "service-worker.js": "https://ewoken.github.io/world-data-app/service-worker.js",
-  "static/css/2.782a28ce.chunk.css.map": "https://ewoken.github.io/world-data-app/static/css/2.782a28ce.chunk.css.map",
-  "static/css/main.a23b464b.chunk.css.map": "https://ewoken.github.io/world-data-app/static/css/main.a23b464b.chunk.css.map"
+  "static/css/2.a1206ab7.chunk.css.map": "https://ewoken.github.io/world-data-app/static/css/2.a1206ab7.chunk.css.map",
+  "static/css/main.bb9d6a9e.chunk.css.map": "https://ewoken.github.io/world-data-app/static/css/main.bb9d6a9e.chunk.css.map"
 }
