@@ -126,7 +126,7 @@ export function buildChartWrapper(WrappedChart) {
           </div>
           <WrappedChart {...this.props} />
           <div className="ChartWrapper__footer toPng">
-            From http://worldenergydata.tk - Sources: IEA, World Bank
+            From ewoken.github.io/world-data-app/ - Sources: IEA, World Bank
           </div>
         </div>
       );

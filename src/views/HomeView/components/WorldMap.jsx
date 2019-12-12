@@ -214,7 +214,7 @@ function WorldMap(props) {
         </div>
       </div>
       <div className="WorldMap__sources toPng">
-        From http://worldenergydata.tk - Sources: IEA, World Bank
+        From ewoken.github.io/world-data-app/ - Sources: IEA, World Bank
       </div>
     </div>
   );
