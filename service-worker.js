@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/world-data-app/precache-manifest.2445b3f958c95da895e10ba7c2d02a3f.js"
+  "https://ewoken.github.io/world-data-app/precache-manifest.151f263fbf92abf65697aaac35eaf465.js"
 );
 
 workbox.clientsClaim();
@@ -28,7 +28,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("/world-data-app/index.html", {
+workbox.routing.registerNavigationRoute("https://ewoken.github.io/world-data-app/index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });

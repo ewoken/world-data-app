@@ -1,15 +1,15 @@
 {
-  "main.css": "/world-data-app/static/css/main.a23b464b.chunk.css",
-  "main.js": "/world-data-app/static/js/main.40332f28.chunk.js",
-  "main.js.map": "/world-data-app/static/js/main.40332f28.chunk.js.map",
-  "runtime~main.js": "/world-data-app/static/js/runtime~main.320dc070.js",
-  "runtime~main.js.map": "/world-data-app/static/js/runtime~main.320dc070.js.map",
-  "static/css/2.782a28ce.chunk.css": "/world-data-app/static/css/2.782a28ce.chunk.css",
-  "static/js/2.3695ea86.chunk.js": "/world-data-app/static/js/2.3695ea86.chunk.js",
-  "static/js/2.3695ea86.chunk.js.map": "/world-data-app/static/js/2.3695ea86.chunk.js.map",
-  "index.html": "/world-data-app/index.html",
-  "precache-manifest.2445b3f958c95da895e10ba7c2d02a3f.js": "/world-data-app/precache-manifest.2445b3f958c95da895e10ba7c2d02a3f.js",
-  "service-worker.js": "/world-data-app/service-worker.js",
-  "static/css/2.782a28ce.chunk.css.map": "/world-data-app/static/css/2.782a28ce.chunk.css.map",
-  "static/css/main.a23b464b.chunk.css.map": "/world-data-app/static/css/main.a23b464b.chunk.css.map"
+  "main.css": "https://ewoken.github.io/world-data-app/static/css/main.a23b464b.chunk.css",
+  "main.js": "https://ewoken.github.io/world-data-app/static/js/main.3c301f1f.chunk.js",
+  "main.js.map": "https://ewoken.github.io/world-data-app/static/js/main.3c301f1f.chunk.js.map",
+  "runtime~main.js": "https://ewoken.github.io/world-data-app/static/js/runtime~main.a3a86af5.js",
+  "runtime~main.js.map": "https://ewoken.github.io/world-data-app/static/js/runtime~main.a3a86af5.js.map",
+  "static/css/2.782a28ce.chunk.css": "https://ewoken.github.io/world-data-app/static/css/2.782a28ce.chunk.css",
+  "static/js/2.e016aac4.chunk.js": "https://ewoken.github.io/world-data-app/static/js/2.e016aac4.chunk.js",
+  "static/js/2.e016aac4.chunk.js.map": "https://ewoken.github.io/world-data-app/static/js/2.e016aac4.chunk.js.map",
+  "index.html": "https://ewoken.github.io/world-data-app/index.html",
+  "precache-manifest.151f263fbf92abf65697aaac35eaf465.js": "https://ewoken.github.io/world-data-app/precache-manifest.151f263fbf92abf65697aaac35eaf465.js",
+  "service-worker.js": "https://ewoken.github.io/world-data-app/service-worker.js",
+  "static/css/2.782a28ce.chunk.css.map": "https://ewoken.github.io/world-data-app/static/css/2.782a28ce.chunk.css.map",
+  "static/css/main.a23b464b.chunk.css.map": "https://ewoken.github.io/world-data-app/static/css/main.a23b464b.chunk.css.map"
 }
