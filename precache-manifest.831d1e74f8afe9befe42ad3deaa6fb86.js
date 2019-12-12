@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "https://ewoken.github.io/world-data-app/static/css/2.782a28ce.chunk.css"
   },
   {
-    "revision": "c1f5fdc58a6731a678793e327ce99db4",
+    "revision": "0b91cb350ede64613f6d94bab43ce05d",
     "url": "https://ewoken.github.io/world-data-app/index.html"
   }
 ];
