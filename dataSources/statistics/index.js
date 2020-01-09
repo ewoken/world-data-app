@@ -4,7 +4,7 @@ const sources = require('./sources');
 const statisticConfigs = require('./config');
 
 const DEFAULT_STARTING_YEAR = 1973;
-const DEFAULT_ENDING_YEAR = 2016;
+const DEFAULT_ENDING_YEAR = 2017;
 
 function formatDataArray({ startingYear, endingYear, data, countryLastYear }) {
   const dataByYear = indexBy(d => d.year, data);
