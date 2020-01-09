@@ -29,10 +29,7 @@ Loader.propTypes = {
 };
 
 function buildLoader(loadFunction) {
-  return connect(
-    null,
-    { load: loadFunction },
-  )(Loader);
+  return connect(null, { load: loadFunction })(Loader);
 }
 
 export default buildLoader;
