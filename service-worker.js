@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "https://ewoken.github.io/world-data-app/precache-manifest.82df0b6a9005ce109caa6b27ee67f2a1.js"
+  "https://ewoken.github.io/world-data-app/precache-manifest.311114dc280e4a50da5bd2966ce40026.js"
 );
 
 workbox.clientsClaim();
