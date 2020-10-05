@@ -8,8 +8,8 @@ const {
 } = require('ramda');
 const { MTOE_TO_TWH, POWER_PLANT_EFFICIENCIES } = require('../converters');
 
-const ZEROS = range(1973, 2017).map(year => ({ year, value: 0 }));
-const NULLS = range(1973, 2017).map(year => ({ year, value: null }));
+const ZEROS = range(1973, 2018).map(year => ({ year, value: 0 }));
+const NULLS = range(1973, 2018).map(year => ({ year, value: null }));
 
 function consumptionCompute({
   prod,
