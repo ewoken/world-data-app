@@ -24,6 +24,9 @@ const config = {
   NUCLEAR_CAPACITY_GW: {
     seriesOfCountry: alpha3Code => `INTL.27-7-${alpha3Code}-MK.A`,
   },
+  FOSSIL_FUELS_CAPACITY_GW: {
+    seriesOfCountry: alpha3Code => `INTL.28-7-${alpha3Code}-MK.A`,
+  },
   WIND_GENERATION_TWH: {
     seriesOfCountry: alpha3Code => `INTL.37-12-${alpha3Code}-BKWH.A`,
   },

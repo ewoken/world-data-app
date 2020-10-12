@@ -409,6 +409,14 @@ It is the energy which reaches the final consumer's door and excludes that which
     category: 'Electricity',
   },
   {
+    code: 'FOSSIL_FUELS_CAPACITY_GW',
+    name: 'Fossil fuels capacity',
+    description: '',
+    unit: GIGA_WATTS,
+    source: sources.eia.id,
+    category: 'Electricity',
+  },
+  {
     code: 'WIND_GENERATION_TWH',
     name: 'Wind generation',
     description: '',
