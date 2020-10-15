@@ -27,6 +27,15 @@ const config = {
   FOSSIL_FUELS_CAPACITY_GW: {
     seriesOfCountry: alpha3Code => `INTL.28-7-${alpha3Code}-MK.A`,
   },
+  HYDRO_CAPACITY_GW: {
+    seriesOfCountry: alpha3Code => `INTL.33-7-${alpha3Code}-MK.A`,
+  },
+  GEOTHERMAL_CAPACITY_GW: {
+    seriesOfCountry: alpha3Code => `INTL.35-7-${alpha3Code}-MK.A`,
+  },
+  BIOMASS_WASTE_CAPACITY_GW: {
+    seriesOfCountry: alpha3Code => `INTL.38-7-${alpha3Code}-MK.A`,
+  },
   WIND_GENERATION_TWH: {
     seriesOfCountry: alpha3Code => `INTL.37-12-${alpha3Code}-BKWH.A`,
   },

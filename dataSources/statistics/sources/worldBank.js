@@ -23,6 +23,13 @@ const config = {
   GAS_RENTS_IN_GDP: {
     worldBankCode: 'NY.GDP.NGAS.RT.ZS',
   },
+  SHARE_CO2_EMISSIONS_FROM_ELECTRICITY_HEAT: {
+    worldBankCode: 'EN.CO2.ETOT.ZS',
+  },
+  TOTAL_GHG_EMISSIONS: {
+    worldBankCode: 'EN.ATM.GHGT.KT.CE',
+    unitConverter: value => value / 10 ** 3,
+  },
 };
 
 async function fetchCountryStatisticFromWorldBank(statisticCode, country) {
