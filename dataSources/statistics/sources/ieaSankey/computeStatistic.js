@@ -151,6 +151,32 @@ const statisticCodeMap = {
       return electricity * MTOE_TO_TWH;
     },
   },
+  PRIMARY_POWER_STATIONS_INPUT_MTOE: {
+    sources: {
+      geoth: '99',
+      solarWindTide: '107',
+      nuclear: '118',
+      hydro: '115',
+      bioWaste: '81',
+      coal: '47',
+      gas: '64',
+      oil: '13',
+      oilProducts: '25',
+    },
+    computeStatistic(sources) {
+      return (
+        sources.geoth +
+        sources.solarWindTide +
+        sources.nuclear +
+        sources.hydro +
+        sources.bioWaste +
+        sources.coal +
+        sources.gas +
+        sources.oil +
+        sources.oilProducts
+      );
+    },
+  },
   PRIMARY_ENERGY_PRODUCTION_MTOE: {
     sources: {
       coal: '37',

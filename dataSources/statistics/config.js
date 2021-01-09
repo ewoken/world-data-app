@@ -192,6 +192,14 @@ For others, the quantities entering electricity generation are equal to the elec
       'https://www.iea.org/statistics/resources/balancedefinitions/#geothermalsolaretc',
   },
   {
+    code: 'PRIMARY_POWER_STATIONS_INPUT_MTOE',
+    name: 'Primary energy of power-stations',
+    description: `Primary energy that inputs power-stations`,
+    unit: MTOE_UNIT,
+    source: sources.ieaSankey.id,
+    category: 'Productions',
+  },
+  {
     code: 'PRIMARY_ENERGY_CONSUMPTION_MTOE',
     name: 'Primary energy consumption',
     description: `Total consumption of energy sources contained in the environment, such as raw fuels or renewables sources of energy.
@@ -463,7 +471,7 @@ It is the energy which reaches the final consumer's door and excludes that which
   },
   {
     code: 'WIND_GENERATION_TWH',
-    name: 'Wind generation',
+    name: 'Electricity generation from wind',
     description: '',
     unit: TWH,
     source: sources.eia.id,
@@ -471,7 +479,7 @@ It is the energy which reaches the final consumer's door and excludes that which
   },
   {
     code: 'SOLAR_GENERATION_TWH',
-    name: 'Solar generation',
+    name: 'Electricity generation from solar',
     description: '',
     unit: TWH,
     source: sources.eia.id,
